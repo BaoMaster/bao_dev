@@ -69,6 +69,17 @@ exports.getProduct = (req, res) => {
       res.status(err).json({ err });
     });
 };
+exports.getProductFromCart = (req, res) => {
+  const id = req.params.id;
+
+  Cart.findAll({ where: { userid: id } })
+    .then((data) => {
+      res.send(data);
+    })
+    .catch((err) => {
+      res.status(err).json({ err });
+    });
+};
 exports.addProduct = (req, res) => {
   Product.findOne({
     where: { brand: req.body.brand },
@@ -90,6 +101,43 @@ exports.addProduct = (req, res) => {
         description: req.body.description,
         illustration: req.body.illustration,
         amount: req.body.amount,
+      })
+        .then((data) => {
+          return res.json({ status: "success" });
+        })
+        .catch((err) => {
+          return res.status(err).json(err);
+        });
+    })
+    .catch((err) => {
+      res.status(err).json({ status: "fail", message: err });
+    });
+};
+exports.addProductToCart = (req, res) => {
+  Cart.findOne({
+    where: { userid: req.body.userid },
+  })
+    .then((pro) => {
+      if (pro) {
+        if (req.body.productid === pro.productid) {
+          pro.update({ amount: pro.amount + 1 });
+          return res.status(200).json({
+            status: "success",
+            message: pro.amount,
+          });
+        }
+      }
+      Cart.create({
+        userid: req.body.userid,
+        productid: req.body.productid,
+        // amount: req.body.amount,
+        // brand: req.body.brand,
+        // productcode: req.body.productcode,
+        // price: req.body.price,
+        // productname: req.body.productname,
+        // description: req.body.description,
+        // illustration: req.body.illustration,
+        // amount: req.body.amount,
       })
         .then((data) => {
           return res.json({ status: "success" });

@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from "axios";
 
 // import { UserRoles } from 'src/shared/library/helpers/userRoles';
 
@@ -15,9 +15,9 @@ const shopProductActions = {
     };
   },
 
-  addProduct: (product) => {
+  addProductToCart: (product) => {
     return (dispatch) => {
-      return axios.post(`./products/api/addproduct`, product);
+      return axios.post(`./shop/api/addproducttocart`, product);
     };
   },
   updateProduct: (productId, product) => {

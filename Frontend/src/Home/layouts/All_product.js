@@ -1,37 +1,40 @@
 /* eslint-disable */
-import axios from 'axios';
-import React from 'react';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import axios from "axios";
+import React from "react";
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
 
-import Rolex from '../../image/Rolex.png';
-import productActions from '../../redux/product/actions';
-import Left_slidebar from '../Home_components/Slider_components/Left_slidebar';
+import Rolex from "../../image/Rolex.png";
+import productActions from "../../redux/product/actions";
+import Left_slidebar from "../Home_components/Slider_components/Left_slidebar";
 
 class All_product extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      brand: '',
-      productname: '',
-      productcode: '',
-      illustration: '',
-      description: '',
-      price: '',
+      brand: "",
+      productname: "",
+      productcode: "",
+      illustration: "",
+      description: "",
+      price: "",
       product: [],
       imagePro: [],
       photo: [],
+      id: "",
     };
   }
   componentDidMount() {
     this.getProduct();
   }
-  addCart = (id) => {
-    console.log('idd:', id);
+  addCart = () => {
+    // this.setState({ id: id });
+    console.log("bao");
+    // console.log("baoo:", this.state.id);
   };
   getProduct = async () => {
     await axios
-      .get('http://localhost:3030/shop/api/getproduct')
+      .get("http://localhost:3030/shop/api/getproduct")
       .then((res) => {
         // console.log(res.data), console.log('id', res.data.length);
         for (let index = 0; index < res.data.length; index++) {
@@ -73,36 +76,46 @@ class All_product extends React.Component {
       {
         id: 1,
         img: Rolex,
-        name: 'Rolex fake',
-        price: '10$',
+        name: "Rolex fake",
+        price: "10$",
       },
       {
         id: 2,
         img: Rolex,
-        name: 'Rolex fake2',
-        price: '100$',
+        name: "Rolex fake2",
+        price: "100$",
       },
       {
         id: 3,
         img: Rolex,
-        name: 'Rolex fake3',
-        price: '100$',
+        name: "Rolex fake3",
+        price: "100$",
       },
     ];
     const { product } = this.state;
     var result = product.map((product, index) => {
       return (
-        <div className='col-sm-4' key={index}>
-          <div className='product-image-wrapper'>
-            <div className='single-products'>
-              <div className='productinfo text-center'>
-                <img style={{ width: '200px', height: 'auto' }} src={'http://localhost:3030/images/product/' + product.illustration} alt='sadad' />
+        <div className="col-sm-4" key={index}>
+          <div className="product-image-wrapper">
+            <div className="single-products">
+              <div className="productinfo text-center">
+                <img
+                  style={{ width: "200px", height: "auto" }}
+                  src={
+                    "http://localhost:3030/images/product/" +
+                    product.illustration
+                  }
+                  alt="sadad"
+                />
                 {/* imagee + "/" + product.illustration */}
                 <h2> Price:{product.price}$</h2>
                 <p>{product.productname}</p>
-                <button onClick={this.addCart(product.id)} className='btn btn-default add-to-cart'>
-                  <i className='fa fa-shopping-cart'></i>Add to cart
-                </button>
+                <a
+                  onClick={this.addCart()}
+                  className="btn btn-default add-to-cart"
+                >
+                  <i className="fa fa-shopping-cart"></i>Add to cart
+                </a>
               </div>
               {/* <div className='product-overlay'>
                 <div className='overlay-content'>
@@ -119,25 +132,25 @@ class All_product extends React.Component {
       );
     });
     return (
-      <div className='container'>
-        <div className='row'>
+      <div className="container">
+        <div className="row">
           <Left_slidebar />
-          <div className='col-sm-9 padding-right'>
-            <div className='features_items'>
-              <h2 className='title text-center'>All Items</h2>
+          <div className="col-sm-9 padding-right">
+            <div className="features_items">
+              <h2 className="title text-center">All Items</h2>
               {result}
-              <ul className='pagination'>
-                <li className='active'>
-                  <a href=''>1</a>
+              <ul className="pagination">
+                <li className="active">
+                  <a href="">1</a>
                 </li>
                 <li>
-                  <a href=''>2</a>
+                  <a href="">2</a>
                 </li>
                 <li>
-                  <a href=''>3</a>
+                  <a href="">3</a>
                 </li>
                 <li>
-                  <a href=''>&raquo;</a>
+                  <a href="">&raquo;</a>
                 </li>
               </ul>
             </div>
@@ -162,6 +175,9 @@ const mapDispatchToProps = (dispatch) => ({
   getProduct: () => dispatch(productActions.getProduct),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(All_product));
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withRouter(All_product));
 
 // export default All_product;

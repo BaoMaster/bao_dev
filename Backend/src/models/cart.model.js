@@ -11,6 +11,7 @@ module.exports = (sequelize, Sequelize) => {
     amount: {
       type: Sequelize.INTEGER,
       required: true,
+      defaultValue: 1,
     },
   });
   return Product;

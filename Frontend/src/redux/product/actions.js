@@ -7,6 +7,11 @@ const productActions = {
       return axios.get(`./product/api/getall`);
     };
   },
+  getProductFromCart: (userid) => {
+    return (dispatch) => {
+      return axios.get(`./shop/api/getproductfromcart`, userid);
+    };
+  },
 
   deleteProduct: (productId) => {
     return (dispatch) => {

@@ -5,8 +5,9 @@ const multer = require("multer");
 const path = require("path");
 const Resize = require("../config/resize");
 
-router.post("/api/addproduct", controller.addProduct);
+router.post("/api/addproducttocart", controller.addProductToCart);
 router.get("/api/getproduct", controller.getProduct);
+router.get("/api/getproductfromcart/:id", controller.getProductFromCart);
 router.post("/api/update/:id", controller.updateProduct);
 router.get("/api/getproductbyid/:id", controller.getProductById);
 router.delete("/api/deleteproduct/:id", controller.deleteProduct);

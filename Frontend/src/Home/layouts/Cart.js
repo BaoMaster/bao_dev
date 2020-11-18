@@ -1,12 +1,62 @@
 /* eslint-disable */
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, withRouter } from "react-router-dom";
+import productActions from "../../redux/product/actions";
+import { connect } from "react-redux";
+import axios from "axios";
+
 class Cart extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = { userid: "" };
   }
+  componentDidMount = async () => {
+    await this.setState({
+      userid: localStorage.getItem("userauth").split("id")[1].split(`"`)[2],
+    });
+    // let userid = localStorage.getItem("userauth").split("id")[1].split(`"`)[2];
+    // this.props.getProductFromCart(userid);
+    this.getProductFromCart(this.state.userid);
+    // console.log("baoooo:", userid);
+  };
 
+  getProductFromCart = async (userid) => {
+    console.log("id:", userid);
+    await axios
+      .get("http://localhost:3030/shop/api/getproductfromcart/" + userid)
+      .then((res) => {
+        // console.log(res.data), console.log('id', res.data.length);
+        // for (let index = 0; index < res.data.length; index++) {
+        //   this.setState({
+        //     product: res.data,
+        //     // product: [
+        //     //   (id = res.data.index.id),
+        //     //   (img = res.data.index.illustration),
+        //     //   (name = res.data.index.productname),
+        //     //   (price = res.data.index.price),
+        //     // ],
+        //   });
+        // }
+        // const { photo } = this.state;
+        // photo = this.state.product.map((photo) => {
+        //   this.setState({ imagePro: photo.illustration });
+        //   const { imagePro } = this.state;
+        //   // console.log("asasasa", imagePro);
+        // });
+        // this.setState({
+        //   // product: [
+        //   //   (id = res.data.id),
+        //   //   (img = res.data.illustration),
+        //   //   (name = res.data.productname),
+        //   //   (price = res.data.price),
+        //   // ],
+        // }),
+        // let product=this.state.product
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   render() {
     return (
       <div>
@@ -185,5 +235,23 @@ class Cart extends React.Component {
     );
   }
 }
+const mapStateToProps = (state) => {
+  return {
+    auth: state.auth,
+  };
+};
 
-export default Cart;
+const mapDispatchToProps = (dispatch) => ({
+  // deleteUser: (userId) => dispatch(userActions.deleteUser(userId)),
+  // updateUser: (userId, user) => dispatch(userActions.updateUser(userId, user)),
+  // getUserById: (userId) => dispatch(userActions.getUserById(userId)),
+  // addUser: (user) => dispatch(userActions.addUser(user)),
+  // loginUser: (user) => dispatch(userActions.loginUser(user)),
+  getProduct: () => dispatch(productActions.getProduct),
+
+  getProductFromCart: () => dispatch(productActions.getProductFromCart),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Cart));
+
+// export default Cart;
