@@ -1,4 +1,4 @@
-const db = require("../../config/db.config");
+const db = require('../../config/db.config');
 const Product = db.product;
 const Cart = db.cart;
 
@@ -9,7 +9,7 @@ exports.addToCart = (req, res) => {
     amount: req.body.amount,
   })
     .then((data) => {
-      return res.json({ status: "success" });
+      return res.json({ status: 'success' });
     })
     .catch((err) => {
       return res.status(err).json(err);
@@ -28,7 +28,7 @@ exports.RemoveFromCart = (req, res) => {
     }).then((num) => {
       if (num == 1) {
         res.json({
-          status: "success",
+          status: 'success',
         });
       }
     });
@@ -44,7 +44,7 @@ exports.deleteProduct = (req, res) => {
     .then((num) => {
       if (num == 1) {
         res.json({
-          status: "success",
+          status: 'success',
         });
       }
     })
@@ -57,7 +57,7 @@ exports.deleteProduct = (req, res) => {
 exports.getProductById = (req, res) => {
   const id = req.params.id;
   Product.findOne({ where: { id } }).then((data) => {
-    return res.json({ status: "success", data: data });
+    return res.json({ status: 'success', data: data });
   });
 };
 exports.getProduct = (req, res) => {
@@ -72,7 +72,10 @@ exports.getProduct = (req, res) => {
 exports.getProductFromCart = (req, res) => {
   const id = req.params.id;
 
-  Cart.findAll({ where: { userid: id } })
+  Cart.findAll({
+    include: [db.product],
+    where: { userid: id },
+  })
     .then((data) => {
       res.send(data);
     })
@@ -88,8 +91,8 @@ exports.addProduct = (req, res) => {
       if (pro) {
         if (req.body.productcode === pro.productcode) {
           return res.status(401).json({
-            status: "fail",
-            message: "Your product already have in store",
+            status: 'fail',
+            message: 'Your product already have in store',
           });
         }
       }
@@ -103,51 +106,40 @@ exports.addProduct = (req, res) => {
         amount: req.body.amount,
       })
         .then((data) => {
-          return res.json({ status: "success" });
+          return res.json({ status: 'success' });
         })
         .catch((err) => {
           return res.status(err).json(err);
         });
     })
     .catch((err) => {
-      res.status(err).json({ status: "fail", message: err });
+      res.status(err).json({ status: 'fail', message: err });
     });
 };
 exports.addProductToCart = (req, res) => {
-  Cart.findOne({
+  const { productid, userid } = req.body;
+  console.log('userid', productid);
+  Cart.findAll({
     where: { userid: req.body.userid },
   })
-    .then((pro) => {
-      if (pro) {
-        if (req.body.productid === pro.productid) {
-          pro.update({ amount: pro.amount + 1 });
-          return res.status(200).json({
-            status: "success",
-            message: pro.amount,
-          });
+    .then(async (cart) => {
+      if (cart.length > 0) {
+        let data = null;
+        let products = cart.filter((x) => x.productid == productid);
+        if (products.length > 0) {
+          let amount = Number(products[0].amount) + 1;
+          data = await Cart.update({ amount }, { where: { id: products[0].id } });
+          return res.json({ statusss: 'success', data });
         }
       }
-      Cart.create({
+      data = await Cart.create({
         userid: req.body.userid,
         productid: req.body.productid,
-        // amount: req.body.amount,
-        // brand: req.body.brand,
-        // productcode: req.body.productcode,
-        // price: req.body.price,
-        // productname: req.body.productname,
-        // description: req.body.description,
-        // illustration: req.body.illustration,
-        // amount: req.body.amount,
-      })
-        .then((data) => {
-          return res.json({ status: "success" });
-        })
-        .catch((err) => {
-          return res.status(err).json(err);
-        });
+      });
+      return res.json({ statusss: 'success', data });
     })
     .catch((err) => {
-      res.status(err).json({ status: "fail", message: err });
+      res.status(err).json({ status: 'fail', message: err });
     });
 };
 exports.updateProduct = (req, res) => {
@@ -156,7 +148,7 @@ exports.updateProduct = (req, res) => {
   })
     .then((num) => {
       if (num == 1) {
-        res.json({ status: "success" });
+        res.json({ status: 'success' });
       }
     })
     .catch((err) => {
