@@ -1,4 +1,5 @@
 /* eslint-disable */
+import { CloseOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons';
 import axios from 'axios';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -9,7 +10,7 @@ import productActions from '../../redux/product/actions';
 class Cart extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { userid: '', productInCart: [] };
+    this.state = { userid: '', productInCart: [], header: [{ id: '', name: '', price: '' }] };
   }
   componentDidMount = async () => {
     await this.setState({
@@ -30,6 +31,7 @@ class Cart extends React.Component {
           this.setState({
             productInCart: res.data,
           });
+          console.log('asdad:', this.state.productInCart);
         }
         // console.log(res.data), console.log('id', res.data.length);
         // for (let index = 0; index < res.data.length; index++) {
@@ -67,47 +69,66 @@ class Cart extends React.Component {
     const { productInCart } = this.state;
     var result = productInCart.map((productInCart, index) => {
       return (
-        <div key={index}>
-          <tr>
-            <td className='cart_product'>
-              <a href=''>
-                <img src='images/cart/one.png' alt='' />
-              </a>
-            </td>
-            <td className='cart_description'>
-              <h4>
-                <a href=''>{productInCart.id}</a>
-              </h4>
-              <p>Web ID: 1089772</p>
-            </td>
-            <td className='cart_price'>
-              <p>{productInCart.userid}</p>
-            </td>
-            <td className='cart_quantity'>
-              <div className='cart_quantity_button'>
-                <a className='cart_quantity_up' href=''>
-                  {' '}
-                  +{' '}
-                </a>
-                <input className='cart_quantity_input' type='text' name='quantity' value='1' autocomplete='off' size='2' />
-                <a className='cart_quantity_down' href=''>
-                  {' '}
-                  -{' '}
-                </a>
-              </div>
-            </td>
-            <td className='cart_total'>
-              <p className='cart_total_price'>$59</p>
-            </td>
-            <td className='cart_delete'>
-              <a className='cart_quantity_delete' href=''>
-                <i className='fa fa-times'></i>
-              </a>
-            </td>
-          </tr>
-        </div>
+        <tr key={index}>
+          {/* <td className='cart_product'>
+            <a href=''>
+              <img src='images/cart/one.png' alt='' />
+            </a>
+          </td> */}
+          <td className='cart_description'>
+            <h4>
+              <a href=''>{productInCart.productid}</a>
+            </h4>
+          </td>
+          <td className='cart_name'>
+            <p>{productInCart.products.productname}</p>
+          </td>
+          <td className='cart_name'>
+            {/* <p>{productInCart.products.productname}</p> */}
+            <input className='cart_quantity_input' type='text' name='quantity' value={productInCart.products.amount} autocomplete='off' size='2' />
+          </td>
+          <td className='cart_price'>
+            <p>${productInCart.products.price}</p>
+          </td>
+          <td className='cart_quantity'>
+            <div className='cart_quantity_button'>
+              {/* <a href=''> + </a> */}
+              <button style={{ borderRadius: '100px', backgroundColor: '#ee4d2d' }} type='button'>
+                <PlusOutlined />
+              </button>
+              <input
+                style={{ height: '50px', borderRadius: '5px', fontSize: '15px', textAlign: 'center' }}
+                type='text'
+                name='quantity'
+                value={productInCart.products.amount}
+                autocomplete='off'
+                size='2'
+              />
+              {/* <a href=''> - </a> */}
+              <button type='button'>
+                <MinusOutlined />
+              </button>
+            </div>
+          </td>
+          <td className='cart_total'>
+            <p className='cart_total_price'>{parseInt(productInCart.products.amount) * parseInt(productInCart.products.price)}</p>
+          </td>
+          <td>
+            {/* <a className='cart_quantity_delete' href=''>
+              <CloseOutlined />
+            </a> */}
+            <button className='btn btn-danger' type='button'>
+              <CloseOutlined />
+            </button>
+          </td>
+        </tr>
       );
     });
+    var renderTableHeader = () => {
+      const header = Object.keys(this.state.header);
+      return header.map((key, index) => <th key={index}>{key.toUpperCase()}</th>);
+    };
+
     return (
       <div>
         <section id='cart_items'>
@@ -125,52 +146,56 @@ class Cart extends React.Component {
                 <thead>
                   <tr className='cart_menu'>
                     <td className='image'>Item</td>
-                    <td className='description'></td>
+                    <td className='description'>Product Name</td>
+                    <td className='description'>Size</td>
                     <td className='price'>Price</td>
                     <td className='quantity'>Quantity</td>
                     <td className='total'>Total</td>
+                    <td className='total'>Action</td>
                     <td></td>
                   </tr>
                 </thead>
                 <tbody>
+                  {/* <tr> {renderTableHeader}</tr> */}
                   {result}
+                  {/* {result} */}
                   {/* <tr>
-                      <td className='cart_product'>
-                        <a href=''>
-                          <img src='images/cart/one.png' alt='' />
+                    <td className='cart_product'>
+                      <a href=''>
+                        <img src='images/cart/one.png' alt='' />
+                      </a>
+                    </td>
+                    <td className='cart_description'>
+                      <h4>
+                        <a href=''>{result.productid}</a>
+                      </h4>
+                      <p>Web ID: 1089772</p>
+                    </td>
+                    <td className='cart_price'>
+                      <p>{productInCart.userid}</p>
+                    </td>
+                    <td className='cart_quantity'>
+                      <div className='cart_quantity_button'>
+                        <a className='cart_quantity_up' href=''>
+                          {' '}
+                          +{' '}
                         </a>
-                      </td>
-                      <td className='cart_description'>
-                        <h4>
-                          <a href=''>{productInCart.id}</a>
-                        </h4>
-                        <p>Web ID: 1089772</p>
-                      </td>
-                      <td className='cart_price'>
-                        <p>{productInCart.userid}</p>
-                      </td>
-                      <td className='cart_quantity'>
-                        <div className='cart_quantity_button'>
-                          <a className='cart_quantity_up' href=''>
-                            {' '}
-                            +{' '}
-                          </a>
-                          <input className='cart_quantity_input' type='text' name='quantity' value='1' autocomplete='off' size='2' />
-                          <a className='cart_quantity_down' href=''>
-                            {' '}
-                            -{' '}
-                          </a>
-                        </div>
-                      </td>
-                      <td className='cart_total'>
-                        <p className='cart_total_price'>$59</p>
-                      </td>
-                      <td className='cart_delete'>
-                        <a className='cart_quantity_delete' href=''>
-                          <i className='fa fa-times'></i>
+                        <input className='cart_quantity_input' type='text' name='quantity' value='1' autocomplete='off' size='2' />
+                        <a className='cart_quantity_down' href=''>
+                          {' '}
+                          -{' '}
                         </a>
-                      </td>
-                    </tr> */}
+                      </div>
+                    </td>
+                    <td className='cart_total'>
+                      <p className='cart_total_price'>$59</p>
+                    </td>
+                    <td className='cart_delete'>
+                      <a className='cart_quantity_delete' href=''>
+                        <i className='fa fa-times'></i>
+                      </a>
+                    </td>
+                  </tr> */}
                 </tbody>
               </table>
             </div>

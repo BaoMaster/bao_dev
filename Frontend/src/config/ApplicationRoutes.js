@@ -64,6 +64,7 @@ const ApplicationRoutes = (props) => {
         {/* <RedirectIfUserAuth exact path='/login' component={Home}>
           <Login />
         </RedirectIfUserAuth> */}
+        <Route exact path='/detail' component={Home} />
         <Route path='/checkout' exact component={Home} />
         <Route path='/cart' component={Home} />
         <Route

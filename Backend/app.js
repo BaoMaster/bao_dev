@@ -52,17 +52,11 @@ app.use(function (err, req, res, next) {
   res.render('error');
 });
 
-const CartModel = db.cart;
-const ProductModel = db.product;
-
 db.sequelize
   .sync({
     force: false,
   })
   .then(() => {
-    ProductModel.hasMany(CartModel, {
-      targetKey: 'id',
-    });
     console.log('Drop and resync with {force:true}');
     // initial();
   });

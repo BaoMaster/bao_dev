@@ -6,7 +6,7 @@ import ShipLogo from '../../../shipping.jpg';
 class Left_slidebar extends React.Component {
   render() {
     return (
-      <div className='col-sm-3'>
+      <div className='col-sm-3' style={{ backgroundColor: '#F0F0E9' }}>
         <div className='left-sidebar'>
           <h2>Category</h2>
           <div className='panel-group category-products' id='accordian'>

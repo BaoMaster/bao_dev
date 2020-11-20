@@ -1,3 +1,4 @@
+const { product } = require('../../config/db.config');
 const db = require('../../config/db.config');
 const Product = db.product;
 const Cart = db.cart;
@@ -73,11 +74,15 @@ exports.getProductFromCart = (req, res) => {
   const id = req.params.id;
 
   Cart.findAll({
-    include: [db.product],
     where: { userid: id },
+    raw: true,
   })
-    .then((data) => {
-      res.send(data);
+    .then(async (data) => {
+      for (let i = 0; i < data.length; i++) {
+        let productsQuery = await Product.findOne({ where: { id: data[i].productid } });
+        data[i].products = productsQuery;
+      }
+      res.json(data);
     })
     .catch((err) => {
       res.status(err).json({ err });

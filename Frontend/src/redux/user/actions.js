@@ -73,13 +73,22 @@ const userActions = {
     return (dispatch) => {
       dispatch({ type: authActions.USER_LOGIN });
       try {
-        axios.post('./api/login', user).then((res) => {
-          dispatch({ type: authActions.USER_LOGIN_SUCCESS, data: res.data });
-          dispatch({ type: authActions.CHECK_AUTH_USER });
-        });
-        notification('success', 'Login Successfullys!');
+        axios
+          .post('./api/login', user)
+          .then((res) => {
+            dispatch({ type: authActions.USER_LOGIN_SUCCESS, data: res.data });
+            dispatch({ type: authActions.CHECK_AUTH_USER });
+            notification(res.data.status, res.data.message);
+            // console.log('res:', res);
+          })
+          .catch((err) => {
+            // console.log('baoff', err.response.data);
+            notification(err.response.data.status, err.response.data.message);
+          });
       } catch (err) {
         dispatch({ type: authActions.USER_LOGIN_FAIL, data: err?.response?.data });
+        // notification('error', 'Login Fail!');
+        console.log('bao fail');
       }
     };
   },

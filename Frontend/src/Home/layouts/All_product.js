@@ -9,6 +9,7 @@ import Rolex from '../../image/Rolex.png';
 import productActions from '../../redux/product/actions';
 import ShopProductActions from '../../redux/shopProduct/actions';
 import Left_slidebar from '../Home_components/Slider_components/Left_slidebar';
+import Slider from '../Home_components/Slider_components/Slider';
 
 class All_product extends React.Component {
   constructor(props) {
@@ -152,6 +153,9 @@ class All_product extends React.Component {
           <Left_slidebar />
           <div className='col-sm-9 padding-right'>
             <div className='features_items'>
+              <section id='slider' className='clr-white'>
+                <Slider />
+              </section>
               <h2 className='title text-center'>All Items</h2>
               {result}
               <div>

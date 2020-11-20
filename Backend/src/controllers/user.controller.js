@@ -1,21 +1,19 @@
-const db = require("../../config/db.config");
+const db = require('../../config/db.config');
 const User = db.user;
 
 const Permission = db.permission;
 const Op = db.Sequelize.Op;
-const multer = require("multer");
+const multer = require('multer');
 
 // const mail = require("../helper/mail");
 
-const jwt = require("jsonwebtoken");
-const bcrypt = require("bcryptjs");
-const shortId = require("shortid");
-const jwt_decode = require("jwt-decode");
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
+const shortId = require('shortid');
+const jwt_decode = require('jwt-decode');
 // const mail = require("../helper/mail");
 // const user = require("../models/user");
-shortId.characters(
-  "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ$@"
-);
+shortId.characters('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ$@');
 // const { Op } = require("sequelize/types");
 
 // function sendcode(email) {
@@ -37,7 +35,7 @@ shortId.characters(
 // const validateForgotInput = require("../Validation/forgot");
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "uploads");
+    cb(null, 'uploads');
   },
   filename: (req, file, cb) => {
     console.log(file);
@@ -45,7 +43,7 @@ const storage = multer.diskStorage({
   },
 });
 const fileFilter = (req, file, cb) => {
-  if (file.mimetype == "image/jpeg" || file.mimetype == "image/png") {
+  if (file.mimetype == 'image/jpeg' || file.mimetype == 'image/png') {
     cb(null, true);
   } else {
     cb(null, false);
@@ -64,12 +62,9 @@ const upload = multer({ storage: storage, fileFilter: fileFilter });
 // });
 
 function sendCode(email, code) {
-  mail.send(
-    email,
-    "This is email from GBN page ",
-    "this is your code: " + code
-  );
+  mail.send(email, 'This is email from GBN page ', 'this is your code: ' + code);
 }
+
 exports.reSend = (req, res) => {
   User.findOne({
     where: {
@@ -80,17 +75,19 @@ exports.reSend = (req, res) => {
       const code = shortId.generate();
       sendCode(user.email, code);
       user.update({ codeforverify: code });
-      return res.send("resend success");
+      return res.send('resend success');
     })
     .catch((err) => {
-      return res.send("ERR: " + err);
+      return res.send('ERR: ' + err);
     });
 };
+
 exports.getAll = (req, res) => {
   User.findAll().then((data) => {
     res.send(data);
   });
 };
+
 exports.getOne = (req, res) => {
   User.findOne({
     where: {
@@ -110,7 +107,7 @@ exports.register = (req, res) => {
   // if (!isValid) {
   //   return res.status(400).json(errors);
   // }
-  console.log("Register is starting");
+  console.log('Register is starting');
 
   User.findOne({
     where: {
@@ -122,7 +119,7 @@ exports.register = (req, res) => {
       //   return res.status(400).json({ name: "UserName already exit" });
       // }
       if (user) {
-        return res.status(401).json({ name: "Username already exit" });
+        return res.status(401).json({ name: 'Username already exit' });
       }
       User.findOne({
         where: {
@@ -130,7 +127,7 @@ exports.register = (req, res) => {
         },
       }).then((users) => {
         if (users) {
-          return res.status(401).json({ email: "Email already exit" });
+          return res.status(401).json({ email: 'Email already exit' });
         } else {
           User.create({
             // codenv: req.body.codenv,
@@ -152,18 +149,18 @@ exports.register = (req, res) => {
           })
             .then((user) => {
               const code = shortId.generate();
-              console.log("CODE:" + code);
-              console.log("username:" + user.role);
-              console.log("role:" + req.body.role);
+              console.log('CODE:' + code);
+              console.log('username:' + user.role);
+              console.log('role:' + req.body.role);
 
               // sendCode(user.email, code);
               user.update({ codeforverify: code });
 
-              console.log("register successfully test git continue bao main");
-              res.status(200).send({ verifyCode: code, status: "success" });
+              console.log('register successfully test git continue bao main');
+              res.status(200).send({ verifyCode: code, status: 'success' });
             })
             .catch((err) => {
-              res.status(500).send("Fail, Error=>" + err);
+              res.status(500).send('Fail, Error=>' + err);
             });
         }
       });
@@ -172,6 +169,7 @@ exports.register = (req, res) => {
       return res.send({ messErr: err });
     });
 };
+
 exports.forgotPassword = (req, res) => {
   const { errors, isValid } = validateForgotInput(req.body);
   const shortpass = shortId.generate();
@@ -186,7 +184,7 @@ exports.forgotPassword = (req, res) => {
   })
     .then((users) => {
       if (!users) {
-        return res.status(400).json({ name: "User or email not found" });
+        return res.status(400).json({ name: 'User or email not found' });
       }
       // if (user.email != req.body.email) {
       //   return res.status(400).json({ email: "Email or User not found" });
@@ -196,7 +194,7 @@ exports.forgotPassword = (req, res) => {
       // sendCode(user.email, newPass);
       res.status(200).send({
         forgotPassword: shortpass,
-        status: "Your new password is sended to your email",
+        status: 'Your new password is sended to your email',
       });
     })
     .catch((err) => {
@@ -209,8 +207,9 @@ function generateAccessToken(id, role) {
     expiresIn: 200,
   });
 }
+
 exports.login = (req, res) => {
-  console.log("Sign-In");
+  console.log('Sign-In');
   // const { errors, isValid } = validateLoginInput(req.body);
 
   // Check validation
@@ -225,22 +224,18 @@ exports.login = (req, res) => {
   })
     .then((user) => {
       if (!user) {
-        return res.status(404).json({ usernotfound: "User Not Found." });
+        return res.status(401).json({ status: 'error', message: 'User Not Found.' });
       }
 
-      var passwordIsValid = bcrypt.compareSync(
-        req.body.password,
-        user.password
-      );
+      var passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
       if (!passwordIsValid) {
         return res.status(401).json({
-          passwordincorrect: "Password incorrect",
+          status: 'error',
+          message: 'Password incorrect',
         });
       }
       if (user.idverify == false) {
-        return res
-          .status(400)
-          .json({ usernotverify: "Please verify your account" });
+        return res.status(400).json({ status: 'error', message: 'Please verify your account !' });
       }
       //   user.update({
       //     islogin: true
@@ -258,7 +253,7 @@ exports.login = (req, res) => {
         },
         process.env.JWT_SECRET,
         {
-          expiresIn: "24h", // expires in 24 hours
+          expiresIn: '24h', // expires in 24 hours
         }
       );
       const accessToken = generateAccessToken(user.id, user.role);
@@ -266,7 +261,8 @@ exports.login = (req, res) => {
       var decode = jwt_decode(token);
       res.status(200).send({
         auth: true,
-        status: "success",
+        status: 'success',
+        message: 'Login successfully !',
         username: user.username,
         access_token: token,
         refresh_token: token,
@@ -276,9 +272,10 @@ exports.login = (req, res) => {
       });
     })
     .catch((err) => {
-      res.status(500).send("Error -> " + err);
+      res.status(500).send('Error -> ' + err);
     });
 };
+
 exports.refreshToken = (req, res) => {
   var token = jwt.sign(
     {
@@ -290,7 +287,7 @@ exports.refreshToken = (req, res) => {
       expiresIn: 30, // expires in 24 hours
     }
   );
-  res.send("refrshToken:", token);
+  res.send('refrshToken:', token);
 };
 
 exports.update = (req, res) => {
@@ -303,7 +300,7 @@ exports.update = (req, res) => {
     .then((num) => {
       if (num == 1) {
         res.json({
-          status: "success",
+          status: 'success',
         });
       }
     })
@@ -314,6 +311,7 @@ exports.update = (req, res) => {
       });
     });
 };
+
 exports.delete = (req, res) => {
   const id = req.params.id;
   User.destroy({
@@ -324,7 +322,7 @@ exports.delete = (req, res) => {
     .then((num) => {
       if (num == 1) {
         res.json({
-          status: "success",
+          status: 'success',
         });
       }
     })
@@ -334,6 +332,7 @@ exports.delete = (req, res) => {
       });
     });
 };
+
 exports.verify = (req, res) => {
   const code = req.body.code;
   const email = req.body.email;
@@ -345,14 +344,14 @@ exports.verify = (req, res) => {
     .then((user) => {
       if (!user) {
         return res.status(401).json({
-          message: "email is not correct",
+          message: 'email is not correct',
         });
       } else {
         if (code == user.codeforverify) {
           user.update({ idverify: true });
-          return res.send("your account is verified");
+          return res.send('your account is verified');
         } else {
-          return res.send("Your verify code is not correct");
+          return res.send('Your verify code is not correct');
         }
       }
     })
@@ -360,11 +359,13 @@ exports.verify = (req, res) => {
       return res.send({ ERR: err });
     });
 };
+
 exports.getUserById = (req, res) => {
   User.findOne({ where: { id: req.params.id } }).then((data) => {
-    return res.json({ status: "success", data: data });
+    return res.json({ status: 'success', data: data });
   });
 };
+
 exports.determinePermissions = (req, res) => {
   const role = req.body.role;
 

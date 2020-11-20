@@ -48,7 +48,7 @@ const userGuestActions = {
       dispatch({ type: authActions.USER_LOGIN });
       try {
         axios.post('./api/login', user).then((res) => dispatch({ type: authActions.LOGIN_SUCCESS, data: res.data }));
-        notification('success', 'Login Successfully!');
+        // notification(res.data.status, res.data.message);
       } catch (err) {
         dispatch({ type: authActions.USER_LOGIN_FAIL, data: err?.response?.data });
       }
