@@ -5,34 +5,51 @@ import {
   PlusOutlined,
   ShoppingCartOutlined,
   UnlockOutlined,
-} from '@ant-design/icons';
-import { Button, Divider, Dropdown, Form, Input, Layout, Menu, Modal, Popconfirm, Upload } from 'antd';
-import React from 'react';
-import { Provider } from 'react-redux';
-import { connect } from 'react-redux';
-import { BrowserRouter as Router, Link, Redirect, Route, Switch } from 'react-router-dom';
-import { withRouter } from 'react-router-dom';
+} from "@ant-design/icons";
+import {
+  Button,
+  Divider,
+  Dropdown,
+  Form,
+  Input,
+  Layout,
+  Menu,
+  Modal,
+  Popconfirm,
+  Upload,
+} from "antd";
+import React from "react";
+import { Provider } from "react-redux";
+import { connect } from "react-redux";
+import {
+  BrowserRouter as Router,
+  Link,
+  Redirect,
+  Route,
+  Switch,
+} from "react-router-dom";
+import { withRouter } from "react-router-dom";
 
-import PrivateRouteUser from '../components/privateRoute/user';
-import LocalStorageService from '../config/LocalStorageService';
-import RedirectIfUserAuth from '../config/RedireactIfUserAuth';
-import notification from '../helper/Notification';
-import Logo from '../image/shoplogo.png';
-import userActions from '../redux/user/actions';
-import userGuestActions from '../redux/user/userAction';
-import store from '../store';
-import Content from './Home_components/Content_components/Content';
-import Footer from './Home_components/Footer_components/Footer';
-import Header_bottom from './Home_components/Header_components/Header_bottom';
-import Header_middle from './Home_components/Header_components/Header_middle';
-import Header_top from './Home_components/Header_components/Header_top';
-import ProductDetail from './Home_components/ProductionDetail_component';
-import Slider from './Home_components/Slider_components/Slider';
-import All_product from './layouts/All_product';
-import Cart from './layouts/Cart';
-import Checkout from './layouts/Checkout';
-import Login from './layouts/Login';
-import Not_found from './layouts/Not_found';
+import PrivateRouteUser from "../components/privateRoute/user";
+import LocalStorageService from "../config/LocalStorageService";
+import RedirectIfUserAuth from "../config/RedireactIfUserAuth";
+import notification from "../helper/Notification";
+import Logo from "../image/shoplogo.png";
+import userActions from "../redux/user/actions";
+import userGuestActions from "../redux/user/userAction";
+import store from "../store";
+import Content from "./Home_components/Content_components/Content";
+import Footer from "./Home_components/Footer_components/Footer";
+import Header_bottom from "./Home_components/Header_components/Header_bottom";
+import Header_middle from "./Home_components/Header_components/Header_middle";
+import Header_top from "./Home_components/Header_components/Header_top";
+import ProductDetail from "./Home_components/ProductionDetail_component";
+import Slider from "./Home_components/Slider_components/Slider";
+import All_product from "./layouts/All_product";
+import Cart from "./layouts/Cart";
+import Checkout from "./layouts/Checkout";
+import Login from "./layouts/Login";
+import Not_found from "./layouts/Not_found";
 
 const { Header, Sider } = Layout;
 
@@ -45,17 +62,17 @@ class Home extends React.Component {
     this.state = {
       ShowInfo: false,
       showLogout: false,
-      imageUrl: '',
+      imageUrl: "",
       loading: false,
-      address: '',
-      avatar: '',
-      dayOfBirth: '',
-      email: '',
-      phoneNumber: '',
-      role: '',
-      username: '',
-      userid: '',
-      id: '',
+      address: "",
+      avatar: "",
+      dayOfBirth: "",
+      email: "",
+      phoneNumber: "",
+      role: "",
+      username: "",
+      userid: "",
+      id: "",
     };
   }
   // useEffect(() => {
@@ -63,13 +80,13 @@ class Home extends React.Component {
   // }, []);
 
   handleChange = (info) => {
-    if (info.file.status === 'uploading') {
+    if (info.file.status === "uploading") {
       this.setState({ loading: true });
       // console.log("info:", info.file.response.name);
       return;
     }
-    if (info.file.status === 'done') {
-      console.log('info==:', info.file.response.name);
+    if (info.file.status === "done") {
+      console.log("info==:", info.file.response.name);
       this.setState({
         // loading: true,
         avatar: info.file.response.name,
@@ -83,13 +100,15 @@ class Home extends React.Component {
       );
     }
   };
-  componentDidMount() {
-    this.props.checkUserAuth();
-    if (localStorage.getItem('userauth')) {
-      this.setState({ userid: localStorage.getItem('userauth').split('id')[1].split(`"`)[2] });
+  componentDidMount = async () => {
+    await this.props.checkUserAuth();
+    if (localStorage.getItem("userauth")) {
+      this.setState({
+        userid: localStorage.getItem("userauth").split("id")[1].split(`"`)[2],
+      });
     }
-    // console.log('iddd:', this.state.userid);
-  }
+    console.log("iddd:", this.state.userid);
+  };
 
   info = (userId) => {
     this.setState({ ShowInfo: true });
@@ -104,18 +123,18 @@ class Home extends React.Component {
         username: res.data.data.username,
       });
     });
-    console.log('baoooooo:', this.state.ShowInfo);
+    console.log("baoooooo:", this.state.ShowInfo);
   };
   showConfirm() {
     confirm({
-      title: 'This action will log out of the account',
+      title: "This action will log out of the account",
       icon: <ExclamationCircleOutlined />,
-      content: 'are you sure ?',
-      okText: 'Logout',
+      content: "are you sure ?",
+      okText: "Logout",
       onOk() {
         // console.log('OK');
-        localStorage.removeItem('userauth');
-        notification('success', `Logout Successfully`, '');
+        localStorage.removeItem("userauth");
+        notification("success", `Logout Successfully`, "");
       },
       onCancel() {
         // console.log('Cancel');
@@ -140,10 +159,12 @@ class Home extends React.Component {
     const menu = (
       <Menu>
         <Menu.Item>
-          <a onClick={() => this.info(this.state.userid)}>Account Information</a>
+          <a onClick={() => this.info(this.state.userid)}>
+            Account Information
+          </a>
         </Menu.Item>
         <Menu.Item>
-          <a onClick={''}>Change Password</a>
+          <a onClick={""}>Change Password</a>
         </Menu.Item>
         <Menu.Item>
           <a onClick={() => this.info()}>Settings</a>
@@ -159,43 +180,94 @@ class Home extends React.Component {
         <Provider store={store}>
           <Router>
             <div>
-              <header id='header'>
+              <header id="header">
                 <Header_top />
                 {/* <Header_middle /> */}
                 <Layout>
-                  <Header style={{ height: '100px', padding: 0, backgroundColor: 'white' }}>
-                    <Link style={{ marginLeft: '5%', float: 'left' }} to={'/'}>
-                      <img style={{ height: '150px', marginLeft: '100%' }} src={Logo} />
+                  <Header
+                    style={{
+                      height: "100px",
+                      padding: 0,
+                      backgroundColor: "white",
+                    }}
+                  >
+                    <Link style={{ marginLeft: "5%", float: "left" }} to={"/"}>
+                      <img
+                        style={{ height: "150px", marginLeft: "100%" }}
+                        src={Logo}
+                      />
                     </Link>
                     {/* <Link style={{ fontSize: '15px', marginLeft: '60%' }} to='/checkout'>
                       Checkout
                     </Link> */}
-                    <div className='col-sm-3' style={{ marginLeft: '25%', marginTop: '50px' }}>
-                      <div className='search_box pull-right'>
-                        <input style={{ width: '500px', backgroundColor: 'white', border: '2px solid red' }} type='text' placeholder='Search' />
+                    <div
+                      className="col-sm-3"
+                      style={{ marginLeft: "25%", marginTop: "50px" }}
+                    >
+                      <div className="search_box pull-right">
+                        <input
+                          style={{
+                            width: "500px",
+                            backgroundColor: "white",
+                            border: "2px solid red",
+                          }}
+                          type="text"
+                          placeholder="Search"
+                        />
                       </div>
                     </div>
-                    <div style={{ marginTop: '50px' }}>
-                      <Link style={{ fontSize: '20px', marginLeft: '1%', color: '#EE4D2D', marginTop: '50px' }} to={'/cart'}>
+                    <div style={{ marginTop: "50px" }}>
+                      <Link
+                        style={{
+                          fontSize: "20px",
+                          marginLeft: "1%",
+                          color: "#EE4D2D",
+                          marginTop: "50px",
+                        }}
+                        to={"/cart"}
+                      >
                         <ShoppingCartOutlined /> Cart
                       </Link>
                       {username ? (
-                        <Dropdown overlay={menu} placement='bottomCenter' arrow>
+                        <Dropdown overlay={menu} placement="bottomCenter" arrow>
                           {/* <Button>bottomCenter</Button> */}
-                          <Link style={{ marginLeft: '5%', color: '#EE4D2D', fontSize: '20px', marginTop: '50px' }}>Hello {username}</Link>
+                          <Link
+                            style={{
+                              marginLeft: "5%",
+                              color: "#EE4D2D",
+                              fontSize: "20px",
+                              marginTop: "50px",
+                            }}
+                          >
+                            Hello {username}
+                          </Link>
                         </Dropdown>
                       ) : (
                         // <button type='button'></button>
                         // <div style={{ marginLeft: '2%' }}>
                         // </div>
-                        <Link style={{ fontSize: '20px', marginLeft: '5%', color: '#EE4D2D', marginTop: '50px' }} to={'/login'}>
-                          <UnlockOutlined /> {'Login'}
+                        <Link
+                          style={{
+                            fontSize: "20px",
+                            marginLeft: "5%",
+                            color: "#EE4D2D",
+                            marginTop: "50px",
+                          }}
+                          to={"/login"}
+                        >
+                          <UnlockOutlined /> {"Login"}
                         </Link>
                       )}
                     </div>
                   </Header>
                   <div>
-                    <Modal className='company-details' title='User Information' visible={this.state.ShowInfo} onOk={this.handleOk} onCancel={this.handleCancel}>
+                    <Modal
+                      className="company-details"
+                      title="User Information"
+                      visible={this.state.ShowInfo}
+                      onOk={this.handleOk}
+                      onCancel={this.handleCancel}
+                    >
                       <Form>
                         {/* <CreateOrUpdateUser
                   // onRef={ref => (this.child = ref)}
@@ -235,23 +307,53 @@ class Home extends React.Component {
                         </div>
                         <div>
                           <label>User Name</label>
-                          <Input type='text' name='userName' value={this.state.username} onChange={this.onChange} id='username'></Input>
+                          <Input
+                            type="text"
+                            name="userName"
+                            value={this.state.username}
+                            onChange={this.onChange}
+                            id="username"
+                          ></Input>
                         </div>
                         <div>
                           <label>Email</label>
-                          <Input type='text' name='email' value={this.state.email} onChange={this.onChange} id='email'></Input>
+                          <Input
+                            type="text"
+                            name="email"
+                            value={this.state.email}
+                            onChange={this.onChange}
+                            id="email"
+                          ></Input>
                         </div>
                         <div>
                           <label>Phone Number</label>
-                          <Input type='text' name='phoneNumber' value={this.state.phoneNumber} onChange={this.onChange} id='phoneNumber'></Input>
+                          <Input
+                            type="text"
+                            name="phoneNumber"
+                            value={this.state.phoneNumber}
+                            onChange={this.onChange}
+                            id="phoneNumber"
+                          ></Input>
                         </div>
                         <div>
                           <label>Address</label>
-                          <Input type='text' name='address' value={this.state.address} onChange={this.onChange} id='address'></Input>
+                          <Input
+                            type="text"
+                            name="address"
+                            value={this.state.address}
+                            onChange={this.onChange}
+                            id="address"
+                          ></Input>
                         </div>
                         <div>
                           <label>Day of birth</label>
-                          <Input type='date' name='dayOfBirth' value={this.state.dayOfBirth} onChange={this.onChange} id='dayOfBirth'></Input>
+                          <Input
+                            type="date"
+                            name="dayOfBirth"
+                            value={this.state.dayOfBirth}
+                            onChange={this.onChange}
+                            id="dayOfBirth"
+                          ></Input>
                         </div>
 
                         <div>
@@ -267,7 +369,13 @@ class Home extends React.Component {
                         <Option value="ADMIN">Admin</Option>
                         <Option value="USER">User</Option>
                       </Select> */}
-                          <Input type='text' name='role' value={this.state.role} onChange={this.onChange} id='role'></Input>
+                          <Input
+                            type="text"
+                            name="role"
+                            value={this.state.role}
+                            onChange={this.onChange}
+                            id="role"
+                          ></Input>
                         </div>
                         {/* <div>
                           <label>Password</label>
@@ -285,16 +393,16 @@ class Home extends React.Component {
               {/* <section id='slider' className='clr-white'>
                 <Slider />
               </section> */}
-              <section className='clr-white'>
+              <section className="clr-white">
                 <Switch>
-                  <Route path='/' exact component={Content} />
-                  <RedirectIfUserAuth exact path='/login'>
+                  <Route path="/" exact component={Content} />
+                  <RedirectIfUserAuth exact path="/login">
                     <Login />
                   </RedirectIfUserAuth>
-                  <PrivateRouteUser path='/cart' exact component={Cart} />
-                  <Route path='/detail' exact component={ProductDetail} />
-                  <Route path='/checkout' exact component={Checkout} />
-                  <Route path='/bao' component={Not_found} />
+                  <PrivateRouteUser path="/cart" exact component={Cart} />
+                  <Route path="/detail" exact component={ProductDetail} />
+                  <Route path="/checkout" exact component={Checkout} />
+                  <Route path="/bao" component={Not_found} />
                 </Switch>
               </section>
               <Footer />
