@@ -16,24 +16,52 @@ exports.addToCart = (req, res) => {
       return res.status(err).json(err);
     });
 };
-exports.RemoveFromCart = (req, res) => {
-  Cart.findOne({
+exports.removeFromCart = (req, res) => {
+  Cart.findAll({
     where: {
-      userId: req.user.userId,
+      userid: req.query.userid,
+      productid: req.query.productid,
     },
-  }).then((res) => {
-    Cart.destroy({
-      where: {
-        productid: res.body.productid,
-      },
-    }).then((num) => {
-      if (num == 1) {
-        res.json({
-          status: 'success',
-        });
+  })
+
+    .then((data) => {
+      if (data.length > 0) {
+        Cart.destroy({
+          where: { id: data[0].id },
+        })
+          .then((num) => {
+            if (num == 1) {
+              return res.json({ status: 'success', message: 'Detele product from cart successfully' });
+            }
+          })
+          .catch((err) => {
+            return res.status(402).json({ status: 'fail', message: err.message });
+          });
+        // return res.json({ data });
+      } else {
+        return res.status(402).json({ message: 'not Found' });
       }
+      // if (data.length > 0) {
+      //   Cart.destroy({
+      //     where: {
+      //       productid: req.body.productid,
+      //     },
+      //   })
+      //     .then((num) => {
+      //       if (num == 1) {
+      //         return res.json({
+      //           status: 'success',
+      //         });
+      //       }
+      //     })
+      //     .catch((err) => {
+      //       return res.status(402).json({ err });
+      //     });
+      // }
+    })
+    .catch((err) => {
+      return res.status(403).json({ message: err.message });
     });
-  });
 };
 exports.deleteProduct = (req, res) => {
   const id = req.params.id;

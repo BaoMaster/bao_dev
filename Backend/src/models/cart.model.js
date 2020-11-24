@@ -1,5 +1,12 @@
+const uuid = require('uuidv4');
+
 module.exports = (sequelize, Sequelize) => {
-  const Product = sequelize.define("cart", {
+  const Product = sequelize.define('cart', {
+    id: {
+      primaryKey: true,
+      type: Sequelize.UUID,
+      defaultValue: Sequelize.literal('uuid_generate_v4()'),
+    },
     userid: {
       type: Sequelize.STRING,
       required: true,

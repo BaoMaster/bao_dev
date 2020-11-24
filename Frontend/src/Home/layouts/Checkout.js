@@ -20,7 +20,7 @@ class Checkout extends React.Component {
             <div className='step-one'>
               <h2 className='heading'>Step1</h2>
             </div>
-            <div className='checkout-options'>
+            {/* <div className='checkout-options'>
               <h3>New User</h3>
               <p>Checkout options</p>
               <ul className='nav'>
@@ -40,7 +40,7 @@ class Checkout extends React.Component {
                   </a>
                 </li>
               </ul>
-            </div>
+            </div> */}
 
             <div className='register-req'>
               <p>Please use Register And Checkout to easily get access to your order history, or use Checkout as Guest</p>

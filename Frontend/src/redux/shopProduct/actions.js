@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from 'axios';
 
 // import { UserRoles } from 'src/shared/library/helpers/userRoles';
 
@@ -8,7 +8,11 @@ const shopProductActions = {
       return axios.get(`./shop/api/getproduct`);
     };
   },
-
+  removeFromCart: (data) => {
+    return (dispatch) => {
+      return axios.delete(`./shop/api/removefromcart`, { params: data });
+    };
+  },
   deleteProduct: (productId) => {
     return (dispatch) => {
       return axios.delete(`./products/api/deleteproduct/${productId}`);
