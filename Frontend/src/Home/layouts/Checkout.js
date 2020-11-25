@@ -1,9 +1,120 @@
 /* eslint-disable */
+import { CloseOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons';
+import axios from 'axios';
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 
 class Checkout extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      userid: '',
+      productInCart: [],
+      header: [{ id: '', name: '', price: '' }],
+      total: 0,
+      finalTotal: 0,
+      discount: 0,
+    };
+  }
+  componentDidMount = async () => {
+    if (localStorage.getItem('userauth')) {
+      await this.setState({
+        userid: localStorage.getItem('userauth').split('id')[1].split(`"`)[2],
+      });
+      this.getProductFromCart(this.state.userid);
+    }
+    this.setState({ discount: localStorage.getItem('discount') });
+    // let userid = localStorage.getItem("userauth").split("id")[1].split(`"`)[2];
+    // this.props.getProductFromCart(userid);
+    // console.log("baoooo:", userid);
+  };
+  getProductFromCart = (userid) => {
+    console.log('id:', userid);
+    axios
+      .get('http://localhost:3030/shop/api/getproductfromcart/' + userid)
+      .then(async (res) => {
+        this.setState({
+          productInCart: res.data,
+        });
+        var temp = localStorage.getItem('userauth');
+        const { productInCart } = this.state;
+        var total = 0;
+        for (let index = 0; index < productInCart.length; index++) {
+          total = total + parseInt(productInCart[index].amount) * parseInt(productInCart[index].products.price);
+        }
+        await this.setState({ total: total, finalTotal: parseInt(total) + 2 - parseInt(this.state.discount) });
+
+        console.log('baooo:', this.state.total);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   render() {
+    const { productInCart } = this.state;
+
+    var result = productInCart.map((productInCart, index) => {
+      return (
+        <tr key={index}>
+          {/* <td className='cart_product'>
+          <a href=''>
+            <img src='images/cart/one.png' alt='' />
+          </a>
+        </td> */}
+          <td className='cart_description'>
+            <h4>
+              <a href=''>{productInCart.productid}</a>
+            </h4>
+          </td>
+          <td className='cart_name'>
+            <p>{productInCart.products.productname}</p>
+          </td>
+          <td className='cart_name'>
+            {/* <p>{productInCart.products.productname}</p> */}
+            {/* <input className='cart_quantity_input' type='text' name='quantity' value={productInCart.amount} autocomplete='off' size='2' /> */}
+            <p>{productInCart.amount}</p>
+          </td>
+          <td className='cart_price'>
+            <p>${productInCart.products.price}</p>
+          </td>
+          <td className='cart_quantity'>
+            <div className='cart_quantity_button'>
+              {/* <a href=''> + </a> */}
+              {/* <button style={{ borderRadius: '100px', backgroundColor: '#ee4d2d' }} type='button'>
+                <PlusOutlined />
+              </button> */}
+              {/* <input
+                style={{
+                  height: '50px',
+                  borderRadius: '5px',
+                  fontSize: '15px',
+                  textAlign: 'center',
+                }}
+                type='text'
+                name='quantity'
+                value={productInCart.amount}
+                autocomplete='off'
+                size='2'
+              /> */}
+              <p>{productInCart.amount}</p>
+              {/* <a href=''> - </a> */}
+              {/* <button type='button'>
+                <MinusOutlined />
+              </button> */}
+            </div>
+          </td>
+          <td className='cart_total'>
+            <p className='cart_total_price'>{parseInt(productInCart.amount) * parseInt(productInCart.products.price)}$</p>
+          </td>
+          {/* <td>
+    
+            <button className='btn btn-danger' type='button' onClick={() => this.handleDelete(productInCart.productid)}>
+              <CloseOutlined />
+            </button>
+          </td> */}
+        </tr>
+      );
+    });
     return (
       <div>
         <section id='cart_items'>
@@ -17,9 +128,9 @@ class Checkout extends React.Component {
               </ol>
             </div>
 
-            <div className='step-one'>
+            {/* <div className='step-one'>
               <h2 className='heading'>Step1</h2>
-            </div>
+            </div> */}
             {/* <div className='checkout-options'>
               <h3>New User</h3>
               <p>Checkout options</p>
@@ -43,12 +154,12 @@ class Checkout extends React.Component {
             </div> */}
 
             <div className='register-req'>
-              <p>Please use Register And Checkout to easily get access to your order history, or use Checkout as Guest</p>
+              <p>Please check your cart list before making payment</p>
             </div>
 
             <div className='shopper-informations'>
               <div className='row'>
-                <div className='col-sm-3'>
+                {/* <div className='col-sm-3'>
                   <div className='shopper-info'>
                     <p>Shopper Information</p>
                     <form>
@@ -64,64 +175,7 @@ class Checkout extends React.Component {
                       Continue
                     </a>
                   </div>
-                </div>
-                <div className='col-sm-5 clearfix'>
-                  <div className='bill-to'>
-                    <p>Bill To</p>
-                    <div className='form-one'>
-                      <form>
-                        <input type='text' placeholder='Company Name' />
-                        <input type='text' placeholder='Email*' />
-                        <input type='text' placeholder='Title' />
-                        <input type='text' placeholder='First Name *' />
-                        <input type='text' placeholder='Middle Name' />
-                        <input type='text' placeholder='Last Name *' />
-                        <input type='text' placeholder='Address 1 *' />
-                        <input type='text' placeholder='Address 2' />
-                      </form>
-                    </div>
-                    <div className='form-two'>
-                      <form>
-                        <input type='text' placeholder='Zip / Postal Code *' />
-                        <select>
-                          <option>-- Country --</option>
-                          <option>United States</option>
-                          <option>Bangladesh</option>
-                          <option>UK</option>
-                          <option>India</option>
-                          <option>Pakistan</option>
-                          <option>Ucrane</option>
-                          <option>Canada</option>
-                          <option>Dubai</option>
-                        </select>
-                        <select>
-                          <option>-- State / Province / Region --</option>
-                          <option>United States</option>
-                          <option>Bangladesh</option>
-                          <option>UK</option>
-                          <option>India</option>
-                          <option>Pakistan</option>
-                          <option>Ucrane</option>
-                          <option>Canada</option>
-                          <option>Dubai</option>
-                        </select>
-                        <input type='password' placeholder='Confirm password' />
-                        <input type='text' placeholder='Phone *' />
-                        <input type='text' placeholder='Mobile Phone' />
-                        <input type='text' placeholder='Fax' />
-                      </form>
-                    </div>
-                  </div>
-                </div>
-                <div className='col-sm-4'>
-                  <div className='order-message'>
-                    <p>Shipping Order</p>
-                    <textarea name='message' placeholder='Notes about your order, Special Notes for Delivery' rows='16'></textarea>
-                    <label>
-                      <input type='checkbox' /> Shipping to bill address
-                    </label>
-                  </div>
-                </div>
+                </div> */}
               </div>
             </div>
             <div className='review-payment'>
@@ -133,62 +187,41 @@ class Checkout extends React.Component {
                 <thead>
                   <tr className='cart_menu'>
                     <td className='image'>Item</td>
-                    <td className='description'></td>
+                    <td className='description'>Product Name</td>
+                    <td className='description'>Size</td>
                     <td className='price'>Price</td>
                     <td className='quantity'>Quantity</td>
                     <td className='total'>Total</td>
+                    {/* <td className='total'>Action</td> */}
                     <td></td>
                   </tr>
                 </thead>
                 <tbody>
+                  {result}
+
                   <tr>
-                    <td className='cart_product'>
-                      <a href=''>
-                        <img src='images/cart/one.png' alt='' />
-                      </a>
-                    </td>
-                    <td className='cart_description'>
-                      <h4>
-                        <a href=''>Colorblock Scuba</a>
-                      </h4>
-                      <p>Web ID: 1089772</p>
-                    </td>
-                    <td className='cart_price'>
-                      <p>$59</p>
-                    </td>
-                    <td className='cart_quantity'>
-                      <div className='cart_quantity_button'>
-                        <a className='cart_quantity_up' href=''>
-                          {' '}
-                          +{' '}
-                        </a>
-                        <input className='cart_quantity_input' type='text' name='quantity' value='1' autocomplete='off' size='2' />
-                        <a className='cart_quantity_down' href=''>
-                          {' '}
-                          -{' '}
-                        </a>
+                    <td colspan='2'>
+                      <div style={{ marginLeft: '50px', marginTop: '20px' }}>
+                        <p>Name: {}</p>
+                        <p>Phone: {}</p>
+                        <p>Address: {}</p>
+                        <p>Notes about order: {}</p>
                       </div>
                     </td>
-                    <td className='cart_total'>
-                      <p className='cart_total_price'>$59</p>
-                    </td>
-                    <td className='cart_delete'>
-                      <a className='cart_quantity_delete' href=''>
-                        <i className='fa fa-times'></i>
-                      </a>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td colspan='4'>&nbsp;</td>
+                    <td style={{ borderLeft: '1px solid #bbb', height: '80px', marginTop: '20px' }}></td>
                     <td colspan='2'>
                       <table className='table table-condensed total-result'>
                         <tr>
                           <td>Cart Sub Total</td>
-                          <td>$59</td>
+                          <td>${this.state.total}</td>
                         </tr>
                         <tr>
                           <td>Exo Tax</td>
                           <td>$2</td>
+                        </tr>
+                        <tr>
+                          <td>Discount</td>
+                          <td>${this.state.discount}</td>
                         </tr>
                         <tr className='shipping-cost'>
                           <td>Shipping Cost</td>
@@ -197,7 +230,7 @@ class Checkout extends React.Component {
                         <tr>
                           <td>Total</td>
                           <td>
-                            <span>$61</span>
+                            <span>${this.state.finalTotal}</span>
                           </td>
                         </tr>
                       </table>
@@ -206,13 +239,13 @@ class Checkout extends React.Component {
                 </tbody>
               </table>
             </div>
-            <div className='payment-options'>
+            {/* <div className='payment-options'>
               <span>
                 <label>
                   <input type='checkbox' /> Direct Bank Transfer
                 </label>
               </span>
-            </div>
+            </div> */}
           </div>
         </section>
       </div>

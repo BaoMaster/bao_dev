@@ -17,16 +17,37 @@ class Cart extends React.Component {
       userid: '',
       productInCart: [],
       header: [{ id: '', name: '', price: '' }],
+      total: 0,
+      finalTotal: 0,
+      discount: 0,
+      name: '',
+      email: '',
+      phone: '',
+      address: '',
+      notes: '',
     };
   }
   componentDidMount = async () => {
-    await this.setState({
-      userid: localStorage.getItem('userauth').split('id')[1].split(`"`)[2],
-    });
+    if (localStorage.getItem('userauth')) {
+      await this.setState({
+        userid: localStorage.getItem('userauth').split('id')[1].split(`"`)[2],
+      });
+      this.getProductFromCart(this.state.userid);
+    }
     // let userid = localStorage.getItem("userauth").split("id")[1].split(`"`)[2];
     // this.props.getProductFromCart(userid);
-    this.getProductFromCart(this.state.userid);
     // console.log("baoooo:", userid);
+  };
+  onCheckout = () => {
+    var obj = {
+      userid: this.state.userid,
+      name: this.state.name,
+      phone: this.state.phone,
+      address: this.state.address,
+      total: this.state.finalTotal,
+      discount: this.state.discount,
+      product: this.state.productInCart,
+    };
   };
   handleDelete = (productId) => {
     // productId.preventDefault();
@@ -53,38 +74,35 @@ class Cart extends React.Component {
         this.setState({
           productInCart: res.data,
         });
-        console.log('asdad:', this.state.productInCart);
-        // console.log(res.data), console.log('id', res.data.length);
-        // for (let index = 0; index < res.data.length; index++) {
-        //   this.setState({
-        //     product: res.data,
-        //     // product: [
-        //     //   (id = res.data.index.id),
-        //     //   (img = res.data.index.illustration),
-        //     //   (name = res.data.index.productname),
-        //     //   (price = res.data.index.price),
-        //     // ],
-        //   });
-        // }
-        // const { photo } = this.state;
-        // photo = this.state.product.map((photo) => {
-        //   this.setState({ imagePro: photo.illustration });
-        //   const { imagePro } = this.state;
-        //   // console.log("asasasa", imagePro);
-        // });
-        // this.setState({
-        //   // product: [
-        //   //   (id = res.data.id),
-        //   //   (img = res.data.illustration),
-        //   //   (name = res.data.productname),
-        //   //   (price = res.data.price),
-        //   // ],
-        // }),
-        // let product=this.state.product
+        var temp = localStorage.getItem('userauth');
+        const { productInCart } = this.state;
+        var total = 0;
+        for (let index = 0; index < productInCart.length; index++) {
+          total = total + parseInt(productInCart[index].amount) * parseInt(productInCart[index].products.price);
+        }
+        this.setState({ total: total });
+        console.log('baooo:', this.state.total);
       })
       .catch((err) => {
         console.log(err);
       });
+  };
+  onChange = (e) => {
+    this.setState({ [e.target.id]: e.target.value });
+  };
+  onChangeValue = async (e) => {
+    console.log('value change:', e.target.value);
+    if (e.target.value == 'discount10') {
+      await this.setState({ discount: 10 });
+    }
+    if (e.target.value == 'discount20') {
+      await this.setState({ discount: 20 });
+    }
+    if (e.target.value == 'discount30') {
+      await this.setState({ discount: 30 });
+    }
+    localStorage.setItem('discount', this.state.discount);
+    this.setState({ finalTotal: parseInt(this.state.total) + 2 - parseInt(this.state.discount) });
   };
   render() {
     const { productInCart } = this.state;
@@ -204,65 +222,102 @@ class Cart extends React.Component {
             <div className='row'>
               <div className='col-sm-6'>
                 <div className='chose_area'>
-                  <ul className='user_option'>
-                    <li>
-                      <input type='checkbox' />
-                      <label>Use Coupon Code</label>
-                    </li>
-                    <li>
-                      <input type='checkbox' />
-                      <label>Use Gift Voucher</label>
-                    </li>
-                    <li>
-                      <input type='checkbox' />
-                      <label>Estimate Shipping & Taxes</label>
-                    </li>
-                  </ul>
-                  <ul className='user_info'>
-                    <li className='single_field'>
-                      <label>Country:</label>
-                      <select>
-                        <option>United States</option>
-                        <option>Bangladesh</option>
-                        <option>UK</option>
-                        <option>India</option>
-                        <option>Pakistan</option>
-                        <option>Ucrane</option>
-                        <option>Canada</option>
-                        <option>Dubai</option>
-                      </select>
-                    </li>
-                    <li className='single_field'>
-                      <label>Region / State:</label>
-                      <select>
-                        <option>Select</option>
-                        <option>Dhaka</option>
-                        <option>London</option>
-                        <option>Dillih</option>
-                        <option>Lahore</option>
-                        <option>Alaska</option>
-                        <option>Canada</option>
-                        <option>Dubai</option>
-                      </select>
-                    </li>
-                    <li className='single_field zip-field'>
-                      <label>Zip Code:</label>
-                      <input type='text' />
-                    </li>
-                  </ul>
+                  <div onChange={this.onChangeValue}>
+                    <ul className='user_option'>
+                      <li>
+                        <input type='radio' name='option' value='discount10' />
+                        <label>Use Coupon Code Discount 10%</label>
+                      </li>
+                      <li>
+                        <input type='radio' name='option' value='discount20' />
+                        <label>Use Coupon Code Discount 20%</label>
+                      </li>
+                      <li>
+                        <input type='radio' name='option' value='discount30' />
+                        <label>Use Coupon Code Discount 30%</label>
+                      </li>
+                    </ul>
+                  </div>
+
+                  <div>
+                    <ul className='user_info'>
+                      <li style={{ float: 'none' }}>
+                        <label>Name: </label>
+                        <input onChange={this.onChange} id='name' type='text' placeholder='Customer Name' style={{ width: '400px' }} />
+                      </li>
+
+                      <li style={{ float: 'none' }}>
+                        <label>Email: </label>
+
+                        <input onChange={this.onChange} id='email' type='text' placeholder='Email*' style={{ width: '400px' }} />
+                      </li>
+                      <li>
+                        <label>Phone: </label>
+
+                        <input onChange={this.onChange} id='phone' type='text' placeholder='Phone *' style={{ width: '400px' }} />
+                      </li>
+                      <li className='single_field'>
+                        <label>Country:</label>
+                        <select>
+                          <option>United States</option>
+                          <option>Bangladesh</option>
+                          <option>UK</option>
+                          <option>India</option>
+                          <option>Pakistan</option>
+                          <option>Ucrane</option>
+                          <option>Canada</option>
+                          <option>Dubai</option>
+                        </select>
+                      </li>
+                      <li className='single_field'>
+                        <label>Region / State:</label>
+                        <select>
+                          <option>Select</option>
+                          <option>Dhaka</option>
+                          <option>London</option>
+                          <option>Dillih</option>
+                          <option>Lahore</option>
+                          <option>Alaska</option>
+                          <option>Canada</option>
+                          <option>Dubai</option>
+                        </select>
+                      </li>
+                      <li>
+                        <label>Address</label>
+                        <textarea onChange={this.onChange} id='address' type='text' rows='5' cols='70' placeholder='Address'></textarea>
+                      </li>
+                    </ul>
+                  </div>
+                  {/* <div className='col-sm-7'>sads</div> */}
                   {/* <a className="btn btn-default update" href="">
                     Get Quotes
                   </a> */}
-                  <a className='btn btn-default check_out' href='/checkout'>
-                    Continue Checkout
-                  </a>
                 </div>
               </div>
+
               <div className='col-sm-6'>
+                <div className='total_area' style={{ marginBottom: '10px' }}>
+                  {/* <div className='col-sm-6'> */}
+                  <div className='order-message'>
+                    <p style={{ marginLeft: '50px' }}>Shipping Order</p>
+                    <textarea
+                      onChange={this.onChange}
+                      id='note'
+                      name='message'
+                      placeholder='Notes about your order, Special Notes for Delivery'
+                      style={{ height: '140px', marginLeft: '35px', width: '90%' }}
+                      rows='3'
+                    ></textarea>
+                    {/* <label>
+                        <input type='checkbox' /> Shipping to bill address
+                      </label> */}
+                    {/* </div> */}
+                  </div>
+                </div>
                 <div className='total_area'>
                   <ul>
                     <li>
-                      Cart Sub Total <span>$59</span>
+                      Cart Sub Total <span>${this.state.total}</span>
                     </li>
                     <li>
                       Eco Tax <span>$2</span>
@@ -271,17 +326,23 @@ class Cart extends React.Component {
                       Shipping Cost <span>Free</span>
                     </li>
                     <li>
-                      Total <span>$61</span>
+                      Discount <span>${this.state.discount}</span>
+                    </li>
+                    <li style={{ fontWeight: 'bold' }}>
+                      Total <span>${this.state.finalTotal || parseInt(this.state.total) + 2 - parseInt(this.state.discount)}</span>
                     </li>
                   </ul>
-                  <NavLink to='/cartupdate' activeClassName='btn btn-default update'>
+                  {/* <NavLink to='/cartupdate' activeClassName='btn btn-default update'>
                     Update
                   </NavLink>
                   <NavLink to='/checkout' activeClassName='btn btn-default check_out'>
                     Check Out
-                  </NavLink>
+                  </NavLink> */}
                 </div>
               </div>
+              <button onClick={this.onCheckout} className='btn btn-default check_out' href='/checkout' style={{ textAlign: 'center', marginLeft: '520px', marginTop: '25px' }}>
+                Continue Checkout
+              </button>
             </div>
           </div>
         </section>

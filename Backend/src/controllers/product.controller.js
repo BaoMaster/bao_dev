@@ -2,6 +2,7 @@ const { product } = require('../../config/db.config');
 const db = require('../../config/db.config');
 const Product = db.product;
 const Cart = db.cart;
+const Checkout = db.checkout;
 
 exports.addToCart = (req, res) => {
   Cart.create({
@@ -15,6 +16,13 @@ exports.addToCart = (req, res) => {
     .catch((err) => {
       return res.status(err).json(err);
     });
+};
+exports.addToCheckout = (req, res) => {
+  Checkout.create({
+    userid: req.body.userid,
+    name: req.body.name,
+    phone: req.body.phone,
+  });
 };
 exports.removeFromCart = (req, res) => {
   Cart.findAll({
