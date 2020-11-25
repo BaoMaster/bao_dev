@@ -1,5 +1,5 @@
-const { product } = require('../../config/db.config');
-const db = require('../../config/db.config');
+const { product } = require("../../config/db.config");
+const db = require("../../config/db.config");
 const Product = db.product;
 const Cart = db.cart;
 const Checkout = db.checkout;
@@ -11,7 +11,19 @@ exports.addToCart = (req, res) => {
     amount: req.body.amount,
   })
     .then((data) => {
-      return res.json({ status: 'success' });
+      return res.json({ status: "success" });
+    })
+    .catch((err) => {
+      return res.status(err).json(err);
+    });
+};
+exports.getInfoFromCheckout = (req, res) => {
+  Checkout.findAll({
+    where: { userid: req.params.userid },
+    order: [["createdAt", "DESC"]],
+  })
+    .then((data) => {
+      return res.json(data[0]);
     })
     .catch((err) => {
       return res.status(err).json(err);
@@ -22,7 +34,19 @@ exports.addToCheckout = (req, res) => {
     userid: req.body.userid,
     name: req.body.name,
     phone: req.body.phone,
-  });
+    address: req.body.address,
+    email: req.body.email,
+    total: req.body.total,
+    discount: req.body.discount,
+    note: req.body.note,
+    product: req.body.product,
+  })
+    .then((data) => {
+      return res.json({ status: "success" });
+    })
+    .catch((err) => {
+      return res.status(err).json(err);
+    });
 };
 exports.removeFromCart = (req, res) => {
   Cart.findAll({
@@ -39,15 +63,20 @@ exports.removeFromCart = (req, res) => {
         })
           .then((num) => {
             if (num == 1) {
-              return res.json({ status: 'success', message: 'Detele product from cart successfully' });
+              return res.json({
+                status: "success",
+                message: "Detele product from cart successfully",
+              });
             }
           })
           .catch((err) => {
-            return res.status(402).json({ status: 'fail', message: err.message });
+            return res
+              .status(402)
+              .json({ status: "fail", message: err.message });
           });
         // return res.json({ data });
       } else {
-        return res.status(402).json({ message: 'not Found' });
+        return res.status(402).json({ message: "not Found" });
       }
       // if (data.length > 0) {
       //   Cart.destroy({
@@ -81,7 +110,7 @@ exports.deleteProduct = (req, res) => {
     .then((num) => {
       if (num == 1) {
         res.json({
-          status: 'success',
+          status: "success",
         });
       }
     })
@@ -94,7 +123,7 @@ exports.deleteProduct = (req, res) => {
 exports.getProductById = (req, res) => {
   const id = req.params.id;
   Product.findOne({ where: { id } }).then((data) => {
-    return res.json({ status: 'success', data: data });
+    return res.json({ status: "success", data: data });
   });
 };
 exports.getProduct = (req, res) => {
@@ -115,7 +144,9 @@ exports.getProductFromCart = (req, res) => {
   })
     .then(async (data) => {
       for (let i = 0; i < data.length; i++) {
-        let productsQuery = await Product.findOne({ where: { id: data[i].productid } });
+        let productsQuery = await Product.findOne({
+          where: { id: data[i].productid },
+        });
         data[i].products = productsQuery;
       }
       res.json(data);
@@ -132,8 +163,8 @@ exports.addProduct = (req, res) => {
       if (pro) {
         if (req.body.productcode === pro.productcode) {
           return res.status(401).json({
-            status: 'fail',
-            message: 'Your product already have in store',
+            status: "fail",
+            message: "Your product already have in store",
           });
         }
       }
@@ -147,19 +178,19 @@ exports.addProduct = (req, res) => {
         amount: req.body.amount,
       })
         .then((data) => {
-          return res.json({ status: 'success' });
+          return res.json({ status: "success" });
         })
         .catch((err) => {
           return res.status(err).json(err);
         });
     })
     .catch((err) => {
-      res.status(err).json({ status: 'fail', message: err });
+      res.status(err).json({ status: "fail", message: err });
     });
 };
 exports.addProductToCart = (req, res) => {
   const { productid, userid } = req.body;
-  console.log('userid', productid);
+  console.log("userid", productid);
   Cart.findAll({
     where: { userid: req.body.userid },
   })
@@ -169,18 +200,21 @@ exports.addProductToCart = (req, res) => {
         let products = cart.filter((x) => x.productid == productid);
         if (products.length > 0) {
           let amount = Number(products[0].amount) + 1;
-          data = await Cart.update({ amount }, { where: { id: products[0].id } });
-          return res.json({ statusss: 'success', data });
+          data = await Cart.update(
+            { amount },
+            { where: { id: products[0].id } }
+          );
+          return res.json({ statusss: "success", data });
         }
       }
       data = await Cart.create({
         userid: req.body.userid,
         productid: req.body.productid,
       });
-      return res.json({ statusss: 'success', data });
+      return res.json({ statusss: "success", data });
     })
     .catch((err) => {
-      res.status(err).json({ status: 'fail', message: err });
+      res.status(err).json({ status: "fail", message: err });
     });
 };
 exports.updateProduct = (req, res) => {
@@ -189,7 +223,7 @@ exports.updateProduct = (req, res) => {
   })
     .then((num) => {
       if (num == 1) {
-        res.json({ status: 'success' });
+        res.json({ status: "success" });
       }
     })
     .catch((err) => {

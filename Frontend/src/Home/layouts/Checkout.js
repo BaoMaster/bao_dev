@@ -1,50 +1,76 @@
 /* eslint-disable */
-import { CloseOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons';
-import axios from 'axios';
-import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { CloseOutlined, MinusOutlined, PlusOutlined } from "@ant-design/icons";
+import axios from "axios";
+import React from "react";
+import { connect } from "react-redux";
+
+import { NavLink, withRouter } from "react-router-dom";
+import shopProduct from "../../redux/shopProduct/actions";
 
 class Checkout extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      userid: '',
+      userid: "",
       productInCart: [],
-      header: [{ id: '', name: '', price: '' }],
+      header: [{ id: "", name: "", price: "" }],
       total: 0,
       finalTotal: 0,
       discount: 0,
+      name: "",
+      phone: "",
+      address: "",
+      notes: "",
+      email: "",
     };
   }
   componentDidMount = async () => {
-    if (localStorage.getItem('userauth')) {
+    if (localStorage.getItem("userauth")) {
       await this.setState({
-        userid: localStorage.getItem('userauth').split('id')[1].split(`"`)[2],
+        userid: localStorage.getItem("userauth").split("id")[1].split(`"`)[2],
       });
       this.getProductFromCart(this.state.userid);
+      this.props.getInfoFromCheckout(this.state.userid).then((data) => {
+        console.log("let:", data);
+        this.setState({
+          address: data.data.address,
+          discount: data.data.discount,
+          name: data.data.name,
+          phone: data.data.phone,
+          total: data.data.total,
+          notes: data.data.note,
+          email: data.data.email,
+        });
+      });
     }
-    this.setState({ discount: localStorage.getItem('discount') });
+    this.setState({ discount: localStorage.getItem("discount") });
     // let userid = localStorage.getItem("userauth").split("id")[1].split(`"`)[2];
     // this.props.getProductFromCart(userid);
     // console.log("baoooo:", userid);
   };
   getProductFromCart = (userid) => {
-    console.log('id:', userid);
+    console.log("id:", userid);
     axios
-      .get('http://localhost:3030/shop/api/getproductfromcart/' + userid)
+      .get("http://localhost:3030/shop/api/getproductfromcart/" + userid)
       .then(async (res) => {
         this.setState({
           productInCart: res.data,
         });
-        var temp = localStorage.getItem('userauth');
+        var temp = localStorage.getItem("userauth");
         const { productInCart } = this.state;
         var total = 0;
         for (let index = 0; index < productInCart.length; index++) {
-          total = total + parseInt(productInCart[index].amount) * parseInt(productInCart[index].products.price);
+          total =
+            total +
+            parseInt(productInCart[index].amount) *
+              parseInt(productInCart[index].products.price);
         }
-        await this.setState({ total: total, finalTotal: parseInt(total) + 2 - parseInt(this.state.discount) });
+        await this.setState({
+          total: total,
+          finalTotal: parseInt(total) + 2 - parseInt(this.state.discount),
+        });
 
-        console.log('baooo:', this.state.total);
+        console.log("baooo:", this.state.total);
       })
       .catch((err) => {
         console.log(err);
@@ -61,24 +87,24 @@ class Checkout extends React.Component {
             <img src='images/cart/one.png' alt='' />
           </a>
         </td> */}
-          <td className='cart_description'>
+          <td className="cart_description">
             <h4>
-              <a href=''>{productInCart.productid}</a>
+              <a href="">{productInCart.productid}</a>
             </h4>
           </td>
-          <td className='cart_name'>
+          <td className="cart_name">
             <p>{productInCart.products.productname}</p>
           </td>
-          <td className='cart_name'>
+          <td className="cart_name">
             {/* <p>{productInCart.products.productname}</p> */}
             {/* <input className='cart_quantity_input' type='text' name='quantity' value={productInCart.amount} autocomplete='off' size='2' /> */}
             <p>{productInCart.amount}</p>
           </td>
-          <td className='cart_price'>
+          <td className="cart_price">
             <p>${productInCart.products.price}</p>
           </td>
-          <td className='cart_quantity'>
-            <div className='cart_quantity_button'>
+          <td className="cart_quantity">
+            <div className="cart_quantity_button">
               {/* <a href=''> + </a> */}
               {/* <button style={{ borderRadius: '100px', backgroundColor: '#ee4d2d' }} type='button'>
                 <PlusOutlined />
@@ -103,8 +129,12 @@ class Checkout extends React.Component {
               </button> */}
             </div>
           </td>
-          <td className='cart_total'>
-            <p className='cart_total_price'>{parseInt(productInCart.amount) * parseInt(productInCart.products.price)}$</p>
+          <td className="cart_total">
+            <p className="cart_total_price">
+              {parseInt(productInCart.amount) *
+                parseInt(productInCart.products.price)}
+              $
+            </p>
           </td>
           {/* <td>
     
@@ -117,14 +147,14 @@ class Checkout extends React.Component {
     });
     return (
       <div>
-        <section id='cart_items'>
-          <div className='container'>
-            <div className='breadcrumbs'>
-              <ol className='breadcrumb'>
+        <section id="cart_items">
+          <div className="container">
+            <div className="breadcrumbs">
+              <ol className="breadcrumb">
                 <li>
-                  <NavLink to='/'>Home</NavLink>
+                  <NavLink to="/">Home</NavLink>
                 </li>
-                <li className='active'>Check out</li>
+                <li className="active">Check out</li>
               </ol>
             </div>
 
@@ -153,12 +183,12 @@ class Checkout extends React.Component {
               </ul>
             </div> */}
 
-            <div className='register-req'>
+            <div className="register-req">
               <p>Please check your cart list before making payment</p>
             </div>
 
-            <div className='shopper-informations'>
-              <div className='row'>
+            <div className="shopper-informations">
+              <div className="row">
                 {/* <div className='col-sm-3'>
                   <div className='shopper-info'>
                     <p>Shopper Information</p>
@@ -178,20 +208,20 @@ class Checkout extends React.Component {
                 </div> */}
               </div>
             </div>
-            <div className='review-payment'>
+            <div className="review-payment">
               <h2>Review & Payment</h2>
             </div>
 
-            <div className='table-responsive cart_info'>
-              <table className='table table-condensed'>
+            <div className="table-responsive cart_info">
+              <table className="table table-condensed">
                 <thead>
-                  <tr className='cart_menu'>
-                    <td className='image'>Item</td>
-                    <td className='description'>Product Name</td>
-                    <td className='description'>Size</td>
-                    <td className='price'>Price</td>
-                    <td className='quantity'>Quantity</td>
-                    <td className='total'>Total</td>
+                  <tr className="cart_menu">
+                    <td className="image">Item</td>
+                    <td className="description">Product Name</td>
+                    <td className="description">Size</td>
+                    <td className="price">Price</td>
+                    <td className="quantity">Quantity</td>
+                    <td className="total">Total</td>
                     {/* <td className='total'>Action</td> */}
                     <td></td>
                   </tr>
@@ -200,17 +230,24 @@ class Checkout extends React.Component {
                   {result}
 
                   <tr>
-                    <td colspan='2'>
-                      <div style={{ marginLeft: '50px', marginTop: '20px' }}>
-                        <p>Name: {}</p>
-                        <p>Phone: {}</p>
-                        <p>Address: {}</p>
-                        <p>Notes about order: {}</p>
+                    <td colspan="2">
+                      <div style={{ marginLeft: "50px", marginTop: "20px" }}>
+                        <p>Name: {this.state.name}</p>
+                        <p>Phone: {this.state.phone}</p>
+                        <p>Address: {this.state.address}</p>
+                        <p>Email: {this.state.email}</p>
+                        <p>Notes about order: {this.state.notes}</p>
                       </div>
                     </td>
-                    <td style={{ borderLeft: '1px solid #bbb', height: '80px', marginTop: '20px' }}></td>
-                    <td colspan='2'>
-                      <table className='table table-condensed total-result'>
+                    <td
+                      style={{
+                        borderLeft: "1px solid #bbb",
+                        height: "80px",
+                        marginTop: "20px",
+                      }}
+                    ></td>
+                    <td colspan="2">
+                      <table className="table table-condensed total-result">
                         <tr>
                           <td>Cart Sub Total</td>
                           <td>${this.state.total}</td>
@@ -223,7 +260,7 @@ class Checkout extends React.Component {
                           <td>Discount</td>
                           <td>${this.state.discount}</td>
                         </tr>
-                        <tr className='shipping-cost'>
+                        <tr className="shipping-cost">
                           <td>Shipping Cost</td>
                           <td>Free</td>
                         </tr>
@@ -246,6 +283,7 @@ class Checkout extends React.Component {
                 </label>
               </span>
             </div> */}
+            <button type="button">accept payment</button>
           </div>
         </section>
       </div>
@@ -253,4 +291,21 @@ class Checkout extends React.Component {
   }
 }
 
-export default Checkout;
+const mapStateToProps = (state) => {
+  return {
+    auth: state.auth,
+  };
+};
+const mapDispatchToProps = (dispatch) => ({
+  // getProduct: () => dispatch(productActions.getProduct),
+  removeFromCart: (data) => dispatch(shopProduct.removeFromCart(data)),
+  addToCheckout: (data) => dispatch(shopProduct.addToCheckout(data)),
+  getInfoFromCheckout: (data) =>
+    dispatch(shopProduct.getInfoFromCheckout(data)),
+  // getProductFromCart: () => dispatch(productActions.getProductFromCart),
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withRouter(Checkout));
