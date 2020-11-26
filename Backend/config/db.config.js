@@ -19,6 +19,7 @@ db.product = require('../src/models/product.model')(sequelize, Sequelize);
 db.permission = require('../src/models/permission.model')(sequelize, Sequelize);
 db.cart = require('../src/models/cart.model')(sequelize, Sequelize);
 db.checkout = require('../src/models/checkout.model')(sequelize, Sequelize);
+db.history = require('../src/models/history.model')(sequelize, Sequelize);
 // db.role = require("./Role/role.model")(sequelize, Sequelize);
 // db.product= require("./Products/product.model")(sequelize,Sequelize)
 // db.job = require("./models/jobs")(sequelize, Sequelize);

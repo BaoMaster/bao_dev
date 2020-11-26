@@ -1,11 +1,15 @@
 const uuid = require('uuidv4');
-
+const shortId = require('shortid');
+shortId.characters('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ$@');
 module.exports = (sequelize, Sequelize) => {
-  const Checkout = sequelize.define('checkout', {
+  const Checkout = sequelize.define('histories', {
     id: {
       primaryKey: true,
       type: Sequelize.UUID,
       defaultValue: Sequelize.literal('uuid_generate_v4()'),
+    },
+    ordercode: {
+      type: Sequelize.STRING,
     },
     userid: {
       type: Sequelize.STRING,
@@ -34,10 +38,6 @@ module.exports = (sequelize, Sequelize) => {
     },
     note: {
       type: Sequelize.STRING,
-    },
-    paidOrNot: {
-      type: Sequelize.BOOLEAN,
-      defaultValue: false,
     },
   });
   return Checkout;

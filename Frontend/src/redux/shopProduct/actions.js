@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from 'axios';
 
 // import { UserRoles } from 'src/shared/library/helpers/userRoles';
 
@@ -6,6 +6,26 @@ const shopProductActions = {
   getProduct: () => {
     return (dispatch) => {
       return axios.get(`./shop/api/getproduct`);
+    };
+  },
+  sendMail: (data) => {
+    return (dispatch) => {
+      return axios.post(`./shop/send`, data);
+    };
+  },
+  addToHistory: (data) => {
+    return (dispatch) => {
+      return axios.post(`./shop/api/addtohistory`, data);
+    };
+  },
+  deleteCartByUserid: (data) => {
+    return (dispatch) => {
+      return axios.delete(`./shop/api/deletecartbyuserid`, { params: data });
+    };
+  },
+  deleteCheckoutByUserid: (data) => {
+    return (dispatch) => {
+      return axios.delete(`./shop/api/deletecheckoutbyuserid`, { params: data });
     };
   },
   removeFromCart: (data) => {
