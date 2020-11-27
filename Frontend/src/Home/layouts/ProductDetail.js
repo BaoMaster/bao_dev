@@ -7,10 +7,11 @@ import { connect } from 'react-redux';
 import { NavLink, withRouter } from 'react-router-dom';
 
 import notification from '../../helper/Notification';
+import sample from '../../image/2.jpg';
 import productActions from '../../redux/product/actions';
 import shopProduct from '../../redux/shopProduct/actions';
 
-class Cart extends React.Component {
+class ProductDetail extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -123,68 +124,68 @@ class Cart extends React.Component {
     if (!productInCart.length) {
       var result = <Empty />;
     } else {
-      var result = productInCart.map((productInCart, index) => {
-        return (
-          <tr key={index}>
-            {/* <td className='cart_product'>
-            <a href=''>
-              <img src='images/cart/one.png' alt='' />
-            </a>
-          </td> */}
-            <td className='cart_description'>
-              <h4>
-                <a href=''>{productInCart.productid}</a>
-              </h4>
-            </td>
-            <td className='cart_name'>
-              <p>{productInCart.products.productname}</p>
-            </td>
-            <td className='cart_name'>
-              {/* <p>{productInCart.products.productname}</p> */}
-              <input className='cart_quantity_input' type='text' name='quantity' value={productInCart.amount} autocomplete='off' size='2' />
-            </td>
-            <td className='cart_price'>
-              <p>${productInCart.products.price}</p>
-            </td>
-            <td className='cart_quantity'>
-              <div className='cart_quantity_button'>
-                {/* <a href=''> + </a> */}
-                <button style={{ borderRadius: '100px', backgroundColor: '#ee4d2d' }} type='button'>
-                  <PlusOutlined />
-                </button>
-                <input
-                  style={{
-                    height: '50px',
-                    borderRadius: '5px',
-                    fontSize: '15px',
-                    textAlign: 'center',
-                  }}
-                  type='text'
-                  name='quantity'
-                  value={productInCart.amount}
-                  autocomplete='off'
-                  size='2'
-                />
-                {/* <a href=''> - </a> */}
-                <button type='button'>
-                  <MinusOutlined />
-                </button>
-              </div>
-            </td>
-            <td className='cart_total'>
-              <p className='cart_total_price'>{parseInt(productInCart.amount) * parseInt(productInCart.products.price)}$</p>
-            </td>
-            <td>
-              {/* <a className='cart_quantity_delete' href=''>
-              <CloseOutlined />
-            </a> */}
-              <button className='btn btn-danger' type='button' onClick={() => this.handleDelete(productInCart.productid)}>
-                <CloseOutlined />
-              </button>
-            </td>
-          </tr>
-        );
-      });
+      //   var result = productInCart.map((productInCart, index) => {
+      //     return (
+      //       <tr key={index}>
+      //         {/* <td className='cart_product'>
+      //         <a href=''>
+      //           <img src='images/cart/one.png' alt='' />
+      //         </a>
+      //       </td> */}
+      //         <td className='cart_description'>
+      //           <h4>
+      //             <a href=''>{productInCart.productid}</a>
+      //           </h4>
+      //         </td>
+      //         <td className='cart_name'>
+      //           <p>{productInCart.products.productname}</p>
+      //         </td>
+      //         <td className='cart_name'>
+      //           {/* <p>{productInCart.products.productname}</p> */}
+      //           <input className='cart_quantity_input' type='text' name='quantity' value={productInCart.amount} autocomplete='off' size='2' />
+      //         </td>
+      //         <td className='cart_price'>
+      //           <p>${productInCart.products.price}</p>
+      //         </td>
+      //         <td className='cart_quantity'>
+      //           <div className='cart_quantity_button'>
+      //             {/* <a href=''> + </a> */}
+      //             <button style={{ borderRadius: '100px', backgroundColor: '#ee4d2d' }} type='button'>
+      //               <PlusOutlined />
+      //             </button>
+      //             <input
+      //               style={{
+      //                 height: '50px',
+      //                 borderRadius: '5px',
+      //                 fontSize: '15px',
+      //                 textAlign: 'center',
+      //               }}
+      //               type='text'
+      //               name='quantity'
+      //               value={productInCart.amount}
+      //               autocomplete='off'
+      //               size='2'
+      //             />
+      //             {/* <a href=''> - </a> */}
+      //             <button type='button'>
+      //               <MinusOutlined />
+      //             </button>
+      //           </div>
+      //         </td>
+      //         <td className='cart_total'>
+      //           <p className='cart_total_price'>{parseInt(productInCart.amount) * parseInt(productInCart.products.price)}$</p>
+      //         </td>
+      //         <td>
+      //           {/* <a className='cart_quantity_delete' href=''>
+      //           <CloseOutlined />
+      //         </a> */}
+      //           <button className='btn btn-danger' type='button' onClick={() => this.handleDelete(productInCart.productid)}>
+      //             <CloseOutlined />
+      //           </button>
+      //         </td>
+      //       </tr>
+      //     );
+      //   });
     }
 
     var renderTableHeader = () => {
@@ -204,26 +205,6 @@ class Cart extends React.Component {
                 <li className='active'>Shopping Cart</li>
               </ol>
             </div>
-            <div className='table-responsive cart_info'>
-              <table className='table table-condensed'>
-                <thead>
-                  <tr className='cart_menu'>
-                    <td className='image'>Item</td>
-                    <td className='description'>Product Name</td>
-                    <td className='description'>Size</td>
-                    <td className='price'>Price</td>
-                    <td className='quantity'>Quantity</td>
-                    <td className='total'>Total</td>
-                    <td className='total'>Action</td>
-                    <td></td>
-                  </tr>
-                </thead>
-                <tbody>
-                  {/* <tr> {renderTableHeader}</tr> */}
-                  {result}
-                </tbody>
-              </table>
-            </div>
           </div>
         </section>
         <section id='do_action'>
@@ -235,76 +216,7 @@ class Cart extends React.Component {
             <div className='row'>
               <div className='col-sm-6'>
                 <div className='chose_area'>
-                  <div onChange={this.onChangeValue}>
-                    <ul className='user_option'>
-                      <li>
-                        <input type='radio' name='option' value='discount10' />
-                        <label>Use Coupon Code Discount 10%</label>
-                      </li>
-                      <li>
-                        <input type='radio' name='option' value='discount20' />
-                        <label>Use Coupon Code Discount 20%</label>
-                      </li>
-                      <li>
-                        <input type='radio' name='option' value='discount30' />
-                        <label>Use Coupon Code Discount 30%</label>
-                      </li>
-                    </ul>
-                  </div>
-
-                  <div>
-                    <ul className='user_info'>
-                      <li style={{ float: 'none' }}>
-                        <label>Name: </label>
-                        <input onChange={this.onChange} id='name' type='text' placeholder='Customer Name' style={{ width: '400px' }} />
-                      </li>
-
-                      <li style={{ float: 'none' }}>
-                        <label>Email: </label>
-
-                        <input onChange={this.onChange} id='email' type='text' placeholder='Email*' style={{ width: '400px' }} />
-                      </li>
-                      <li>
-                        <label>Phone: </label>
-
-                        <input onChange={this.onChange} id='phone' type='text' placeholder='Phone *' style={{ width: '400px' }} />
-                      </li>
-                      <li className='single_field'>
-                        <label>Country:</label>
-                        <select>
-                          <option>United States</option>
-                          <option>Bangladesh</option>
-                          <option>UK</option>
-                          <option>India</option>
-                          <option>Pakistan</option>
-                          <option>Ucrane</option>
-                          <option>Canada</option>
-                          <option>Dubai</option>
-                        </select>
-                      </li>
-                      <li className='single_field'>
-                        <label>Region / State:</label>
-                        <select>
-                          <option>Select</option>
-                          <option>Dhaka</option>
-                          <option>London</option>
-                          <option>Dillih</option>
-                          <option>Lahore</option>
-                          <option>Alaska</option>
-                          <option>Canada</option>
-                          <option>Dubai</option>
-                        </select>
-                      </li>
-                      <li>
-                        <label>Address</label>
-                        <textarea onChange={this.onChange} id='address' type='text' rows='5' cols='70' placeholder='Address'></textarea>
-                      </li>
-                    </ul>
-                  </div>
-                  {/* <div className='col-sm-7'>sads</div> */}
-                  {/* <a className="btn btn-default update" href="">
-                    Get Quotes
-                  </a> */}
+                  <img src={sample}></img>
                 </div>
               </div>
 
@@ -389,4 +301,4 @@ const mapDispatchToProps = (dispatch) => ({
   getProductFromCart: () => dispatch(productActions.getProductFromCart),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Cart));
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(ProductDetail));

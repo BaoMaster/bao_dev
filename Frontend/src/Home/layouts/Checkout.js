@@ -33,6 +33,7 @@ class Checkout extends React.Component {
       checkout: '',
       visible: false,
       idGenerate: '',
+      tax: 2,
     };
   }
   componentDidMount = async () => {
@@ -55,7 +56,7 @@ class Checkout extends React.Component {
         });
       });
     }
-    this.setState({ discount: localStorage.getItem('discount') });
+    // this.setState({ discount: localStorage.getItem('discount') });
     // let userid = localStorage.getItem("userauth").split("id")[1].split(`"`)[2];
     // this.props.getProductFromCart(userid);
     // console.log("baoooo:", userid);
@@ -80,14 +81,30 @@ class Checkout extends React.Component {
     };
     var forSend = {
       email: this.state.email,
+      orderid: this.state.idGenerate,
+      username: this.state.name,
+      total: this.state.finalTotal,
     };
     var forCreatePdf = {
-      filename: this.state.ordercode,
+      filename: this.state.idGenerate,
+      invoice: {
+        ordercode: this.state.idGenerate,
+        finalTotal: this.state.finalTotal,
+        name: this.state.name,
+        address: this.state.address,
+        phone: this.state.phone,
+        product: this.state.productInCart,
+        total: this.state.total,
+        discount: this.state.discount,
+        tax: this.state.tax,
+      },
     };
     var forDel = { userid: this.state.userid };
     await this.props.addToHistory(obj).then((res) => {
       this.props.deleteCartByUserid(forDel);
       this.props.deleteCheckoutByUserid(forDel);
+      this.props.createPdf(forCreatePdf);
+      this.props.sendMail(forSend);
     });
     this.setState({ visible: false });
     notification('success', 'Payment success, Please check your email to track order status');
@@ -104,6 +121,7 @@ class Checkout extends React.Component {
         this.setState({
           productInCart: res.data,
         });
+        console.log('incart:', this.state.productInCart);
         var temp = localStorage.getItem('userauth');
         const { productInCart } = this.state;
         var total = 0;
@@ -359,6 +377,7 @@ const mapDispatchToProps = (dispatch) => ({
   deleteCartByUserid: (data) => dispatch(shopProduct.deleteCartByUserid(data)),
   deleteCheckoutByUserid: (data) => dispatch(shopProduct.deleteCheckoutByUserid(data)),
   sendMail: (data) => dispatch(shopProduct.sendMail(data)),
+  createPdf: (data) => dispatch(shopProduct.createPdf(data)),
   // getProductFromCart: () => dispatch(productActions.getProductFromCart),
 });
 

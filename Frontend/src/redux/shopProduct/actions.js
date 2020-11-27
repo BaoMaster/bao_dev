@@ -28,6 +28,12 @@ const shopProductActions = {
       return axios.delete(`./shop/api/deletecheckoutbyuserid`, { params: data });
     };
   },
+  createPdf: (data) => {
+    return (dispatch) => {
+      return axios.post(`./shop/pdf`, data);
+    };
+  },
+
   removeFromCart: (data) => {
     return (dispatch) => {
       return axios.delete(`./shop/api/removefromcart`, { params: data });

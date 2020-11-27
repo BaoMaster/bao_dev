@@ -167,7 +167,7 @@ class All_product extends React.Component {
                     className='company-details'
                     title='Product Details'
                     visible={this.state.isShowModal}
-                    onOk={this.handleOk}
+                    onOk={() => this.addCart(this.state.id)}
                     onCancel={this.handleCancel}
                   >
                     <Form>
