@@ -1,11 +1,11 @@
-const uuid = require('uuidv4');
+const uuid = require("uuidv4");
 
 module.exports = (sequelize, Sequelize) => {
-  const Checkout = sequelize.define('checkout', {
+  const Checkout = sequelize.define("checkout", {
     id: {
       primaryKey: true,
       type: Sequelize.UUID,
-      defaultValue: Sequelize.literal('uuid_generate_v4()'),
+      defaultValue: Sequelize.literal("uuid_generate_v4()"),
     },
     userid: {
       type: Sequelize.STRING,
@@ -23,6 +23,9 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.STRING,
     },
     product: {
+      type: Sequelize.STRING,
+    },
+    size: {
       type: Sequelize.STRING,
     },
     total: {

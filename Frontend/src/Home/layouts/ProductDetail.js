@@ -1,266 +1,262 @@
 /* eslint-disable */
-import { CloseOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons';
-import { Empty } from 'antd';
-import axios from 'axios';
-import React from 'react';
-import { connect } from 'react-redux';
-import { NavLink, withRouter } from 'react-router-dom';
+import { CloseOutlined, MinusOutlined, PlusOutlined } from "@ant-design/icons";
+import { Empty } from "antd";
+import axios from "axios";
+import React from "react";
+import { connect } from "react-redux";
+import { NavLink, withRouter } from "react-router-dom";
 
-import notification from '../../helper/Notification';
-import sample from '../../image/2.jpg';
-import productActions from '../../redux/product/actions';
-import shopProduct from '../../redux/shopProduct/actions';
+import notification from "../../helper/Notification";
+import sample from "../../image/2.jpg";
+import productActions from "../../redux/product/actions";
+import shopProduct from "../../redux/shopProduct/actions";
 
 class ProductDetail extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      userid: '',
+      userid: "",
       productInCart: [],
-      header: [{ id: '', name: '', price: '' }],
-      total: 0,
-      finalTotal: 0,
-      discount: 0,
-      name: '',
-      email: '',
-      phone: '',
-      address: '',
-      notes: '',
-      checkout: '',
+      name: "",
+      illustration: "",
+      brand: "",
+      description: "",
+      price: "",
+      size: "38",
+      amountChoose: 1,
     };
   }
+  addOne = () => {
+    this.setState({ amountChoose: this.state.amountChoose + 1 });
+    console.log("add", this.state.amountChoose);
+  };
+  subOne = () => {
+    this.setState({ amountChoose: this.state.amountChoose - 1 });
+    console.log("add", this.state.amountChoose);
+  };
   componentDidMount = async () => {
-    if (localStorage.getItem('userauth')) {
+    if (localStorage.getItem("userauth")) {
       await this.setState({
-        userid: localStorage.getItem('userauth').split('id')[1].split(`"`)[2],
+        userid: localStorage.getItem("userauth").split("id")[1].split(`"`)[2],
       });
-      this.getProductFromCart(this.state.userid);
+      this.props.getProductById(this.props.match.params.id).then((data) => {
+        this.setState({
+          name: data.data.data.productname,
+          brand: data.data.data.brand,
+          description: data.data.data.description,
+          illustration: data.data.data.illustration,
+          price: data.data.data.price,
+          // size: data.data.data.size,
+        });
+        console.log("bao:", data.data.data);
+      });
     }
     // let userid = localStorage.getItem("userauth").split("id")[1].split(`"`)[2];
     // this.props.getProductFromCart(userid);
     // console.log("baoooo:", userid);
   };
-  onCheckout = () => {
-    var obj = {
-      userid: this.state.userid,
-      email: this.state.email,
-      name: this.state.name,
-      phone: this.state.phone,
-      address: this.state.address,
-      // total: this.state.finalTotal,
-      total: this.state.total,
-      discount: this.state.discount,
-      product: this.state.checkout,
-      note: this.state.note,
-    };
-    this.props.addToCheckout(obj).then((res) => {
-      console.log('how:', res);
-      this.props.history.push('/checkout');
-    });
-  };
-  handleDelete = (productId) => {
-    // productId.preventDefault();
-    console.log('delete action:', this.state.userid);
-    console.log('delete action aa:', productId);
-    const { userid } = this.state;
+  // onCheckout = () => {
+  //   var obj = {
+  //     userid: this.state.userid,
+  //     email: this.state.email,
+  //     name: this.state.name,
+  //     phone: this.state.phone,
+  //     address: this.state.address,
+  //     // total: this.state.finalTotal,
+  //     total: this.state.total,
+  //     discount: this.state.discount,
+  //     product: this.state.checkout,
+  //     note: this.state.note,
+  //   };
+  //   this.props.addToCheckout(obj).then((res) => {
+  //     console.log("how:", res);
+  //     this.props.history.push("/checkout");
+  //   });
+  // };
+  addCart = (e, size, amount) => {
     const obj = {
-      userid: userid,
-      productid: productId,
+      userid: localStorage.getItem("userauth").split("id")[1].split(`"`)[2],
+      size: size,
+      amountChoose: amount,
+      productid: e,
     };
-    this.props.removeFromCart(obj).then((res) => {
-      const { userid } = this.state;
-      if (res.data.status === 'success') {
-        this.getProductFromCart(userid);
-        notification(res.data.status, res.data.message);
-      }
-    });
+    this.props.addProductToCart(obj);
   };
-  getProductFromCart = (userid) => {
-    console.log('id:', userid);
-    axios
-      .get('http://localhost:3030/shop/api/getproductfromcart/' + userid)
-      .then((res) => {
-        this.setState({
-          productInCart: res.data,
-        });
-        var temp = localStorage.getItem('userauth');
-        const { productInCart } = this.state;
-        var total = 0;
-        var checkout = [];
-        for (let index = 0; index < productInCart.length; index++) {
-          checkout = checkout + productInCart[index].productid + '/' + productInCart[index].amount + '***';
-          total = total + parseInt(productInCart[index].amount) * parseInt(productInCart[index].products.price);
-        }
-        this.setState({ total: total, checkout: checkout });
-        console.log('baooo:', this.state.total);
-        console.log('checkout:', this.state.checkout);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
+  // handleDelete = (productId) => {
+  //   // productId.preventDefault();
+  //   console.log("delete action:", this.state.userid);
+  //   console.log("delete action aa:", productId);
+  //   const { userid } = this.state;
+  //   const obj = {
+  //     userid: userid,
+  //     productid: productId,
+  //   };
+  //   this.props.removeFromCart(obj).then((res) => {
+  //     const { userid } = this.state;
+  //     if (res.data.status === "success") {
+  //       this.getProductFromCart(userid);
+  //       notification(res.data.status, res.data.message);
+  //     }
+  //   });
+  // };
+  // getProductFromCart = (userid) => {
+  //   console.log("id:", userid);
+  //   axios
+  //     .get("http://localhost:3030/shop/api/getproductfromcart/" + userid)
+  //     .then((res) => {
+  //       this.setState({
+  //         productInCart: res.data,
+  //       });
+  //       var temp = localStorage.getItem("userauth");
+  //       const { productInCart } = this.state;
+  //       var total = 0;
+  //       var checkout = [];
+  //       for (let index = 0; index < productInCart.length; index++) {
+  //         checkout =
+  //           checkout +
+  //           productInCart[index].productid +
+  //           "/" +
+  //           productInCart[index].amount +
+  //           "***";
+  //         total =
+  //           total +
+  //           parseInt(productInCart[index].amount) *
+  //             parseInt(productInCart[index].products.price);
+  //       }
+  //       this.setState({ total: total, checkout: checkout });
+  //       console.log("baooo:", this.state.total);
+  //       console.log("checkout:", this.state.checkout);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // };
   onChange = (e) => {
     this.setState({ [e.target.id]: e.target.value });
+    console.log("aaa", e.target.value);
   };
   onChangeValue = async (e) => {
-    console.log('value change:', e.target.value);
-    if (e.target.value == 'discount10') {
+    console.log("value change:", e.target.value);
+    if (e.target.value == "discount10") {
       await this.setState({ discount: 10 });
     }
-    if (e.target.value == 'discount20') {
+    if (e.target.value == "discount20") {
       await this.setState({ discount: 20 });
     }
-    if (e.target.value == 'discount30') {
+    if (e.target.value == "discount30") {
       await this.setState({ discount: 30 });
     }
-    localStorage.setItem('discount', this.state.discount);
+    localStorage.setItem("discount", this.state.discount);
     this.setState({
-      finalTotal: parseInt(this.state.total) + 2 - parseInt(this.state.discount),
+      finalTotal:
+        parseInt(this.state.total) + 2 - parseInt(this.state.discount),
     });
   };
   render() {
     const { productInCart } = this.state;
-    !productInCart.length ? console.log('true:', productInCart) : console.log('false:', productInCart);
+    !productInCart.length
+      ? console.log("true:", productInCart)
+      : console.log("false:", productInCart);
     if (!productInCart.length) {
       var result = <Empty />;
     } else {
-      //   var result = productInCart.map((productInCart, index) => {
-      //     return (
-      //       <tr key={index}>
-      //         {/* <td className='cart_product'>
-      //         <a href=''>
-      //           <img src='images/cart/one.png' alt='' />
-      //         </a>
-      //       </td> */}
-      //         <td className='cart_description'>
-      //           <h4>
-      //             <a href=''>{productInCart.productid}</a>
-      //           </h4>
-      //         </td>
-      //         <td className='cart_name'>
-      //           <p>{productInCart.products.productname}</p>
-      //         </td>
-      //         <td className='cart_name'>
-      //           {/* <p>{productInCart.products.productname}</p> */}
-      //           <input className='cart_quantity_input' type='text' name='quantity' value={productInCart.amount} autocomplete='off' size='2' />
-      //         </td>
-      //         <td className='cart_price'>
-      //           <p>${productInCart.products.price}</p>
-      //         </td>
-      //         <td className='cart_quantity'>
-      //           <div className='cart_quantity_button'>
-      //             {/* <a href=''> + </a> */}
-      //             <button style={{ borderRadius: '100px', backgroundColor: '#ee4d2d' }} type='button'>
-      //               <PlusOutlined />
-      //             </button>
-      //             <input
-      //               style={{
-      //                 height: '50px',
-      //                 borderRadius: '5px',
-      //                 fontSize: '15px',
-      //                 textAlign: 'center',
-      //               }}
-      //               type='text'
-      //               name='quantity'
-      //               value={productInCart.amount}
-      //               autocomplete='off'
-      //               size='2'
-      //             />
-      //             {/* <a href=''> - </a> */}
-      //             <button type='button'>
-      //               <MinusOutlined />
-      //             </button>
-      //           </div>
-      //         </td>
-      //         <td className='cart_total'>
-      //           <p className='cart_total_price'>{parseInt(productInCart.amount) * parseInt(productInCart.products.price)}$</p>
-      //         </td>
-      //         <td>
-      //           {/* <a className='cart_quantity_delete' href=''>
-      //           <CloseOutlined />
-      //         </a> */}
-      //           <button className='btn btn-danger' type='button' onClick={() => this.handleDelete(productInCart.productid)}>
-      //             <CloseOutlined />
-      //           </button>
-      //         </td>
-      //       </tr>
-      //     );
-      //   });
     }
 
     var renderTableHeader = () => {
       const header = Object.keys(this.state.header);
-      return header.map((key, index) => <th key={index}>{key.toUpperCase()}</th>);
+      return header.map((key, index) => (
+        <th key={index}>{key.toUpperCase()}</th>
+      ));
     };
 
     return (
       <div>
-        <section id='cart_items'>
-          <div className='container'>
-            <div className='breadcrumbs'>
-              <ol className='breadcrumb'>
+        <section id="cart_items">
+          <div className="container">
+            <div className="breadcrumbs">
+              <ol className="breadcrumb">
                 <li>
-                  <NavLink to='/'>Home</NavLink>
+                  <NavLink to="/">Home</NavLink>
                 </li>
-                <li className='active'>Shopping Cart</li>
+                <li className="active">Shopping Cart</li>
               </ol>
             </div>
           </div>
         </section>
-        <section id='do_action'>
-          <div className='container'>
-            <div className='heading'>
-              <h3>What would you like to do next?</h3>
-              <p>Choose if you have a discount code or reward points you want to use or would like to estimate your delivery cost.</p>
-            </div>
-            <div className='row'>
-              <div className='col-sm-6'>
-                <div className='chose_area'>
-                  <img src={sample}></img>
+        <section id="do_action">
+          <div className="container" style={{ backgroundColor: "#E6E4DF" }}>
+            {/* <div className="heading">
+              <h3>{this.state.name}</h3>
+              <p>
+                Choose if you have a discount code or reward points you want to
+                use or would like to estimate your delivery cost.
+              </p>
+            </div> */}
+            <div className="row">
+              <div className="col-sm-6">
+                <div className="chose_area">
+                  <img
+                    src={sample}
+                    style={{ height: "400px", width: "auto" }}
+                  ></img>
                 </div>
               </div>
 
-              <div className='col-sm-6'>
-                <div className='total_area' style={{ marginBottom: '10px' }}>
-                  {/* <div className='col-sm-6'> */}
-                  <div className='order-message'>
-                    <p style={{ marginLeft: '50px' }}>Shipping Order</p>
-                    <textarea
+              <div className="col-sm-6" style={{ marginBottom: "10px" }}>
+                <div
+                  className="total_area"
+                  style={{ backgroundColor: "#E6E4DF", marginBottom: "10px" }}
+                >
+                  <h3>{this.state.name}</h3>
+                  <p>{this.state.description}</p>
+                  <p style={{ fontSize: "25px" }}>
+                    CURRENT PRICE:
+                    <b style={{ color: "red" }}> ${this.state.price}</b>
+                  </p>
+                  <p style={{ fontSize: "18px" }}>
+                    <b>91%</b> of buyers enjoyed this product!<b> (87 votes)</b>
+                  </p>
+                  <p>
+                    SIZE:{" "}
+                    <select
                       onChange={this.onChange}
-                      id='note'
-                      name='message'
-                      placeholder='Notes about your order, Special Notes for Delivery'
+                      name="size"
+                      id="size"
+                      style={{ marginLeft: "60px", width: "60px" }}
+                    >
+                      <option value="38">38</option>
+                      <option value="39">39</option>
+                      <option value="40">40</option>
+                      <option value="41">41</option>
+                      <option value="42">42</option>
+                      <option value="43">43</option>
+                    </select>
+                  </p>
+                  <p>
+                    AMOUNT:
+                    <button
+                      onClick={this.subOne}
                       style={{
-                        height: '140px',
-                        marginLeft: '35px',
-                        width: '90%',
+                        marginLeft: "30px",
+                        width: "28px",
+                        height: "28px",
                       }}
-                      rows='3'
-                    ></textarea>
-                    {/* <label>
-                        <input type='checkbox' /> Shipping to bill address
-                      </label> */}
-                    {/* </div> */}
-                  </div>
-                </div>
-                <div className='total_area'>
-                  <ul>
-                    <li>
-                      Cart Sub Total <span>${this.state.total}</span>
-                    </li>
-                    <li>
-                      Eco Tax <span>$2</span>
-                    </li>
-                    <li>
-                      Shipping Cost <span>Free</span>
-                    </li>
-                    <li>
-                      Discount <span>${this.state.discount}</span>
-                    </li>
-                    <li style={{ fontWeight: 'bold' }}>
-                      Total <span>${this.state.finalTotal || parseInt(this.state.total) + 2 - parseInt(this.state.discount)}</span>
-                    </li>
-                  </ul>
+                    >
+                      -
+                    </button>
+                    <input
+                      id="amountChoose"
+                      type="decimal"
+                      value={this.state.amountChoose}
+                      style={{ width: "30px", textAlign: "center" }}
+                    ></input>
+                    <button
+                      onClick={this.addOne}
+                      style={{ width: "28px", height: "28px" }}
+                    >
+                      +
+                    </button>
+                  </p>
                   {/* <NavLink to='/cartupdate' activeClassName='btn btn-default update'>
                     Update
                   </NavLink>
@@ -268,18 +264,40 @@ class ProductDetail extends React.Component {
                     Check Out
                   </NavLink> */}
                 </div>
+                <button
+                  onClick={() =>
+                    this.addCart(
+                      this.props.match.params.id,
+                      this.state.size,
+                      this.state.amountChoose
+                    )
+                  }
+                  style={{
+                    borderRadius: "5px",
+                    marginLeft: "40%",
+                    borderColor: "#ee4d2d",
+                    height: "50px",
+                    fontWeight: "bold",
+                    color: "white",
+                    backgroundColor: "#ee4d2d",
+                  }}
+                  type="button"
+                >
+                  {" "}
+                  ADD TO CART
+                </button>
               </div>
-              <button
+              {/* <button
                 onClick={this.onCheckout}
-                className='btn btn-default check_out'
+                className="btn btn-default check_out"
                 style={{
-                  textAlign: 'center',
-                  marginLeft: '520px',
-                  marginTop: '25px',
+                  textAlign: "center",
+                  marginLeft: "520px",
+                  marginTop: "25px",
                 }}
               >
                 Continue Checkout
-              </button>
+              </button> */}
             </div>
           </div>
         </section>
@@ -297,8 +315,12 @@ const mapDispatchToProps = (dispatch) => ({
   getProduct: () => dispatch(productActions.getProduct),
   removeFromCart: (data) => dispatch(shopProduct.removeFromCart(data)),
   addToCheckout: (data) => dispatch(shopProduct.addToCheckout(data)),
-
+  getProductById: (id) => dispatch(shopProduct.getProductById(id)),
+  addProductToCart: (id) => dispatch(shopProduct.addProductToCart(id)),
   getProductFromCart: () => dispatch(productActions.getProductFromCart),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(ProductDetail));
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withRouter(ProductDetail));
