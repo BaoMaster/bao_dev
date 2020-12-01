@@ -39,6 +39,28 @@ class Cart extends React.Component {
     // this.props.getProductFromCart(userid);
     // console.log("baoooo:", userid);
   };
+  addOne = (e, size) => {
+    const obj = {
+      userid: localStorage.getItem('userauth').split('id')[1].split(`"`)[2],
+      size: size,
+      productid: e,
+    };
+    this.props.addOneInCart(obj);
+    this.getProductFromCart(this.state.userid);
+
+    // notification('success', 'Add product to cart success');
+  };
+  subOne = (e, size) => {
+    const obj = {
+      userid: localStorage.getItem('userauth').split('id')[1].split(`"`)[2],
+      size: size,
+      productid: e,
+    };
+    this.props.subOneInCart(obj);
+    this.getProductFromCart(this.state.userid);
+
+    // notification('success', 'Add product to cart success');
+  };
   onCheckout = () => {
     var obj = {
       userid: this.state.userid,
@@ -84,6 +106,7 @@ class Cart extends React.Component {
         });
         var temp = localStorage.getItem('userauth');
         const { productInCart } = this.state;
+        localStorage.setItem('count', productInCart.length);
         var total = 0;
         var checkout = [];
         for (let index = 0; index < productInCart.length; index++) {
@@ -132,16 +155,19 @@ class Cart extends React.Component {
             </a>
           </td> */}
             <td className='cart_description'>
-              <h4>
+              {/* <h4>
                 <a href=''>{productInCart.productid}</a>
-              </h4>
+              </h4> */}
+              <img src={'http://localhost:3030/images/product/' + productInCart.products.illustration} style={{ height: 'auto', width: '80px' }}></img>
             </td>
             <td className='cart_name'>
               <p>{productInCart.products.productname}</p>
             </td>
             <td className='cart_name'>
               {/* <p>{productInCart.products.productname}</p> */}
-              <input className='cart_quantity_input' type='text' name='quantity' value={productInCart.amount} autocomplete='off' size='2' />
+              <p style={{ fontSize: '18px' }} className='cart_quantity_input'>
+                {productInCart.size}
+              </p>
             </td>
             <td className='cart_price'>
               <p>${productInCart.products.price}</p>
@@ -149,25 +175,19 @@ class Cart extends React.Component {
             <td className='cart_quantity'>
               <div className='cart_quantity_button'>
                 {/* <a href=''> + </a> */}
-                <button style={{ borderRadius: '100px', backgroundColor: '#ee4d2d' }} type='button'>
-                  <PlusOutlined />
-                </button>
-                <input
+
+                <button
+                  onClick={() => this.subOne(productInCart.productid, productInCart.size)}
                   style={{
-                    height: '50px',
-                    borderRadius: '5px',
-                    fontSize: '15px',
-                    textAlign: 'center',
+                    width: '28px',
+                    height: '28px',
                   }}
-                  type='text'
-                  name='quantity'
-                  value={productInCart.amount}
-                  autocomplete='off'
-                  size='2'
-                />
-                {/* <a href=''> - </a> */}
-                <button type='button'>
-                  <MinusOutlined />
+                >
+                  -
+                </button>
+                <input id='amountChoose' type='decimal' value={productInCart.amount} style={{ width: '30px', textAlign: 'center' }}></input>
+                <button onClick={() => this.addOne(productInCart.productid, productInCart.size)} style={{ width: '28px', height: '28px' }}>
+                  +
                 </button>
               </div>
             </td>
@@ -385,6 +405,8 @@ const mapDispatchToProps = (dispatch) => ({
   getProduct: () => dispatch(productActions.getProduct),
   removeFromCart: (data) => dispatch(shopProduct.removeFromCart(data)),
   addToCheckout: (data) => dispatch(shopProduct.addToCheckout(data)),
+  addOneInCart: (data) => dispatch(shopProduct.addOneInCart(data)),
+  subOneInCart: (data) => dispatch(shopProduct.subOneInCart(data)),
 
   getProductFromCart: () => dispatch(productActions.getProductFromCart),
 });

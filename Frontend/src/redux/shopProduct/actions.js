@@ -13,6 +13,16 @@ const shopProductActions = {
       return axios.post(`./shop/send`, data);
     };
   },
+  addOneInCart: (data) => {
+    return (dispatch) => {
+      return axios.post(`./shop/api/addoneincart`, data);
+    };
+  },
+  subOneInCart: (data) => {
+    return (dispatch) => {
+      return axios.post(`./shop/api/suboneincart`, data);
+    };
+  },
   addToHistory: (data) => {
     return (dispatch) => {
       return axios.post(`./shop/api/addtohistory`, data);

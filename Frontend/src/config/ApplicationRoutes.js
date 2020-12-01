@@ -20,6 +20,7 @@ import Header_middle from '../Home/Home_components/Header_components/Header_midd
 import Header_top from '../Home/Home_components/Header_components/Header_top';
 import Slider from '../Home/Home_components/Slider_components/Slider';
 import Cart from '../Home/layouts/Cart';
+import user from '../image/no-avatar.png';
 import userActions from '../redux/user/actions';
 import RedirectIfUserAuth from './RedireactIfUserAuth';
 import RedirectIfAuth from './RedirectIfAuth';
@@ -64,7 +65,8 @@ const ApplicationRoutes = (props) => {
         {/* <RedirectIfUserAuth exact path='/login' component={Home}>
           <Login />
         </RedirectIfUserAuth> */}
-        <Route exact path='/detail' component={Home} />
+        <Route exact path='/detail/:id' component={Home} />
+        <Route exact path='/verify/:id' component={Home} />
         <Route path='/checkout' exact component={Home} />
         <Route path='/cart' component={Home} />
         <Route
@@ -87,13 +89,14 @@ const ApplicationRoutes = (props) => {
                     },
                   })}
                   <p style={{ color: '#fff', marginLeft: '70%' }}>
-                    {username ? username : 'You are not login'}
+                    {/* {username ? username : 'You are not login'} */}
                     {isAuthenticated ? (
-                      <Button className='btn-delete' type='danger' onClick={logout}>
-                        Logout
-                      </Button>
+                      // <Button className='btn-delete' type='danger' onClick={logout}>
+                      //   Logout
+                      // </Button>
+                      <img style={{ width: '50px', marginLeft: '200px' }} src={user}></img>
                     ) : (
-                      ''
+                      'You are not login'
                     )}
                   </p>
                 </Header>
@@ -128,6 +131,7 @@ const ApplicationRoutes = (props) => {
             </Layout>
           )}
         />
+        <Route component={Home} />
       </Router>
     </React.Fragment>
   );

@@ -9,6 +9,8 @@ const mail = require('../helper/mail');
 const pdfController = require('../src/controllers/pdf');
 
 router.post('/api/addproducttocart', controller.addProductToCart);
+router.post('/api/addoneincart', controller.addOneInCart);
+router.post('/api/suboneincart', controller.subOneInCart);
 router.get('/api/getproduct', controller.getProduct);
 router.get('/api/getproductfromcart/:id', controller.getProductFromCart);
 router.post('/api/update/:id', controller.updateProduct);

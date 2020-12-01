@@ -5,7 +5,7 @@ const Permission = db.permission;
 const Op = db.Sequelize.Op;
 const multer = require('multer');
 
-// const mail = require("../helper/mail");
+const mail = require('../../helper/mailForRegister');
 
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
@@ -61,8 +61,8 @@ const upload = multer({ storage: storage, fileFilter: fileFilter });
 //   return res.status(200).json({ name: filename });
 // });
 
-function sendCode(email, code) {
-  mail.send(email, 'This is email from GBN page ', 'this is your code: ' + code);
+function sendCode(email, username) {
+  mail.send(email, username);
 }
 
 exports.reSend = (req, res) => {
@@ -148,16 +148,16 @@ exports.register = (req, res) => {
             // roles:req.body.roles
           })
             .then((user) => {
-              const code = shortId.generate();
-              console.log('CODE:' + code);
-              console.log('username:' + user.role);
-              console.log('role:' + req.body.role);
+              // const code = shortId.generate();
+              // console.log('CODE:' + code);
+              // console.log('username:' + user);
+              // console.log('role:' + req.body.role);
+              console.log('register successfully test git continue bao main', user.username);
+              console.log('register successfully test git continue bao mainss', user.email);
+              sendCode(user.email, user.username);
+              // user.update({ codeforverify: code });
 
-              // sendCode(user.email, code);
-              user.update({ codeforverify: code });
-
-              console.log('register successfully test git continue bao main');
-              res.status(200).send({ verifyCode: code, status: 'success' });
+              res.status(200).send({ status: 'success' });
             })
             .catch((err) => {
               res.status(500).send('Fail, Error=>' + err);
@@ -334,29 +334,36 @@ exports.delete = (req, res) => {
 };
 
 exports.verify = (req, res) => {
-  const code = req.body.code;
-  const email = req.body.email;
+  // const code = req.body.code;
+  // const email = req.body.email;
   User.findOne({
     where: {
-      email: req.body.email,
+      username: req.params.id,
     },
   })
     .then((user) => {
-      if (!user) {
-        return res.status(401).json({
-          message: 'email is not correct',
-        });
+      // return res.json(user);
+      if (user.idverify === false) {
+        user.update({ idverify: true });
+        return res.json({ status: 'success', message: 'Your account has been successfully verified' });
       } else {
-        if (code == user.codeforverify) {
-          user.update({ idverify: true });
-          return res.send('your account is verified');
-        } else {
-          return res.send('Your verify code is not correct');
-        }
+        return res.json({ status: 'fail', message: 'Your account has been verified' });
       }
+      // if (!user) {
+      //   return res.status(401).json({
+      //     message: 'email is not correct',
+      //   });
+      // } else {
+      //   if (code == user.codeforverify) {
+      //     user.update({ idverify: true });
+      //     return res.send('your account is verified');
+      //   } else {
+      //     return res.send('Your verify code is not correct');
+      //   }
+      // }
     })
     .catch((err) => {
-      return res.send({ ERR: err });
+      return res.send({ ERR: err.message });
     });
 };
 

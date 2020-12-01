@@ -1,43 +1,44 @@
 /* eslint-disable */
-import { CloseOutlined, MinusOutlined, PlusOutlined } from "@ant-design/icons";
-import { Empty } from "antd";
-import axios from "axios";
-import React from "react";
-import { connect } from "react-redux";
-import { NavLink, withRouter } from "react-router-dom";
+import { CloseOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons';
+import { Empty } from 'antd';
+import axios from 'axios';
+import React from 'react';
+import { connect } from 'react-redux';
+import { NavLink, withRouter } from 'react-router-dom';
 
-import notification from "../../helper/Notification";
-import sample from "../../image/2.jpg";
-import productActions from "../../redux/product/actions";
-import shopProduct from "../../redux/shopProduct/actions";
+import notification from '../../helper/Notification';
+import sample from '../../image/2.jpg';
+import productActions from '../../redux/product/actions';
+import shopProduct from '../../redux/shopProduct/actions';
 
 class ProductDetail extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      userid: "",
+      userid: '',
       productInCart: [],
-      name: "",
-      illustration: "",
-      brand: "",
-      description: "",
-      price: "",
-      size: "38",
+      name: '',
+      illustration: '',
+      brand: '',
+      description: '',
+      price: '',
+      size: '38',
+      buyNow: false,
       amountChoose: 1,
     };
   }
   addOne = () => {
     this.setState({ amountChoose: this.state.amountChoose + 1 });
-    console.log("add", this.state.amountChoose);
+    console.log('add', this.state.amountChoose);
   };
   subOne = () => {
     this.setState({ amountChoose: this.state.amountChoose - 1 });
-    console.log("add", this.state.amountChoose);
+    console.log('add', this.state.amountChoose);
   };
   componentDidMount = async () => {
-    if (localStorage.getItem("userauth")) {
+    if (localStorage.getItem('userauth')) {
       await this.setState({
-        userid: localStorage.getItem("userauth").split("id")[1].split(`"`)[2],
+        userid: localStorage.getItem('userauth').split('id')[1].split(`"`)[2],
       });
       this.props.getProductById(this.props.match.params.id).then((data) => {
         this.setState({
@@ -48,7 +49,7 @@ class ProductDetail extends React.Component {
           price: data.data.data.price,
           // size: data.data.data.size,
         });
-        console.log("bao:", data.data.data);
+        console.log('bao:', data.data.data);
       });
     }
     // let userid = localStorage.getItem("userauth").split("id")[1].split(`"`)[2];
@@ -75,12 +76,24 @@ class ProductDetail extends React.Component {
   // };
   addCart = (e, size, amount) => {
     const obj = {
-      userid: localStorage.getItem("userauth").split("id")[1].split(`"`)[2],
+      userid: localStorage.getItem('userauth').split('id')[1].split(`"`)[2],
       size: size,
       amountChoose: amount,
       productid: e,
     };
     this.props.addProductToCart(obj);
+    notification('success', 'Add product to cart success');
+  };
+  byNow = (e, size, amount) => {
+    const obj = {
+      userid: localStorage.getItem('userauth').split('id')[1].split(`"`)[2],
+      size: size,
+      amountChoose: amount,
+      productid: e,
+    };
+    this.props.addProductToCart(obj);
+    notification('success', 'Add product to cart success');
+    this.props.history.push('/cart');
   };
   // handleDelete = (productId) => {
   //   // productId.preventDefault();
@@ -133,30 +146,27 @@ class ProductDetail extends React.Component {
   // };
   onChange = (e) => {
     this.setState({ [e.target.id]: e.target.value });
-    console.log("aaa", e.target.value);
+    console.log('aaa', e.target.value);
   };
   onChangeValue = async (e) => {
-    console.log("value change:", e.target.value);
-    if (e.target.value == "discount10") {
+    console.log('value change:', e.target.value);
+    if (e.target.value == 'discount10') {
       await this.setState({ discount: 10 });
     }
-    if (e.target.value == "discount20") {
+    if (e.target.value == 'discount20') {
       await this.setState({ discount: 20 });
     }
-    if (e.target.value == "discount30") {
+    if (e.target.value == 'discount30') {
       await this.setState({ discount: 30 });
     }
-    localStorage.setItem("discount", this.state.discount);
+    localStorage.setItem('discount', this.state.discount);
     this.setState({
-      finalTotal:
-        parseInt(this.state.total) + 2 - parseInt(this.state.discount),
+      finalTotal: parseInt(this.state.total) + 2 - parseInt(this.state.discount),
     });
   };
   render() {
     const { productInCart } = this.state;
-    !productInCart.length
-      ? console.log("true:", productInCart)
-      : console.log("false:", productInCart);
+    !productInCart.length ? console.log('true:', productInCart) : console.log('false:', productInCart);
     if (!productInCart.length) {
       var result = <Empty />;
     } else {
@@ -164,27 +174,25 @@ class ProductDetail extends React.Component {
 
     var renderTableHeader = () => {
       const header = Object.keys(this.state.header);
-      return header.map((key, index) => (
-        <th key={index}>{key.toUpperCase()}</th>
-      ));
+      return header.map((key, index) => <th key={index}>{key.toUpperCase()}</th>);
     };
 
     return (
       <div>
-        <section id="cart_items">
-          <div className="container">
-            <div className="breadcrumbs">
-              <ol className="breadcrumb">
+        <section id='cart_items'>
+          <div className='container'>
+            <div className='breadcrumbs'>
+              <ol className='breadcrumb'>
                 <li>
-                  <NavLink to="/">Home</NavLink>
+                  <NavLink to='/'>Home</NavLink>
                 </li>
-                <li className="active">Shopping Cart</li>
+                <li className='active'>Shopping Cart</li>
               </ol>
             </div>
           </div>
         </section>
-        <section id="do_action">
-          <div className="container" style={{ backgroundColor: "#E6E4DF" }}>
+        <section id='do_action'>
+          <div className='container' style={{ backgroundColor: '#E6E4DF' }}>
             {/* <div className="heading">
               <h3>{this.state.name}</h3>
               <p>
@@ -192,44 +200,33 @@ class ProductDetail extends React.Component {
                 use or would like to estimate your delivery cost.
               </p>
             </div> */}
-            <div className="row">
-              <div className="col-sm-6">
-                <div className="chose_area">
-                  <img
-                    src={sample}
-                    style={{ height: "400px", width: "auto" }}
-                  ></img>
+            <div className='row'>
+              <div className='col-sm-6'>
+                <div className='chose_area'>
+                  <img src={'http://localhost:3030/images/product/' + this.state.illustration} style={{ height: 'auto', width: '400px' }}></img>
                 </div>
               </div>
 
-              <div className="col-sm-6" style={{ marginBottom: "10px" }}>
-                <div
-                  className="total_area"
-                  style={{ backgroundColor: "#E6E4DF", marginBottom: "10px" }}
-                >
+              <div className='col-sm-6' style={{ marginBottom: '10px' }}>
+                <div className='total_area' style={{ backgroundColor: '#E6E4DF', marginBottom: '10px' }}>
                   <h3>{this.state.name}</h3>
                   <p>{this.state.description}</p>
-                  <p style={{ fontSize: "25px" }}>
+                  <p style={{ fontSize: '25px' }}>
                     CURRENT PRICE:
-                    <b style={{ color: "red" }}> ${this.state.price}</b>
+                    <b style={{ color: 'red' }}> ${this.state.price}</b>
                   </p>
-                  <p style={{ fontSize: "18px" }}>
+                  <p style={{ fontSize: '18px' }}>
                     <b>91%</b> of buyers enjoyed this product!<b> (87 votes)</b>
                   </p>
                   <p>
-                    SIZE:{" "}
-                    <select
-                      onChange={this.onChange}
-                      name="size"
-                      id="size"
-                      style={{ marginLeft: "60px", width: "60px" }}
-                    >
-                      <option value="38">38</option>
-                      <option value="39">39</option>
-                      <option value="40">40</option>
-                      <option value="41">41</option>
-                      <option value="42">42</option>
-                      <option value="43">43</option>
+                    SIZE:{' '}
+                    <select onChange={this.onChange} name='size' id='size' style={{ marginLeft: '60px', width: '60px' }}>
+                      <option value='38'>38</option>
+                      <option value='39'>39</option>
+                      <option value='40'>40</option>
+                      <option value='41'>41</option>
+                      <option value='42'>42</option>
+                      <option value='43'>43</option>
                     </select>
                   </p>
                   <p>
@@ -237,23 +234,15 @@ class ProductDetail extends React.Component {
                     <button
                       onClick={this.subOne}
                       style={{
-                        marginLeft: "30px",
-                        width: "28px",
-                        height: "28px",
+                        marginLeft: '30px',
+                        width: '28px',
+                        height: '28px',
                       }}
                     >
                       -
                     </button>
-                    <input
-                      id="amountChoose"
-                      type="decimal"
-                      value={this.state.amountChoose}
-                      style={{ width: "30px", textAlign: "center" }}
-                    ></input>
-                    <button
-                      onClick={this.addOne}
-                      style={{ width: "28px", height: "28px" }}
-                    >
+                    <input id='amountChoose' type='decimal' value={this.state.amountChoose} style={{ width: '30px', textAlign: 'center' }}></input>
+                    <button onClick={this.addOne} style={{ width: '28px', height: '28px' }}>
                       +
                     </button>
                   </p>
@@ -265,26 +254,35 @@ class ProductDetail extends React.Component {
                   </NavLink> */}
                 </div>
                 <button
-                  onClick={() =>
-                    this.addCart(
-                      this.props.match.params.id,
-                      this.state.size,
-                      this.state.amountChoose
-                    )
-                  }
+                  onClick={() => this.addCart(this.props.match.params.id, this.state.size, this.state.amountChoose)}
                   style={{
-                    borderRadius: "5px",
-                    marginLeft: "40%",
-                    borderColor: "#ee4d2d",
-                    height: "50px",
-                    fontWeight: "bold",
-                    color: "white",
-                    backgroundColor: "#ee4d2d",
+                    borderRadius: '2px',
+                    marginLeft: '20%',
+                    borderColor: '#ee4d2d',
+                    height: '50px',
+                    color: '#ee4d2d',
+                    backgroundColor: 'rgba(255,87,34,.1)',
                   }}
-                  type="button"
+                  type='button'
                 >
-                  {" "}
+                  {' '}
                   ADD TO CART
+                </button>
+                <button
+                  onClick={() => this.byNow(this.props.match.params.id, this.state.size, this.state.amountChoose)}
+                  style={{
+                    borderRadius: '2px',
+                    marginLeft: '5%',
+
+                    borderColor: '#ee4d2d',
+                    height: '50px',
+                    color: 'white',
+                    backgroundColor: '#ee4d2d',
+                  }}
+                  type='button'
+                >
+                  {' '}
+                  BUY NOW
                 </button>
               </div>
               {/* <button
@@ -320,7 +318,4 @@ const mapDispatchToProps = (dispatch) => ({
   getProductFromCart: () => dispatch(productActions.getProductFromCart),
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(withRouter(ProductDetail));
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(ProductDetail));

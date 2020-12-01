@@ -11,7 +11,11 @@ const userGuestActions = {
       return axios.get(`./users/api/getall`);
     };
   },
-
+  verifyAccount: (username) => {
+    return (dispatch) => {
+      return axios.post(`./api/verify/${username}`);
+    };
+  },
   checkUserAuth: () => {
     return (dispatch) => {
       dispatch({ type: authActions.CHECK_AUTH_USER });

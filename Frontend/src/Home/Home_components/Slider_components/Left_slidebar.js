@@ -1,4 +1,5 @@
 /* eslint-disable */
+import { Slider, Switch } from 'antd';
 import React from 'react';
 
 import ShipLogo from '../../../shipping.jpg';
@@ -13,21 +14,21 @@ class Left_slidebar extends React.Component {
             <div className='panel panel-default'>
               <div className='panel-heading'>
                 <h4 className='panel-title'>
-                  <a>Rolex</a>
+                  <a>Jordan</a>
                 </h4>
               </div>
             </div>
             <div className='panel panel-default'>
               <div className='panel-heading'>
                 <h4 className='panel-title'>
-                  <a>G-Shock</a>
+                  <a>Convert</a>
                 </h4>
               </div>
             </div>
             <div className='panel panel-default'>
               <div className='panel-heading'>
                 <h4 className='panel-title'>
-                  <a>Apple Watch</a>
+                  <a>Adidas</a>
                 </h4>
               </div>
             </div>
@@ -36,9 +37,10 @@ class Left_slidebar extends React.Component {
           <div className='price-range'>
             <h2>Price Range</h2>
             <div className='well text-center'>
-              <input type='text' className='span2' data-slider-min='0' data-slider-max='600' data-slider-step='5' data-slider-value='[250,450]' id='sl2' />
+              <Slider range defaultValue={[20, 60]} />{' '}
+              {/* <input type='text' className='span2' data-slider-min='0' data-slider-max='600' data-slider-step='5' data-slider-value='[250,450]' id='sl2' /> */}
               <br />
-              <b className='pull-left'>$ 0</b> <b className='pull-right'>$ 600</b>
+              <b className='pull-left'>$ 0</b> <b className='pull-right'>$ 100</b>
             </div>
           </div>
           <div className='shipping text-center'>

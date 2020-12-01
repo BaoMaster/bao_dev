@@ -1,36 +1,25 @@
-import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
-import {
-  Button,
-  Card,
-  Form,
-  Input,
-  Menu,
-  message,
-  Modal,
-  Select,
-  Table,
-  Tabs,
-  Upload,
-} from "antd";
-import axios from "axios";
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
-import LocalStorageService from "../../config/LocalStorageService";
+import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
+import { Button, Card, Form, Input, Menu, message, Modal, SearchBox, Select, Table, Tabs, Upload } from 'antd';
+import axios from 'axios';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 
-import notification from "../../helper/Notification";
-import userActions from "../../redux/user/actions";
+import LocalStorageService from '../../config/LocalStorageService';
+import notification from '../../helper/Notification';
+import userActions from '../../redux/user/actions';
 
 // import CreateOrUpdateUser from "./CreateOrUpdateCompany.js";
 // import TableRow from "./TableRow";
 const { confirm } = Modal;
 const { Option } = Select;
+const { Search } = Input;
 
 const { TabPane } = Tabs;
 const menu = (
   <Menu>
-    <Menu.Item value="ADMIN">Admin</Menu.Item>
-    <Menu.Item value="USER">User</Menu.Item>
+    <Menu.Item value='ADMIN'>Admin</Menu.Item>
+    <Menu.Item value='USER'>User</Menu.Item>
   </Menu>
 );
 class UserList extends Component {
@@ -46,47 +35,39 @@ class UserList extends Component {
 
   columns = [
     {
-      title: "Username",
-      dataIndex: "username",
+      title: 'Username',
+      dataIndex: 'username',
     },
     {
-      title: "Email",
-      dataIndex: "email",
+      title: 'Email',
+      dataIndex: 'email',
     },
     {
-      title: "Role",
-      key: "role",
-      dataIndex: "role",
+      title: 'Role',
+      key: 'role',
+      dataIndex: 'role',
     },
     {
-      title: "Avatar",
-      key: "avatar",
-      dataIndex: "avatar",
+      title: 'Avatar',
+      key: 'avatar',
+      dataIndex: 'avatar',
     },
     // {
     //   title:'IsVerify',
     //   dataIndex: 'idverify'
     // },
     {
-      title: "Action",
-      key: "action",
+      title: 'Action',
+      key: 'action',
       render: (com) => {
         return (
           // <Space size="middle">
           <div>
-            <Button
-              className="btn-delete"
-              type="danger"
-              onClick={() => this.handleToggleDeletedModal(true, com.id)}
-            >
+            <Button className='btn-delete' type='danger' onClick={() => this.handleToggleDeletedModal(true, com.id)}>
               Delete
             </Button>
 
-            <Button
-              className="btn-update"
-              type="primary"
-              onClick={() => this.handleUpdate(com.id)}
-            >
+            <Button className='btn-update' type='primary' onClick={() => this.handleUpdate(com.id)}>
               Update
             </Button>
           </div>
@@ -108,18 +89,18 @@ class UserList extends Component {
       totalItem: 0,
       visibleDelete: false,
       userIdDelete: null,
-      searchInput: "",
-      username: "",
-      email: "",
-      password: "",
+      searchInput: '',
+      username: '',
+      email: '',
+      password: '',
       avatar: undefined,
-      phoneNumber: "",
-      address: "",
-      dayOfBirth: "",
+      phoneNumber: '',
+      address: '',
+      dayOfBirth: '',
       errors: {},
       loading: false,
-      imageUrl: "",
-      role: "",
+      imageUrl: '',
+      role: '',
     };
   }
   componentDidMount() {
@@ -134,29 +115,29 @@ class UserList extends Component {
   };
   getBase64 = (img, callback) => {
     const reader = new FileReader();
-    reader.addEventListener("load", () => callback(reader.result));
+    reader.addEventListener('load', () => callback(reader.result));
     reader.readAsDataURL(img);
   };
 
   beforeUpload = (file) => {
-    const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
+    const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
     if (!isJpgOrPng) {
-      message.error("You can only upload JPG/PNG file!");
+      message.error('You can only upload JPG/PNG file!');
     }
     const isLt2M = file.size / 1024 / 1024 < 2;
     if (!isLt2M) {
-      message.error("Image must smaller than 2MB!");
+      message.error('Image must smaller than 2MB!');
     }
     return isJpgOrPng && isLt2M;
   };
   handleChange = (info) => {
-    if (info.file.status === "uploading") {
+    if (info.file.status === 'uploading') {
       this.setState({ loading: true });
       // console.log("info:", info.file.response.name);
       return;
     }
-    if (info.file.status === "done") {
-      console.log("info==:", info.file.response.name);
+    if (info.file.status === 'done') {
+      console.log('info==:', info.file.response.name);
       this.setState({
         // loading: true,
         avatar: info.file.response.name,
@@ -176,7 +157,7 @@ class UserList extends Component {
     //   this.props.history.push("/");
     // } else {
     await axios
-      .get("http://localhost:3030/users/api/getall")
+      .get('http://localhost:3030/users/api/getall')
       .then((response) => {
         console.log(response.data);
         this.setState({
@@ -185,7 +166,7 @@ class UserList extends Component {
           idverify: response.data.idverify,
         });
         const { users } = this.state;
-        console.log("bao", users);
+        console.log('bao', users);
       })
       .catch(function (error) {
         console.log(error);
@@ -198,7 +179,7 @@ class UserList extends Component {
   handleUpdate = (userId) => {
     this.setState({ isShowModal: true, userId: userId });
     this.props.getUserById(userId).then((res) => {
-      console.log("daat:", res);
+      console.log('daat:', res);
       this.setState({
         address: res.data.data.address,
         avatar: res.data.data.avatar,
@@ -218,19 +199,19 @@ class UserList extends Component {
 
   handleDelete = (userId) => {
     this.props.deleteUser(userId).then((res) => {
-      console.log("status:", res.data.status);
-      if (res.data.status === "success") {
-        console.log("okkkk");
+      console.log('status:', res.data.status);
+      if (res.data.status === 'success') {
+        console.log('okkkk');
         this.getUser();
         this.handleToggleDeletedModal(false, 0);
-        notification("success", `Delete Company Successfully`, "");
+        notification('success', `Delete Company Successfully`, '');
       }
     });
   };
 
   handleOk = async () => {
     if (this.state.userId) {
-      console.log("update");
+      console.log('update');
       const obj = {
         username: this.state.username,
         email: this.state.email,
@@ -242,14 +223,14 @@ class UserList extends Component {
         dayOfBirth: this.state.dayOfBirth,
       };
       await this.props.updateUser(this.state.userId, obj).then((res) => {
-        if (res.data.status === "success") {
+        if (res.data.status === 'success') {
           this.getUser();
           this.setState({ isShowModal: false });
-          notification("success", `Update User Successfully`, "");
+          notification('success', `Update User Successfully`, '');
         }
       });
     } else {
-      console.log("submit");
+      console.log('submit');
       const obj = {
         username: this.state.username,
         email: this.state.email,
@@ -261,11 +242,11 @@ class UserList extends Component {
         dayOfBirth: this.state.dayOfBirth,
       };
       await this.props.addUser(obj).then((res) => {
-        if (res.data.status === "success") {
-          console.log("okkkk add");
+        if (res.data.status === 'success') {
+          console.log('okkkk add');
           this.getUser();
           this.handleToggleDeletedModal(false, 0);
-          notification("success", `Add User Successfully`, "");
+          notification('success', `Add User Successfully`, '');
           this.setState({ isShowModal: false });
         }
       });
@@ -276,14 +257,14 @@ class UserList extends Component {
   };
   cleanData = () => {
     this.setState({
-      userId: "",
-      address: "",
-      avatar: "",
-      dayOfBirth: "",
-      email: "",
-      phoneNumber: "",
-      role: "",
-      username: "",
+      userId: '',
+      address: '',
+      avatar: '',
+      dayOfBirth: '',
+      email: '',
+      phoneNumber: '',
+      role: '',
+      username: '',
     });
   };
   onChange = (e) => {
@@ -320,6 +301,7 @@ class UserList extends Component {
   handleCancel = (e) => {
     this.setState({ isShowModal: false });
   };
+  onSearch = (value) => console.log(value);
 
   render() {
     const { loading, imageUrl } = this.state;
@@ -333,31 +315,30 @@ class UserList extends Component {
       // <LayoutContentWrapper className="company">
       <div>
         <Card
-          header={{ title: "Companies" }}
+          header={{ title: 'Companies' }}
           extra={
-            <React.Fragment>
-              {/* <SearchBox
+            <>
+              {/* <SearchBox placeholder='Search companies'></SearchBox> */}
+              <Search placeholder='Search users' onSearch={this.onSearch} style={{ width: 200 }} />
+
+              <React.Fragment>
+                {/* <SearchBox
                 placeholder="Search companies"
                 handleOnTransferText={this.handleOnTransferText}
               ></SearchBox> */}
-              <Button
-                className="btn-add"
-                type="primary"
-                onClick={this.handleModal}
-              >
-                Add User
-              </Button>
-            </React.Fragment>
+                <Button className='btn-add' type='primary' onClick={this.handleModal}>
+                  Add User
+                </Button>
+              </React.Fragment>
+            </>
           }
         >
           <Modal
-            title="Are you sure?"
+            title='Are you sure?'
             visible={this.state.visibleDelete}
             onOk={() => this.handleDelete(this.state.userIdDelete)}
-            okType={"danger"}
-            onCancel={() =>
-              this.handleToggleDeletedModal(false, this.state.userIdDelete)
-            }
+            okType={'danger'}
+            onCancel={() => this.handleToggleDeletedModal(false, this.state.userIdDelete)}
           >
             <p>Do you really want to delete this record?</p>
           </Modal>
@@ -390,8 +371,8 @@ class UserList extends Component {
         {this.state.isShowModal && (
           <>
             <Modal
-              className="company-details"
-              title={this.state.userId ? "Update User" : "Add New User"}
+              className='company-details'
+              title={this.state.userId ? 'Update User' : 'Add New User'}
               visible={this.state.isShowModal}
               onOk={this.handleOk}
               onCancel={this.handleCancel}
@@ -404,40 +385,28 @@ class UserList extends Component {
                   handleResponse={this.handleResponseFromChild}
                 ></CreateOrUpdateUser> */}
 
-                <Tabs
-                  defaultActiveKey="1"
-                  activeKey={this.state.activeTab}
-                  onChange={(activeTab) => this.setState({ activeTab })}
-                >
+                <Tabs defaultActiveKey='1' activeKey={this.state.activeTab} onChange={(activeTab) => this.setState({ activeTab })}>
                   {/* <TabPane tab="General Info" key="1">
                     <label>
                         Info
                     </label>
                 </TabPane> */}
-                  <TabPane tab="Add user" key="1">
+                  <TabPane tab='Add user' key='1'>
                     <div>
                       <label>Avatar</label>
                       <Upload
-                        name="image"
-                        listType="picture-card"
-                        className="avatar-uploader"
+                        name='image'
+                        listType='picture-card'
+                        className='avatar-uploader'
                         showUploadList={false}
-                        action="http://localhost:3030/users/post"
+                        action='http://localhost:3030/users/post'
                         headers={{
                           authorization: `Bearer ${LocalStorageService.getAccessToken()}`,
                         }}
                         beforeUpload={this.beforeUpload}
                         onChange={this.handleChange}
                       >
-                        {imageUrl ? (
-                          <img
-                            src={imageUrl}
-                            alt="image"
-                            style={{ width: "100%" }}
-                          />
-                        ) : (
-                          uploadButton
-                        )}
+                        {imageUrl ? <img src={imageUrl} alt='image' style={{ width: '100%' }} /> : uploadButton}
                       </Upload>
                       {/* <Input
                         type="file"
@@ -447,53 +416,23 @@ class UserList extends Component {
                     </div>
                     <div>
                       <label>User Name</label>
-                      <Input
-                        type="text"
-                        name="userName"
-                        value={this.state.username}
-                        onChange={this.onChange}
-                        id="username"
-                      ></Input>
+                      <Input type='text' name='userName' value={this.state.username} onChange={this.onChange} id='username'></Input>
                     </div>
                     <div>
                       <label>Email</label>
-                      <Input
-                        type="text"
-                        name="email"
-                        value={this.state.email}
-                        onChange={this.onChange}
-                        id="email"
-                      ></Input>
+                      <Input type='text' name='email' value={this.state.email} onChange={this.onChange} id='email'></Input>
                     </div>
                     <div>
                       <label>Phone Number</label>
-                      <Input
-                        type="text"
-                        name="phoneNumber"
-                        value={this.state.phoneNumber}
-                        onChange={this.onChange}
-                        id="phoneNumber"
-                      ></Input>
+                      <Input type='text' name='phoneNumber' value={this.state.phoneNumber} onChange={this.onChange} id='phoneNumber'></Input>
                     </div>
                     <div>
                       <label>Address</label>
-                      <Input
-                        type="text"
-                        name="address"
-                        value={this.state.address}
-                        onChange={this.onChange}
-                        id="address"
-                      ></Input>
+                      <Input type='text' name='address' value={this.state.address} onChange={this.onChange} id='address'></Input>
                     </div>
                     <div>
                       <label>Day of birth</label>
-                      <Input
-                        type="date"
-                        name="dayOfBirth"
-                        value={this.state.dayOfBirth}
-                        onChange={this.onChange}
-                        id="dayOfBirth"
-                      ></Input>
+                      <Input type='date' name='dayOfBirth' value={this.state.dayOfBirth} onChange={this.onChange} id='dayOfBirth'></Input>
                     </div>
 
                     <div>
@@ -509,23 +448,11 @@ class UserList extends Component {
                         <Option value="ADMIN">Admin</Option>
                         <Option value="USER">User</Option>
                       </Select> */}
-                      <Input
-                        type="text"
-                        name="role"
-                        value={this.state.role}
-                        onChange={this.onChange}
-                        id="role"
-                      ></Input>
+                      <Input type='text' name='role' value={this.state.role} onChange={this.onChange} id='role'></Input>
                     </div>
                     <div>
                       <label>Password</label>
-                      <Input
-                        type="password"
-                        name="password"
-                        value={this.state.password}
-                        onChange={this.onChange}
-                        id="password"
-                      ></Input>
+                      <Input type='password' name='password' value={this.state.password} onChange={this.onChange} id='password'></Input>
                     </div>
                   </TabPane>
                 </Tabs>

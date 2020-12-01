@@ -25,14 +25,19 @@ class UserLogin extends React.Component {
   };
   onChange = (e) => {
     this.setState({ [e.target.id]: e.target.value });
+    console.log('sas:', e.target.value);
   };
-  onSubmitRegister = () => {
+  onSubmitRegister = (e) => {
+    e.preventDefault();
+
     const obj = {
       username: this.state.username,
       email: this.state.email,
       password: this.state.password,
     };
-    this.props.addGuestUser(obj);
+    this.props.addGuestUser(obj).then((data) => {
+      // this.props.history.push('/verify/'+data);
+    });
   };
   render() {
     return (
@@ -71,37 +76,22 @@ class UserLogin extends React.Component {
                   </form>
                 </div>
               </div>
-              {/* <div className="col-sm-1">
-                <h2 className="or">OR</h2>
+              <div className='col-sm-1'>
+                <h2 className='or'>OR</h2>
               </div>
-              <div className="col-sm-4">
-                <div className="signup-form">
+              <div className='col-sm-4'>
+                <div className='signup-form'>
                   <h2>New User Signup!</h2>
                   <form onSubmit={this.onSubmitRegister}>
-                    <input
-                      type="text"
-                      placeholder="Name"
-                      onchange={this.onChange}
-                      id="username"
-                    />
-                    <input
-                      type="email"
-                      placeholder="Email Address"
-                      onchange={this.onChange}
-                      id="email"
-                    />
-                    <input
-                      type="password"
-                      placeholder="Password"
-                      onchange={this.onChange}
-                      id="password"
-                    />
-                    <button type="submit" className="btn btn-default">
+                    <input type='text' placeholder='Name' onChange={this.onChange} id='username' required />
+                    <input type='email' placeholder='Email Address' onChange={this.onChange} id='email' required />
+                    <input type='password' placeholder='Password' onChange={this.onChange} id='password' required />
+                    <button type='submit' className='btn btn-default'>
                       Signup
                     </button>
                   </form>
                 </div>
-              </div> */}
+              </div>
             </div>
           </div>
         </section>

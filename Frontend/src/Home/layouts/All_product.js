@@ -1,42 +1,79 @@
 /* eslint-disable */
-import { Form, Modal } from "antd";
-import axios from "axios";
-import React from "react";
-import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
+import { Badge, Form, Modal } from 'antd';
+import axios from 'axios';
+import React from 'react';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 
-import Rolex from "../../image/Rolex.png";
-import productActions from "../../redux/product/actions";
-import ShopProductActions from "../../redux/shopProduct/actions";
-import Left_slidebar from "../Home_components/Slider_components/Left_slidebar";
-import Slider from "../Home_components/Slider_components/Slider";
+import Rolex from '../../image/Rolex.png';
+import productActions from '../../redux/product/actions';
+import ShopProductActions from '../../redux/shopProduct/actions';
+import Left_slidebar from '../Home_components/Slider_components/Left_slidebar';
+import Slider from '../Home_components/Slider_components/Slider';
 
 class All_product extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      brand: "",
-      productname: "",
-      productcode: "",
-      illustration: "",
-      description: "",
-      price: "",
+      brand: '',
+      productname: '',
+      productcode: '',
+      illustration: '',
+      description: '',
+      price: '',
       product: [],
       imagePro: [],
       photo: [],
-      id: "",
+      id: '',
+      productInCart: [],
+      count: '',
+      userid: '',
     };
   }
   handleCancel = () => {
     this.setState({ isShowModal: false });
-    console.log("status:", this.state.isShowModal);
+    console.log('status:', this.state.isShowModal);
   };
-  componentDidMount() {
+  componentDidMount = async () => {
     this.getProduct();
-  }
+    if (localStorage.getItem('userauth')) {
+      await this.setState({
+        userid: localStorage.getItem('userauth').split('id')[1].split(`"`)[2],
+      });
+      // this.getProductFromCart(this.state.userid);
+      console.log('this:', this.state.userid);
+    }
+  };
+  getProductFromCart = (userid) => {
+    console.log('id:', userid);
+    axios
+      .get('http://localhost:3030/shop/api/getproductfromcart/' + userid)
+      .then((res) => {
+        this.setState({
+          productInCart: res.data,
+          // count: this.state.productInCart.length(),
+        });
+        console.log('length:', this.state.productInCart.length);
+        // localStorage.setItem('count', this.state.productInCart.length);
+        // var temp = localStorage.getItem('userauth');
+        // const { productInCart } = this.state;
+        // var total = 0;
+        // var checkout = [];
+        // for (let index = 0; index < productInCart.length; index++) {
+        //   checkout = checkout + productInCart[index].productid + '/' + productInCart[index].amount + '***';
+        //   total = total + parseInt(productInCart[index].amount) * parseInt(productInCart[index].products.price);
+        // }
+        // this.setState({ total: total, checkout: checkout });
+        // console.log('baooo:', this.state.total);
+        // console.log('checkout:', this.state.checkout);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   addCart = (e) => {
     const obj = {
-      userid: localStorage.getItem("userauth").split("id")[1].split(`"`)[2],
+      userid: localStorage.getItem('userauth').split('id')[1].split(`"`)[2],
       productid: e,
     };
     this.props.addProductToCart(obj);
@@ -57,11 +94,11 @@ class All_product extends React.Component {
     //   });
     //   console.log('bao:', res.data.data.productname);
     // });
-    this.props.history.push("/detail/" + productId);
+    this.props.history.push('/detail/' + productId);
   };
   getProduct = async () => {
     await axios
-      .get("http://localhost:3030/shop/api/getproduct")
+      .get('http://localhost:3030/shop/api/getproduct')
       .then((res) => {
         // console.log(res.data), console.log('id', res.data.length);
         for (let index = 0; index < res.data.length; index++) {
@@ -103,52 +140,44 @@ class All_product extends React.Component {
       {
         id: 1,
         img: Rolex,
-        name: "Rolex fake",
-        price: "10$",
+        name: 'Rolex fake',
+        price: '10$',
       },
       {
         id: 2,
         img: Rolex,
-        name: "Rolex fake2",
-        price: "100$",
+        name: 'Rolex fake2',
+        price: '100$',
       },
       {
         id: 3,
         img: Rolex,
-        name: "Rolex fake3",
-        price: "100$",
+        name: 'Rolex fake3',
+        price: '100$',
       },
     ];
     const { product } = this.state;
     var result = product.map((product, index) => {
       return (
-        <div className="col-sm-4" key={index}>
-          <div className="product-image-wrapper">
-            <div className="single-products">
-              <div
-                className="productinfo text-center"
-                onClick={(e) => this.handleSelect(product.id)}
-              >
-                <img
-                  style={{ width: "200px", height: "auto" }}
-                  src={
-                    "http://localhost:3030/images/product/" +
-                    product.illustration
-                  }
-                  alt="sadad"
-                />
+        <div className='col-sm-4' key={index}>
+          <div className='product-image-wrapper'>
+            <div className='single-products'>
+              <div className='productinfo text-center' onClick={(e) => this.handleSelect(product.id)}>
+                <div style={{ height: '200px' }}>
+                  <img style={{ width: '200px', height: 'auto' }} src={'http://localhost:3030/images/product/' + product.illustration} alt='sadad' />
+                </div>
                 {/* imagee + "/" + product.illustration */}
                 <h2> Price:{product.price}$</h2>
                 <p>{product.productname}</p>
               </div>
-              <button
+              {/* <button
                 style={{ marginLeft: "25%" }}
                 type="button"
                 onClick={() => this.addCart(product.id)}
                 className="btn btn-default add-to-cart"
               >
                 <i className="fa fa-shopping-cart"></i>Add to cart
-              </button>
+              </button> */}
               {/* <div className='product-overlay'>
                 <div className='overlay-content'>
                   <h2>{product.price}</h2>
@@ -164,24 +193,24 @@ class All_product extends React.Component {
       );
     });
     return (
-      <div className="container">
-        <div className="row">
+      <div className='container'>
+        <div className='row'>
           <Left_slidebar />
-          <div className="col-sm-9 padding-right">
-            <div className="features_items">
-              <section id="slider" className="clr-white">
+          <div className='col-sm-9 padding-right'>
+            <div className='features_items'>
+              <section id='slider' className='clr-white'>
                 <Slider />
               </section>
-              <h2 className="title text-center">All Items</h2>
+              <h2 className='title text-center'>All Items</h2>
               {result}
               <div>
                 {/* {this.state.isShowModal === true && ( */}
                 <>
                   {/* {console.log('that work')} */}
                   <Modal
-                    okText="Add to Cart"
-                    className="company-details"
-                    title="Product Details"
+                    okText='Add to Cart'
+                    className='company-details'
+                    title='Product Details'
                     visible={this.state.isShowModal}
                     onOk={() => this.addCart(this.state.id)}
                     onCancel={this.handleCancel}
@@ -190,17 +219,17 @@ class All_product extends React.Component {
                       <h1>{this.state.productname}</h1>
                       <div
                         style={{
-                          float: "left",
-                          textAlign: "center",
-                          width: "50%",
-                          height: "auto",
+                          float: 'left',
+                          textAlign: 'center',
+                          width: '50%',
+                          height: 'auto',
                         }}
                       >
                         <p>{this.state.description}</p>
                       </div>
                       <div>
                         {/* <img style={{ marginLeft: '10px' }} src={shoes + this.state.productId} /> */}
-                        <p style={{ textAlign: "center" }}>
+                        <p style={{ textAlign: 'center' }}>
                           Price:<b>{this.state.price}$</b>
                         </p>
                       </div>
@@ -209,18 +238,18 @@ class All_product extends React.Component {
                 </>
                 {/* )} */}
               </div>
-              <ul className="pagination">
-                <li className="active">
-                  <a href="">1</a>
+              <ul className='pagination'>
+                <li className='active'>
+                  <a href=''>1</a>
                 </li>
                 <li>
-                  <a href="">2</a>
+                  <a href=''>2</a>
                 </li>
                 <li>
-                  <a href="">3</a>
+                  <a href=''>3</a>
                 </li>
                 <li>
-                  <a href="">&raquo;</a>
+                  <a href=''>&raquo;</a>
                 </li>
               </ul>
             </div>
@@ -243,15 +272,10 @@ const mapDispatchToProps = (dispatch) => ({
   // addUser: (user) => dispatch(userActions.addUser(user)),
   // loginUser: (user) => dispatch(userActions.loginUser(user)),
   getProduct: () => dispatch(productActions.getProduct),
-  getProductById: (productId) =>
-    dispatch(ShopProductActions.getProductById(productId)),
-  addProductToCart: (product) =>
-    dispatch(ShopProductActions.addProductToCart(product)),
+  getProductById: (productId) => dispatch(ShopProductActions.getProductById(productId)),
+  addProductToCart: (product) => dispatch(ShopProductActions.addProductToCart(product)),
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(withRouter(All_product));
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(All_product));
 
 // export default All_product;

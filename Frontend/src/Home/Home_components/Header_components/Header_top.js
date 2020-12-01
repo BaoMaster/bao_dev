@@ -12,6 +12,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
 
+import notification from '../../../helper/Notification';
 import userActions from '../../../redux/user/actions';
 import userGuestActions from '../../../redux/user/userAction';
 
