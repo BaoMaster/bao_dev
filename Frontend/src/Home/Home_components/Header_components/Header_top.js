@@ -13,6 +13,7 @@ import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
 
 import notification from '../../../helper/Notification';
+import userLogo from '../../../image/no-avatar.png';
 import userActions from '../../../redux/user/actions';
 import userGuestActions from '../../../redux/user/userAction';
 
@@ -96,12 +97,12 @@ class Header_top extends React.Component {
               <div className='contactinfo'>
                 <ul className='nav nav-pills' style={{ width: '1000px' }}>
                   <li>
-                    <a style={{ color: 'white' }}>
+                    <a style={{ color: 'white', marginTop: '8px' }}>
                       <i className='fa fa-phone'></i> +84 942 099 721
                     </a>
                   </li>
                   <li>
-                    <a style={{ color: 'white' }}>
+                    <a style={{ color: 'white', marginTop: '8px' }}>
                       <i className='fa fa-envelope'></i> info@sneakershop@gmail.com
                     </a>
                   </li>
@@ -121,7 +122,7 @@ class Header_top extends React.Component {
                       {username ? (
                         <Dropdown overlay={menu} placement='bottomCenter' arrow>
                           {/* <Button>bottomCenter</Button> */}
-                          <Link
+                          {/* <Link
                             style={{
                               marginLeft: '5%',
                               color: 'white',
@@ -131,7 +132,8 @@ class Header_top extends React.Component {
                             }}
                           >
                             Hello {username}
-                          </Link>
+                          </Link> */}
+                          <img style={{ width: '45px', marginBottom: '5px' }} src={userLogo}></img>
                         </Dropdown>
                       ) : (
                         // <button type='button'></button>
@@ -141,7 +143,7 @@ class Header_top extends React.Component {
                           style={{
                             fontSize: '20px',
                             marginLeft: '5%',
-                            color: '#EE4D2D',
+                            color: 'white',
                             marginTop: '50px',
                           }}
                           to={'/login'}

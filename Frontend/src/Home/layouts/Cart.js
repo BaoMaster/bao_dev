@@ -26,6 +26,7 @@ class Cart extends React.Component {
       address: '',
       notes: '',
       checkout: '',
+      show: true,
     };
   }
   componentDidMount = async () => {
@@ -93,6 +94,7 @@ class Cart extends React.Component {
       if (res.data.status === 'success') {
         this.getProductFromCart(userid);
         notification(res.data.status, res.data.message);
+        this.props.history.push('/cart');
       }
     });
   };
@@ -104,6 +106,10 @@ class Cart extends React.Component {
         this.setState({
           productInCart: res.data,
         });
+        if (res.data.length) {
+          this.setState({ show: false });
+        }
+        console.log('state:', this.state.show);
         var temp = localStorage.getItem('userauth');
         const { productInCart } = this.state;
         localStorage.setItem('count', productInCart.length);
@@ -251,6 +257,7 @@ class Cart extends React.Component {
             <div className='heading'>
               <h3>What would you like to do next?</h3>
               <p>Choose if you have a discount code or reward points you want to use or would like to estimate your delivery cost.</p>
+              <p>You must fill out all information below</p>
             </div>
             <div className='row'>
               <div className='col-sm-6'>
@@ -259,68 +266,69 @@ class Cart extends React.Component {
                     <ul className='user_option'>
                       <li>
                         <input type='radio' name='option' value='discount10' />
-                        <label>Use Coupon Code Discount 10%</label>
+                        <label>Use Coupon Code Discount 10$</label>
                       </li>
                       <li>
                         <input type='radio' name='option' value='discount20' />
-                        <label>Use Coupon Code Discount 20%</label>
+                        <label>Use Coupon Code Discount 20$</label>
                       </li>
                       <li>
                         <input type='radio' name='option' value='discount30' />
-                        <label>Use Coupon Code Discount 30%</label>
+                        <label>Use Coupon Code Discount 30$</label>
                       </li>
                     </ul>
                   </div>
+                  <form>
+                    <div>
+                      <ul className='user_info'>
+                        <li style={{ float: 'none' }}>
+                          <label>Name: </label>
+                          <input required onChange={this.onChange} id='name' type='text' placeholder='Customer Name' style={{ width: '400px' }} />
+                        </li>
 
-                  <div>
-                    <ul className='user_info'>
-                      <li style={{ float: 'none' }}>
-                        <label>Name: </label>
-                        <input onChange={this.onChange} id='name' type='text' placeholder='Customer Name' style={{ width: '400px' }} />
-                      </li>
+                        <li style={{ float: 'none' }}>
+                          <label>Email: </label>
 
-                      <li style={{ float: 'none' }}>
-                        <label>Email: </label>
+                          <input required onChange={this.onChange} id='email' type='text' placeholder='Email*' style={{ width: '400px' }} />
+                        </li>
+                        <li>
+                          <label>Phone: </label>
 
-                        <input onChange={this.onChange} id='email' type='text' placeholder='Email*' style={{ width: '400px' }} />
-                      </li>
-                      <li>
-                        <label>Phone: </label>
-
-                        <input onChange={this.onChange} id='phone' type='text' placeholder='Phone *' style={{ width: '400px' }} />
-                      </li>
-                      <li className='single_field'>
-                        <label>Country:</label>
-                        <select>
-                          <option>United States</option>
-                          <option>Bangladesh</option>
-                          <option>UK</option>
-                          <option>India</option>
-                          <option>Pakistan</option>
-                          <option>Ucrane</option>
-                          <option>Canada</option>
-                          <option>Dubai</option>
-                        </select>
-                      </li>
-                      <li className='single_field'>
-                        <label>Region / State:</label>
-                        <select>
-                          <option>Select</option>
-                          <option>Dhaka</option>
-                          <option>London</option>
-                          <option>Dillih</option>
-                          <option>Lahore</option>
-                          <option>Alaska</option>
-                          <option>Canada</option>
-                          <option>Dubai</option>
-                        </select>
-                      </li>
-                      <li>
-                        <label>Address</label>
-                        <textarea onChange={this.onChange} id='address' type='text' rows='5' cols='70' placeholder='Address'></textarea>
-                      </li>
-                    </ul>
-                  </div>
+                          <input required onChange={this.onChange} id='phone' type='text' placeholder='Phone *' style={{ width: '400px' }} />
+                        </li>
+                        <li className='single_field'>
+                          <label>Country:</label>
+                          <select>
+                            <option>United States</option>
+                            <option>Bangladesh</option>
+                            <option>UK</option>
+                            <option>India</option>
+                            <option>Pakistan</option>
+                            <option>Ucrane</option>
+                            <option>Canada</option>
+                            <option>Dubai</option>
+                          </select>
+                        </li>
+                        <li className='single_field'>
+                          <label>Region / State:</label>
+                          <select>
+                            <option>Select</option>
+                            <option>Dhaka</option>
+                            <option>London</option>
+                            <option>Dillih</option>
+                            <option>Lahore</option>
+                            <option>Alaska</option>
+                            <option>Canada</option>
+                            <option>Dubai</option>
+                          </select>
+                        </li>
+                        <li>
+                          <label>Address</label>
+                          <textarea required onChange={this.onChange} id='address' type='text' rows='5' cols='70' placeholder='Address'></textarea>
+                        </li>
+                      </ul>
+                    </div>
+                  </form>
                   {/* <div className='col-sm-7'>sads</div> */}
                   {/* <a className="btn btn-default update" href="">
                     Get Quotes
@@ -377,17 +385,19 @@ class Cart extends React.Component {
                   </NavLink> */}
                 </div>
               </div>
-              <button
-                onClick={this.onCheckout}
-                className='btn btn-default check_out'
-                style={{
-                  textAlign: 'center',
-                  marginLeft: '520px',
-                  marginTop: '25px',
-                }}
-              >
-                Continue Checkout
-              </button>
+              {this.state.show == false && (
+                <button
+                  onClick={this.onCheckout}
+                  className='btn btn-default check_out'
+                  style={{
+                    textAlign: 'center',
+                    marginLeft: '520px',
+                    marginTop: '25px',
+                  }}
+                >
+                  Continue Checkout
+                </button>
+              )}
             </div>
           </div>
         </section>

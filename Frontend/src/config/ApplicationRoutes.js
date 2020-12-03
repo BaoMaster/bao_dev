@@ -20,6 +20,7 @@ import Header_middle from '../Home/Home_components/Header_components/Header_midd
 import Header_top from '../Home/Home_components/Header_components/Header_top';
 import Slider from '../Home/Home_components/Slider_components/Slider';
 import Cart from '../Home/layouts/Cart';
+import Not_found from '../Home/layouts/Not_found';
 import user from '../image/no-avatar.png';
 import userActions from '../redux/user/actions';
 import RedirectIfUserAuth from './RedireactIfUserAuth';
@@ -61,14 +62,16 @@ const ApplicationRoutes = (props) => {
     <React.Fragment>
       <Router>
         <Route exact path='/' component={Home} />
-        <RedirectIfUserAuth exact path={'/login'} component={Home} />
-        {/* <RedirectIfUserAuth exact path='/login' component={Home}>
+        {/* <RedirectIfUserAuth exact path={'/login'} component={Home} /> */}
+        <RedirectIfUserAuth exact path='/login' component={Home}>
           <Login />
-        </RedirectIfUserAuth> */}
+        </RedirectIfUserAuth>
         <Route exact path='/detail/:id' component={Home} />
         <Route exact path='/verify/:id' component={Home} />
         <Route path='/checkout' exact component={Home} />
         <Route path='/cart' component={Home} />
+        {/* <Route component={Not_found} /> */}
+
         <Route
           path={'/admin'}
           render={() => (
@@ -114,7 +117,7 @@ const ApplicationRoutes = (props) => {
                     </RedirectIfAuth>
                     <PrivateRoute exact path='/admin/userlist' component={UserList} />
                     <PrivateRoute path='/admin/productlist' component={ProductList} />
-                    <Route path='/register' component={Register} />
+                    <Route path='/admin/register' component={Register} />
 
                     {/* <Route path="/list" component={List} /> */}
                     <Route path='/form' component={Form} />
@@ -131,7 +134,7 @@ const ApplicationRoutes = (props) => {
             </Layout>
           )}
         />
-        <Route component={Home} />
+        {/* <Route component={Home} /> */}
       </Router>
     </React.Fragment>
   );

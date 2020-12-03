@@ -16,6 +16,7 @@ import { BrowserRouter as Router, Link, Redirect, Route, Switch } from 'react-ro
 import { withRouter } from 'react-router-dom';
 
 import PrivateRouteUser from '../components/privateRoute/user';
+import ApplicationRoutes from '../config/ApplicationRoutes';
 import LocalStorageService from '../config/LocalStorageService';
 import RedirectIfUserAuth from '../config/RedireactIfUserAuth';
 import notification from '../helper/Notification';
@@ -264,36 +265,6 @@ class Home extends React.Component {
                           <ShoppingCartOutlined />
                         </Link>
                       </Badge>
-                      {username ? (
-                        <Dropdown overlay={menu} placement='bottomCenter' arrow>
-                          {/* <Button>bottomCenter</Button> */}
-                          <Link
-                            style={{
-                              marginLeft: '5%',
-                              color: '#EE4D2D',
-                              fontSize: '20px',
-                              marginTop: '50px',
-                            }}
-                          >
-                            Hello {username}
-                          </Link>
-                        </Dropdown>
-                      ) : (
-                        // <button type='button'></button>
-                        // <div style={{ marginLeft: '2%' }}>
-                        // </div>
-                        <Link
-                          style={{
-                            fontSize: '20px',
-                            marginLeft: '5%',
-                            color: '#EE4D2D',
-                            marginTop: '50px',
-                          }}
-                          to={'/login'}
-                        >
-                          <UnlockOutlined /> {'Login'}
-                        </Link>
-                      )}
                     </div>
                   </Header>
                   <div>
@@ -389,6 +360,7 @@ class Home extends React.Component {
               </section> */}
               <section className='clr-white'>
                 <Switch>
+                  {/* <Route path='/admin' exact component={ApplicationRoutes} /> */}
                   <Route path='/' exact component={Content} />
                   <RedirectIfUserAuth exact path='/login'>
                     <Login />
@@ -397,7 +369,7 @@ class Home extends React.Component {
                   <Route path='/verify/:id' exact component={Verify} />
                   <Route path='/detail/:id' exact component={ProductDetail} />
                   <Route path='/checkout' exact component={Checkout} />
-                  <Route component={Not_found} />
+                  {/* <Route component={Not_found} /> */}
                 </Switch>
               </section>
               <Footer />

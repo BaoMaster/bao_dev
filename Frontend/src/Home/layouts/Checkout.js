@@ -1,7 +1,7 @@
 /* eslint-disable */
 import { CloseOutlined, DollarOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
-import { Button, Modal, Space } from 'antd';
+import { Breadcrumb, Button, Modal, Radio, Space } from 'antd';
 import axios from 'axios';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -34,6 +34,7 @@ class Checkout extends React.Component {
       visible: false,
       idGenerate: '',
       tax: 2,
+      value: 'Online',
     };
   }
   componentDidMount = async () => {
@@ -65,7 +66,12 @@ class Checkout extends React.Component {
     console.log('Clicked cancel button:', shortId.generate());
     this.setState({ visible: false });
   };
-
+  onChange4 = (e) => {
+    console.log('radio4 checked', e.target.value);
+    this.setState({
+      value: e.target.value,
+    });
+  };
   accept = async () => {
     var obj = {
       userid: this.state.userid,
@@ -146,7 +152,12 @@ class Checkout extends React.Component {
       });
   };
   render() {
+    const options = [
+      { label: 'Cash', value: 'Cash' },
+      { label: 'Online', value: 'Online' },
+    ];
     const { productInCart } = this.state;
+    const toDay = new Date();
 
     var result = productInCart.map((productInCart, index) => {
       return (
@@ -158,7 +169,8 @@ class Checkout extends React.Component {
         </td> */}
           <td className='cart_description'>
             <h4>
-              <a href=''>{productInCart.productid}</a>
+              {/* <a href=''>{productInCart.productid}</a> */}
+              <img src={'http://localhost:3030/images/product/' + productInCart.products.illustration} style={{ height: 'auto', width: '80px' }}></img>
             </h4>
           </td>
           <td className='cart_name'>
@@ -214,15 +226,26 @@ class Checkout extends React.Component {
       <div>
         <section id='cart_items'>
           <div className='container'>
-            <div className='breadcrumbs'>
+            {/* <div className='breadcrumbs'>
               <ol className='breadcrumb'>
                 <li>
                   <NavLink to='/'>Home</NavLink>
                 </li>
+                <li>
+                  <a href='/cart'>Cart</a>
+                </li>
                 <li className='active'>Check out</li>
               </ol>
-            </div>
-
+            </div> */}
+            <Breadcrumb>
+              <Breadcrumb.Item>
+                <a href=''>Home</a>
+              </Breadcrumb.Item>
+              <Breadcrumb.Item>
+                <a href='/cart'>Cart</a>
+              </Breadcrumb.Item>
+              <Breadcrumb.Item>CheckOut</Breadcrumb.Item>
+            </Breadcrumb>
             {/* <div className='step-one'>
               <h2 className='heading'>Step1</h2>
             </div> */}
@@ -247,11 +270,9 @@ class Checkout extends React.Component {
                 </li>
               </ul>
             </div> */}
-
             <div className='register-req'>
               <p>Please check your cart list before making payment</p>
             </div>
-
             <div className='shopper-informations'>
               <div className='row'>
                 {/* <div className='col-sm-3'>
@@ -276,7 +297,6 @@ class Checkout extends React.Component {
             <div className='review-payment'>
               <h2>Review & Payment</h2>
             </div>
-
             <div className='table-responsive cart_info'>
               <table className='table table-condensed'>
                 <thead>
@@ -302,6 +322,19 @@ class Checkout extends React.Component {
                         <p>Address: {this.state.address}</p>
                         <p>Email: {this.state.email}</p>
                         <p>Notes about order: {this.state.notes}</p>
+                        <p>Date: {toDay}</p>
+                        <br></br>
+                        <p>
+                          <label>Select a payment method: </label>
+                          <Radio.Group
+                            style={{ marginLeft: '20px' }}
+                            options={options}
+                            onChange={this.onChange4}
+                            value={this.state.value}
+                            optionType='button'
+                            buttonStyle='solid'
+                          />
+                        </p>
                       </div>
                     </td>
                     <td

@@ -25,7 +25,7 @@ function RedirectIfUserAuth({ children, ...rest }) {
 
 const mapStateToProps = (state) => {
   return {
-    isAuthenticatedUser: state.auth.isAuthenticatedUser,
+    isAuthenticatedUser: state.auth.user.isAuthenticatedUser,
   };
 };
 

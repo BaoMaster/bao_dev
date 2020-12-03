@@ -5,7 +5,9 @@ import { Redirect, Route } from 'react-router-dom';
 
 import * as authActions from '../../actions/auth';
 
-function PrivateRouteUser({ component: Component, isAuthenticated, ...rest }) {
+function PrivateRouteUser({ component: Component, ...rest }) {
+  const { isAuthenticated } = rest;
+
   const dispatch = useDispatch();
 
   return (

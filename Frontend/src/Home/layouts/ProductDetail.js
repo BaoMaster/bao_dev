@@ -1,6 +1,6 @@
 /* eslint-disable */
 import { CloseOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons';
-import { Empty } from 'antd';
+import { Empty, Modal } from 'antd';
 import axios from 'axios';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -25,8 +25,15 @@ class ProductDetail extends React.Component {
       size: '38',
       buyNow: false,
       amountChoose: 1,
+      showModal: false,
     };
   }
+  handleOk = () => {
+    this.props.history.push('/login');
+  };
+  handleCancel = () => {
+    this.setState({ showModal: false });
+  };
   addOne = () => {
     this.setState({ amountChoose: this.state.amountChoose + 1 });
     console.log('add', this.state.amountChoose);
@@ -40,18 +47,19 @@ class ProductDetail extends React.Component {
       await this.setState({
         userid: localStorage.getItem('userauth').split('id')[1].split(`"`)[2],
       });
-      this.props.getProductById(this.props.match.params.id).then((data) => {
-        this.setState({
-          name: data.data.data.productname,
-          brand: data.data.data.brand,
-          description: data.data.data.description,
-          illustration: data.data.data.illustration,
-          price: data.data.data.price,
-          // size: data.data.data.size,
-        });
-        console.log('bao:', data.data.data);
-      });
     }
+    this.props.getProductById(this.props.match.params.id).then((data) => {
+      this.setState({
+        name: data.data.data.productname,
+        brand: data.data.data.brand,
+        description: data.data.data.description,
+        illustration: data.data.data.illustration,
+        price: data.data.data.price,
+        // size: data.data.data.size,
+      });
+      console.log('bao:', data.data.data);
+    });
+
     // let userid = localStorage.getItem("userauth").split("id")[1].split(`"`)[2];
     // this.props.getProductFromCart(userid);
     // console.log("baoooo:", userid);
@@ -75,25 +83,33 @@ class ProductDetail extends React.Component {
   //   });
   // };
   addCart = (e, size, amount) => {
-    const obj = {
-      userid: localStorage.getItem('userauth').split('id')[1].split(`"`)[2],
-      size: size,
-      amountChoose: amount,
-      productid: e,
-    };
-    this.props.addProductToCart(obj);
-    notification('success', 'Add product to cart success');
+    if (localStorage.getItem('userauth')) {
+      const obj = {
+        userid: localStorage.getItem('userauth').split('id')[1].split(`"`)[2],
+        size: size,
+        amountChoose: amount,
+        productid: e,
+      };
+      this.props.addProductToCart(obj);
+      notification('success', 'Add product to cart success');
+    } else {
+      this.setState({ showModal: true });
+    }
   };
   byNow = (e, size, amount) => {
-    const obj = {
-      userid: localStorage.getItem('userauth').split('id')[1].split(`"`)[2],
-      size: size,
-      amountChoose: amount,
-      productid: e,
-    };
-    this.props.addProductToCart(obj);
-    notification('success', 'Add product to cart success');
-    this.props.history.push('/cart');
+    if (localStorage.getItem('userauth')) {
+      const obj = {
+        userid: localStorage.getItem('userauth').split('id')[1].split(`"`)[2],
+        size: size,
+        amountChoose: amount,
+        productid: e,
+      };
+      this.props.addProductToCart(obj);
+      notification('success', 'Add product to cart success');
+      this.props.history.push('/cart');
+    } else {
+      this.setState({ showModal: true });
+    }
   };
   // handleDelete = (productId) => {
   //   // productId.preventDefault();
@@ -186,7 +202,7 @@ class ProductDetail extends React.Component {
                 <li>
                   <NavLink to='/'>Home</NavLink>
                 </li>
-                <li className='active'>Shopping Cart</li>
+                <li className='active'>Products detail</li>
               </ol>
             </div>
           </div>
@@ -285,6 +301,16 @@ class ProductDetail extends React.Component {
                   BUY NOW
                 </button>
               </div>
+              <Modal
+                title='Notification'
+                visible={this.state.showModal}
+                onOk={this.handleOk}
+                // confirmLoading={confirmLoading}
+                onCancel={this.handleCancel}
+                okText='Login'
+              >
+                <p>You must Login to add this product to cart !</p>
+              </Modal>
               {/* <button
                 onClick={this.onCheckout}
                 className="btn btn-default check_out"
