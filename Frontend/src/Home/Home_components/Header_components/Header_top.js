@@ -6,16 +6,27 @@ import {
   SearchOutlined,
   ShoppingCartOutlined,
   UnlockOutlined,
-} from '@ant-design/icons';
-import { Button, Divider, Dropdown, Form, Input, Layout, Menu, Modal, Popconfirm, Upload } from 'antd';
-import React from 'react';
-import { connect } from 'react-redux';
-import { Link, withRouter } from 'react-router-dom';
+} from "@ant-design/icons";
+import {
+  Button,
+  Divider,
+  Dropdown,
+  Form,
+  Input,
+  Layout,
+  Menu,
+  Modal,
+  Popconfirm,
+  Upload,
+} from "antd";
+import React from "react";
+import { connect } from "react-redux";
+import { Link, withRouter } from "react-router-dom";
 
-import notification from '../../../helper/Notification';
-import userLogo from '../../../image/no-avatar.png';
-import userActions from '../../../redux/user/actions';
-import userGuestActions from '../../../redux/user/userAction';
+import notification from "../../../helper/Notification";
+import userLogo from "../../../image/no-avatar.png";
+import userActions from "../../../redux/user/actions";
+import userGuestActions from "../../../redux/user/userAction";
 
 const { confirm } = Modal;
 
@@ -25,30 +36,30 @@ class Header_top extends React.Component {
     this.state = {
       ShowInfo: false,
       showLogout: false,
-      imageUrl: '',
+      imageUrl: "",
       loading: false,
-      address: '',
-      avatar: '',
-      dayOfBirth: '',
-      email: '',
-      phoneNumber: '',
-      role: '',
-      username: '',
-      userid: '',
-      id: '',
+      address: "",
+      avatar: "",
+      dayOfBirth: "",
+      email: "",
+      phoneNumber: "",
+      role: "",
+      username: "",
+      userid: "",
+      id: "",
     };
   }
 
   showConfirm() {
     confirm({
-      title: 'This action will log out of the account',
+      title: "This action will log out of the account",
       icon: <ExclamationCircleOutlined />,
-      content: 'are you sure ?',
-      okText: 'Logout',
+      content: "are you sure ?",
+      okText: "Logout",
       onOk() {
         // console.log('OK');
-        localStorage.removeItem('userauth');
-        notification('success', `Logout Successfully`, '');
+        localStorage.removeItem("userauth");
+        notification("success", `Logout Successfully`, "");
       },
       onCancel() {
         // console.log('Cancel');
@@ -68,17 +79,19 @@ class Header_top extends React.Component {
         username: res.data.data.username,
       });
     });
-    console.log('baoooooo:', this.state.ShowInfo);
+    console.log("baoooooo:", this.state.ShowInfo);
   };
   render() {
     const { username } = this.props.auth;
     const menu = (
       <Menu>
         <Menu.Item>
-          <a onClick={() => this.info(this.state.userid)}>Account Information</a>
+          <a onClick={() => this.info(this.state.userid)}>
+            Account Information
+          </a>
         </Menu.Item>
         <Menu.Item>
-          <a onClick={''}>Change Password</a>
+          <a onClick={""}>Change Password</a>
         </Menu.Item>
         <Menu.Item>
           <a onClick={() => this.info()}>Settings</a>
@@ -90,37 +103,41 @@ class Header_top extends React.Component {
     );
 
     return (
-      <div className='header_top' style={{ backgroundColor: '#ee4d2d', color: 'white' }}>
-        <div className='container'>
-          <div className='row'>
-            <div className='col-sm-6'>
-              <div className='contactinfo'>
-                <ul className='nav nav-pills' style={{ width: '1000px' }}>
+      <div
+        className="header_top"
+        style={{ backgroundColor: "#ee4d2d", color: "white" }}
+      >
+        <div className="container">
+          <div className="row">
+            <div className="col-sm-6">
+              <div className="contactinfo">
+                <ul className="nav nav-pills" style={{ width: "1000px" }}>
                   <li>
-                    <a style={{ color: 'white', marginTop: '8px' }}>
-                      <i className='fa fa-phone'></i> +84 942 099 721
+                    <a style={{ color: "white", marginTop: "8px" }}>
+                      <i className="fa fa-phone"></i> +84 942 099 721
                     </a>
                   </li>
                   <li>
-                    <a style={{ color: 'white', marginTop: '8px' }}>
-                      <i className='fa fa-envelope'></i> info@sneakershop@gmail.com
+                    <a style={{ color: "white", marginTop: "8px" }}>
+                      <i className="fa fa-envelope"></i>{" "}
+                      info@sneakershop@gmail.com
                     </a>
                   </li>
                   <li>
-                    <div style={{ width: '200px', marginLeft: '465px' }}>
+                    <div style={{ width: "200px", marginLeft: "465px" }}>
                       <Link
                         style={{
-                          fontSize: '30px',
-                          marginLeft: '1%',
-                          color: '#EE4D2D',
-                          marginTop: '50px',
+                          fontSize: "30px",
+                          marginLeft: "1%",
+                          color: "#EE4D2D",
+                          marginTop: "50px",
                         }}
-                        to={'/cart'}
+                        to={"/shop/cart"}
                       >
                         <ShoppingCartOutlined />
                       </Link>
                       {username ? (
-                        <Dropdown overlay={menu} placement='bottomCenter' arrow>
+                        <Dropdown overlay={menu} placement="bottomCenter" arrow>
                           {/* <Button>bottomCenter</Button> */}
                           {/* <Link
                             style={{
@@ -133,7 +150,10 @@ class Header_top extends React.Component {
                           >
                             Hello {username}
                           </Link> */}
-                          <img style={{ width: '45px', marginBottom: '5px' }} src={userLogo}></img>
+                          <img
+                            style={{ width: "45px", marginBottom: "5px" }}
+                            src={userLogo}
+                          ></img>
                         </Dropdown>
                       ) : (
                         // <button type='button'></button>
@@ -141,14 +161,14 @@ class Header_top extends React.Component {
                         // </div>
                         <Link
                           style={{
-                            fontSize: '20px',
-                            marginLeft: '5%',
-                            color: 'white',
-                            marginTop: '50px',
+                            fontSize: "20px",
+                            marginLeft: "5%",
+                            color: "white",
+                            marginTop: "50px",
                           }}
-                          to={'/login'}
+                          to={"/shop/login"}
                         >
-                          <UnlockOutlined /> {'Login'}
+                          <UnlockOutlined /> {"Login"}
                         </Link>
                       )}
                     </div>
@@ -156,7 +176,13 @@ class Header_top extends React.Component {
                 </ul>
               </div>
               <div>
-                <Modal className='company-details' title='User Information' visible={this.state.ShowInfo} onOk={this.handleOk} onCancel={this.handleCancel}>
+                <Modal
+                  className="company-details"
+                  title="User Information"
+                  visible={this.state.ShowInfo}
+                  onOk={this.handleOk}
+                  onCancel={this.handleCancel}
+                >
                   <Form>
                     {/* <CreateOrUpdateUser
                   // onRef={ref => (this.child = ref)}
@@ -196,23 +222,53 @@ class Header_top extends React.Component {
                     </div>
                     <div>
                       <label>User Name</label>
-                      <Input type='text' name='userName' value={this.state.username} onChange={this.onChange} id='username'></Input>
+                      <Input
+                        type="text"
+                        name="userName"
+                        value={this.state.username}
+                        onChange={this.onChange}
+                        id="username"
+                      ></Input>
                     </div>
                     <div>
                       <label>Email</label>
-                      <Input type='text' name='email' value={this.state.email} onChange={this.onChange} id='email'></Input>
+                      <Input
+                        type="text"
+                        name="email"
+                        value={this.state.email}
+                        onChange={this.onChange}
+                        id="email"
+                      ></Input>
                     </div>
                     <div>
                       <label>Phone Number</label>
-                      <Input type='text' name='phoneNumber' value={this.state.phoneNumber} onChange={this.onChange} id='phoneNumber'></Input>
+                      <Input
+                        type="text"
+                        name="phoneNumber"
+                        value={this.state.phoneNumber}
+                        onChange={this.onChange}
+                        id="phoneNumber"
+                      ></Input>
                     </div>
                     <div>
                       <label>Address</label>
-                      <Input type='text' name='address' value={this.state.address} onChange={this.onChange} id='address'></Input>
+                      <Input
+                        type="text"
+                        name="address"
+                        value={this.state.address}
+                        onChange={this.onChange}
+                        id="address"
+                      ></Input>
                     </div>
                     <div>
                       <label>Day of birth</label>
-                      <Input type='date' name='dayOfBirth' value={this.state.dayOfBirth} onChange={this.onChange} id='dayOfBirth'></Input>
+                      <Input
+                        type="date"
+                        name="dayOfBirth"
+                        value={this.state.dayOfBirth}
+                        onChange={this.onChange}
+                        id="dayOfBirth"
+                      ></Input>
                     </div>
 
                     <div>
@@ -228,7 +284,13 @@ class Header_top extends React.Component {
                         <Option value="ADMIN">Admin</Option>
                         <Option value="USER">User</Option>
                       </Select> */}
-                      <Input type='text' name='role' value={this.state.role} onChange={this.onChange} id='role'></Input>
+                      <Input
+                        type="text"
+                        name="role"
+                        value={this.state.role}
+                        onChange={this.onChange}
+                        id="role"
+                      ></Input>
                     </div>
                     {/* <div>
                           <label>Password</label>
@@ -262,6 +324,9 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Header_top));
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withRouter(Header_top));
 
 // export default Header_top;
