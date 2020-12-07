@@ -38,7 +38,8 @@ import ApplicationRoutes from "../config/ApplicationRoutes";
 import LocalStorageService from "../config/LocalStorageService";
 import RedirectIfUserAuth from "../config/RedireactIfUserAuth";
 import notification from "../helper/Notification";
-import Logo from "../image/shoplogo.png";
+// import Logo from "../image/shoplogo.png";
+import Logo from "../image/logofashion.png";
 import userActions from "../redux/user/actions";
 import userGuestActions from "../redux/user/userAction";
 import store from "../store";
@@ -235,7 +236,11 @@ class Home extends React.Component {
                   >
                     <Link style={{ marginLeft: "5%", float: "left" }} to={"/"}>
                       <img
-                        style={{ height: "150px", marginLeft: "100%" }}
+                        style={{
+                          height: "150px",
+                          marginLeft: "100%",
+                          width: "120px",
+                        }}
                         src={Logo}
                       />
                     </Link>
@@ -264,6 +269,7 @@ class Home extends React.Component {
                           style={{
                             width: "450px",
                             backgroundColor: "white",
+                            color: "black",
                             // border: '2px solid red',
                           }}
                           type="text"
@@ -310,42 +316,7 @@ class Home extends React.Component {
                       onCancel={this.handleCancel}
                     >
                       <Form>
-                        {/* <CreateOrUpdateUser
-                  // onRef={ref => (this.child = ref)}
-                  ref={this.formRef}
-                  userId={this.state.userId?this.state.userId:"999"}
-                  handleResponse={this.handleResponseFromChild}
-                ></CreateOrUpdateUser> */}
-
-                        {/* <Tabs defaultActiveKey='1' activeKey={this.state.activeTab} onChange={(activeTab) => this.setState({ activeTab })}> */}
-                        {/* <TabPane tab="General Info" key="1">
-                    <label>
-                        Info
-                    </label>
-                </TabPane> */}
-                        {/* <TabPane tab='Add user' key='1'> */}
-                        <div>
-                          {/* <label>Avatar</label>
-                          <Upload
-                            name='image'
-                            listType='picture-card'
-                            className='avatar-uploader'
-                            showUploadList={false}
-                            action='http://localhost:3030/users/post'
-                            headers={{
-                              authorization: `Bearer ${LocalStorageService.getAccessToken()}`,
-                            }}
-                            beforeUpload={this.beforeUpload}
-                            onChange={this.handleChange}
-                          >
-                            {imageUrl ? <img src={imageUrl} alt='image' style={{ width: '100%' }} /> : uploadButton}
-                          </Upload> */}
-                          {/* <Input
-                        type="file"
-                        name="image"
-                        beforeUpload={this.beforeUpload}
-                      ></Input> */}
-                        </div>
+                        <div></div>
                         <div>
                           <label>User Name</label>
                           <Input
@@ -442,7 +413,7 @@ class Home extends React.Component {
                   <RedirectIfUserAuth exact path="/shop/login">
                     <Login />
                   </RedirectIfUserAuth>
-                  <PrivateRouteUser path="/shop/cart" exact component={Cart} />
+                  <Route path="/shop/cart" exact component={Cart} />
                   <Route path="/verify/:id" exact component={Verify} />
                   <Route path="/detail/:id" exact component={ProductDetail} />
                   <Route path="/search/:keyword" exact component={Search} />

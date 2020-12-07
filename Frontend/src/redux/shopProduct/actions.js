@@ -51,6 +51,16 @@ const shopProductActions = {
       return axios.delete(`./shop/api/removefromcart`, { params: data });
     };
   },
+  sortPrice: (key) => {
+    return (dispatch) => {
+      return axios.get(`./shop/api/sort/${key}`);
+    };
+  },
+  sortPriceSearch: (obj) => {
+    return (dispatch) => {
+      return axios.get(`./shop/api/sortonsearch/${obj}`);
+    };
+  },
   getInfoFromCheckout: (userid) => {
     return (dispatch) => {
       return axios.get(`./shop/api/getinfofromcheckout/${userid}`);

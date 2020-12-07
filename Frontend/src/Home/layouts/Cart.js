@@ -1,6 +1,6 @@
 /* eslint-disable */
 import { CloseOutlined, MinusOutlined, PlusOutlined } from "@ant-design/icons";
-import { Empty } from "antd";
+import { Empty, Modal } from "antd";
 import axios from "axios";
 import React from "react";
 import { connect } from "react-redux";
@@ -27,58 +27,124 @@ class Cart extends React.Component {
       notes: "",
       checkout: "",
       show: true,
+      showModal: false,
+      cart: [],
     };
   }
   componentDidMount = async () => {
-    if (localStorage.getItem("userauth")) {
-      await this.setState({
-        userid: localStorage.getItem("userauth").split("id")[1].split(`"`)[2],
-      });
-      this.getProductFromCart(this.state.userid);
+    // if (localStorage.getItem("userauth")) {
+    //   await this.setState({
+    //     userid: localStorage.getItem("userauth").split("id")[1].split(`"`)[2],
+    //   });
+    //   this.getProductFromCart(this.state.userid);
+    // }
+    if (localStorage.getItem("cart")) {
+      let cartList = [];
+      let cart = localStorage.getItem("cart").split(",");
+      console.log("test:", cart.length);
+      const length = cart.length;
+      for (let index = 0; index < length; index++) {
+        // const element = array[index];
+        let cartDetail = cart[index].split("-");
+        cartList[index] = {
+          productid: cartDetail[0],
+          size: cartDetail[1],
+          amount: cartDetail[2],
+        };
+        console.log("baotest:", cartList);
+        if (parseInt(index) + 1 === length) {
+          console.log("ummmm:", cartList, "-", length);
+          await this.setState({ cart: cartList });
+        }
+      }
+      console.log("cartlist:", this.state.cart);
+      this.getProductFromCart(this.state.cart);
     }
     // let userid = localStorage.getItem("userauth").split("id")[1].split(`"`)[2];
     // this.props.getProductFromCart(userid);
     // console.log("baoooo:", userid);
   };
   addOne = (e, size) => {
-    const obj = {
-      userid: localStorage.getItem("userauth").split("id")[1].split(`"`)[2],
-      size: size,
-      productid: e,
-    };
-    this.props.addOneInCart(obj);
-    this.getProductFromCart(this.state.userid);
+    // const obj = {
+    //   userid: localStorage.getItem("userauth").split("id")[1].split(`"`)[2],
+    //   size: size,
+    //   productid: e,
+    // };
+    // this.props.addOneInCart(obj);
+    // this.getProductFromCart(this.state.userid);
+    let cartMain = localStorage.getItem("cart");
+    let cart = localStorage.getItem("cart").split("-");
+    let cartList = localStorage.getItem("cart").split(",");
+    for (let index = 0; index < cartList.length; index++) {
+      // const element = array[index];
+
+      console.log("bao:", cartList[index]);
+      let cartDetail = cartList[index].split("-");
+      if (cartDetail[0] === e && cartDetail[1] === size) {
+        cartList[index] = e + "-" + size + "-" + (parseInt(cartDetail[2]) + 1);
+        window.location.reload();
+
+        localStorage.setItem("cart", cartList);
+      }
+
+      // else {
+      //   localStorage.setItem(
+      //     "cart",
+      //     cartMain + "," + e + "-" + size + "-" + amount
+      //   );
+      //   window.location.reload();
+      // }
+    }
 
     // notification('success', 'Add product to cart success');
   };
   subOne = (e, size) => {
-    const obj = {
-      userid: localStorage.getItem("userauth").split("id")[1].split(`"`)[2],
-      size: size,
-      productid: e,
-    };
-    this.props.subOneInCart(obj);
-    this.getProductFromCart(this.state.userid);
+    let cartMain = localStorage.getItem("cart");
+    let cart = localStorage.getItem("cart").split("-");
+    let cartList = localStorage.getItem("cart").split(",");
+    for (let index = 0; index < cartList.length; index++) {
+      // const element = array[index];
+
+      console.log("bao:", cartList[index]);
+      let cartDetail = cartList[index].split("-");
+      if (cartDetail[0] === e && cartDetail[1] === size) {
+        cartList[index] = e + "-" + size + "-" + (parseInt(cartDetail[2]) - 1);
+        window.location.reload();
+
+        localStorage.setItem("cart", cartList);
+      }
+    }
+    // const obj = {
+    //   userid: localStorage.getItem("userauth").split("id")[1].split(`"`)[2],
+    //   size: size,
+    //   productid: e,
+    // };
+    // this.props.subOneInCart(obj);
+    // this.getProductFromCart(this.state.userid);
 
     // notification('success', 'Add product to cart success');
   };
   onCheckout = () => {
-    var obj = {
-      userid: this.state.userid,
-      email: this.state.email,
-      name: this.state.name,
-      phone: this.state.phone,
-      address: this.state.address,
-      // total: this.state.finalTotal,
-      total: this.state.total,
-      discount: this.state.discount,
-      product: this.state.checkout,
-      note: this.state.note,
-    };
-    this.props.addToCheckout(obj).then((res) => {
-      console.log("how:", res);
-      this.props.history.push("/shop/checkout");
-    });
+    if (localStorage.getItem("userauth")) {
+      var obj = {
+        userid: this.state.userid,
+        email: this.state.email,
+        name: this.state.name,
+        phone: this.state.phone,
+        address: this.state.address,
+        // total: this.state.finalTotal,
+        total: this.state.total,
+        discount: this.state.discount,
+        product: this.state.checkout,
+        note: this.state.note,
+      };
+      this.props.addToCheckout(obj).then((res) => {
+        console.log("how:", res);
+        this.props.history.push("/shop/checkout");
+      });
+    } else {
+      this.setState({ showModal: true });
+    }
   };
   handleDelete = (productId) => {
     // productId.preventDefault();
@@ -98,15 +164,23 @@ class Cart extends React.Component {
       }
     });
   };
-  getProductFromCart = (userid) => {
-    console.log("id:", userid);
+  handleOk = () => {
+    this.props.history.push("/shop/login");
+  };
+  handleCancel = () => {
+    this.setState({ showModal: false });
+  };
+  getProductFromCart = (data) => {
+    // console.log("id:", userid);
     axios
-      .get("http://localhost:3030/shop/api/getproductfromcart/" + userid)
+      .post("http://localhost:3030/shop/api/getproductfromcart/", data)
       .then((res) => {
+        console.log("try:", res.data.data);
         this.setState({
-          productInCart: res.data,
+          productInCart: res.data.data,
         });
-        if (res.data.length) {
+        console.log("carrtttt:", this.state.productInCart);
+        if (res.data.data.length) {
           this.setState({ show: false });
         }
         console.log("state:", this.state.show);
@@ -479,6 +553,16 @@ class Cart extends React.Component {
             </div>
           </div>
         </section>
+        <Modal
+          title="Notification"
+          visible={this.state.showModal}
+          onOk={this.handleOk}
+          // confirmLoading={confirmLoading}
+          onCancel={this.handleCancel}
+          okText="Login"
+        >
+          <p>You must Login to add this product to cart !</p>
+        </Modal>
       </div>
     );
   }

@@ -197,7 +197,73 @@ exports.getProduct = (req, res) => {
       res.status(err).json({ err });
     });
 };
+exports.getOrder = (req, res) => {
+  let sp = [];
+  let productsQuery = [];
+  let temp = [];
+  History.findAll()
+    .then(async (data) => {
+      let dataTemp = data;
+      let length = data.length;
+      for (let i = 0; i < length; i++) {
+        // let productsQuery = await Product.findOne({
+        //   where: { id: data[i].productid },
+        // });
+        console.log(dataTemp[i].product.split("***"));
+        sp = dataTemp[i].product.split("***");
+        console.log("le:", sp.length - 1);
+        for (let x = 0; x < sp.length - 1; x++) {
+          let a = sp[x].split("/");
+          // console.log("baooo:", a[0], a[1]);
+          productsQuery = await Product.findOne({
+            where: { id: a[0] },
+          });
+          // console.log("step:", productsQuery);
+          temp[x] = productsQuery;
+        }
+        data[i].products = "s";
+        console.log("spsasas:", dataTemp[i].products);
+      }
+      console.log("sp:", sp[0]);
 
+      return res.json(dataTemp);
+    })
+    .catch((err) => {
+      res.status(err).json({ err });
+    });
+};
+exports.Sort = (req, res) => {
+  let key = req.params.key;
+  Product.findAll({
+    order: [["price", key]],
+  })
+    .then((data) => {
+      return res.send(data);
+    })
+    .catch((err) => {
+      return res.status(err).json({ err });
+    });
+  // return res.json(req.params.key);
+};
+exports.SortOnSearch = (req, res) => {
+  let key = req.params.key;
+  let key1 = key.split("-");
+  Product.findAll({
+    where: {
+      productname: {
+        [Op.iLike]: "%" + key1[0] + "%",
+      },
+    },
+    order: [["price", key1[1]]],
+  })
+    .then((data) => {
+      return res.send(data);
+    })
+    .catch((err) => {
+      return res.status(err).json({ err });
+    });
+  // return res.json(req.params.key);
+};
 exports.search = (req, res) => {
   let keyword = req.params.keyword.replace("%20", " ");
   // return res.json({ keyword });
@@ -295,25 +361,34 @@ exports.subOneInCart = (req, res) => {
       res.status(err).json({ status: "fail", message: err });
     });
 };
-exports.getProductFromCart = (req, res) => {
-  const id = req.params.id;
-
-  Cart.findAll({
-    where: { userid: id },
-    raw: true,
-  })
-    .then(async (data) => {
-      for (let i = 0; i < data.length; i++) {
-        let productsQuery = await Product.findOne({
-          where: { id: data[i].productid },
-        });
-        data[i].products = productsQuery;
-      }
-      res.json(data);
-    })
-    .catch((err) => {
-      res.status(err).json({ err });
+exports.getProductFromCart = async (req, res) => {
+  // const id = req.params.id;
+  console.log("baoser:", req.body.length);
+  let data = req.body;
+  for (let i = 0; i < data.length; i++) {
+    let productsQuery = await Product.findOne({
+      where: { id: data[i].productid },
     });
+    console.log("step:", productsQuery);
+    data[i].products = productsQuery;
+  }
+  return res.json({ statusss: "success", data });
+  // Cart.findAll({
+  //   where: { userid: id },
+  //   raw: true,
+  // })
+  //   .then(async (data) => {
+  //     for (let i = 0; i < data.length; i++) {
+  //       let productsQuery = await Product.findOne({
+  //         where: { id: data[i].productid },
+  //       });
+  //       data[i].products = productsQuery;
+  //     }
+  //     res.json(data);
+  //   })
+  //   .catch((err) => {
+  //     res.status(err).json({ err });
+  //   });
 };
 exports.addProduct = (req, res) => {
   Product.findOne({

@@ -1,6 +1,11 @@
 /* eslint-disable */
-import { CloseOutlined, MinusOutlined, PlusOutlined } from "@ant-design/icons";
-import { Empty, Modal, Form } from "antd";
+import {
+  CloseOutlined,
+  MinusOutlined,
+  PlusOutlined,
+  BulbOutlined,
+} from "@ant-design/icons";
+import { Empty, Modal, Form, Select } from "antd";
 import axios from "axios";
 import React from "react";
 import { connect } from "react-redux";
@@ -10,6 +15,7 @@ import notification from "../../helper/Notification";
 import sample from "../../image/2.jpg";
 import productActions from "../../redux/product/actions";
 import shopProduct from "../../redux/shopProduct/actions";
+const { Option } = Select;
 
 class Search extends React.Component {
   constructor(props) {
@@ -29,6 +35,17 @@ class Search extends React.Component {
       product: [],
     };
   }
+  search = (e) => {
+    // this.setState({ sort: e });
+    // const obj = { key: e, nameKey: this.props.match.params.keyword };
+    const obj = `${this.props.match.params.keyword}-${e}`;
+    this.props.sortPriceSearch(obj).then((data) => {
+      this.setState({
+        product: data.data,
+      });
+    });
+    console.log("ass", obj);
+  };
   handleOk = () => {
     this.props.history.push("/shop/login");
   };
@@ -166,23 +183,6 @@ class Search extends React.Component {
                   <h2> Price:{product.price}$</h2>
                   <p>{product.productname}</p>
                 </div>
-                {/* <button
-                      style={{ marginLeft: "25%" }}
-                      type="button"
-                      onClick={() => this.addCart(product.id)}
-                      className="btn btn-default add-to-cart"
-                    >
-                      <i className="fa fa-shopping-cart"></i>Add to cart
-                    </button> */}
-                {/* <div className='product-overlay'>
-                      <div className='overlay-content'>
-                        <h2>{product.price}</h2>
-                        <p>{product.productname}</p>
-                        <a href='#' className='btn btn-default add-to-cart'>
-                          <i className='fa fa-shopping-cart'></i>Add to cart
-                        </a>
-                      </div>
-                    </div> */}
               </div>
             </div>
           </div>
@@ -196,6 +196,32 @@ class Search extends React.Component {
           {/* <Left_slidebar /> */}
           <div className="col-sm-9 padding-right">
             <div className="features_items">
+              <h4>
+                <BulbOutlined /> Search results for keyword '
+                {this.props.match.params.keyword}'
+              </h4>
+              <div
+                style={{
+                  backgroundColor: "#F0F0E9",
+                  marginTop: "20px",
+                  height: "50px",
+                  // textAlign: "center",
+                }}
+              >
+                <div style={{ marginTop: "10px" }}>
+                  <label style={{ marginTop: "15px", marginLeft: "100px" }}>
+                    SORTED BY:{" "}
+                  </label>
+                  <Select
+                    placeholder="Price"
+                    style={{ width: 120, marginLeft: "50px" }}
+                    onChange={this.search}
+                  >
+                    <Option value="ASC">Low to High</Option>
+                    <Option value="DESC">High to Low</Option>
+                  </Select>
+                </div>
+              </div>
               <h2 style={{ marginTop: "30px" }} className="title text-center">
                 All Items
               </h2>
@@ -234,6 +260,8 @@ const mapDispatchToProps = (dispatch) => ({
   addToCheckout: (data) => dispatch(shopProduct.addToCheckout(data)),
   getProductById: (id) => dispatch(shopProduct.getProductById(id)),
   addProductToCart: (id) => dispatch(shopProduct.addProductToCart(id)),
+  sortPriceSearch: (obj) => dispatch(shopProduct.sortPriceSearch(obj)),
+
   searchApi: (keyword) => dispatch(shopProduct.searchApi(keyword)),
   getProductFromCart: () => dispatch(productActions.getProductFromCart),
 });

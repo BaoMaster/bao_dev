@@ -1,15 +1,26 @@
-import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
-import { Button, Layout } from "antd";
+import {
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
+  ExclamationCircleOutlined,
+} from "@ant-design/icons";
+import { Button, Layout, Dropdown, Menu, Modal } from "antd";
 import jwt_decode from "jwt-decode";
 import React, { useEffect, useState } from "react";
 import { connect, useDispatch } from "react-redux";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Switch,
+  useHistory,
+} from "react-router-dom";
+import { Redirect } from "react-router";
 
 import * as authActions from "../actions/auth";
 import SideNav from "../components/layouts/sidebar";
 import Form from "../components/pages/form";
 import Login from "../components/pages/login.admin";
 import ProductList from "../components/pages/productList";
+import OrderList from "../components/pages/orderList";
 import Register from "../components/pages/register.admin";
 import UserList from "../components/pages/userList";
 import PrivateRoute from "../components/privateRoute";
@@ -25,15 +36,19 @@ import user from "../image/no-avatar.png";
 import userActions from "../redux/user/actions";
 import RedirectIfUserAuth from "./RedireactIfUserAuth";
 import RedirectIfAuth from "./RedirectIfAuth";
+import notification from "../helper/Notification";
 
 // import List from "../components/pages/list";
 // import File from "../components/pages/files";
 // import Videos from "../components/pages/videos";
 const { Header, Sider, Content } = Layout;
+const { confirm } = Modal;
 
 const ApplicationRoutes = (props) => {
   const { isAuthenticated, username } = props.auth;
   const [collapse, setCollapse] = useState(false);
+  let history = useHistory();
+
   const dispatch = useDispatch();
   useEffect(() => {
     window.innerWidth <= 760 ? setCollapse(true) : setCollapse(false);
@@ -57,7 +72,56 @@ const ApplicationRoutes = (props) => {
     // );
     props.logout();
   };
-
+  const info = (userId) => {
+    this.setState({ ShowInfo: true });
+    this.props.getUserById(userId).then((res) => {
+      this.setState({
+        address: res.data.data.address,
+        avatar: res.data.data.avatar,
+        dayOfBirth: res.data.data.dayOfBirth,
+        email: res.data.data.email,
+        phoneNumber: res.data.data.phoneNumber,
+        role: res.data.data.role,
+        username: res.data.data.username,
+      });
+    });
+    console.log("baoooooo:", this.state.ShowInfo);
+  };
+  const showConfirm = () => {
+    confirm({
+      title: "This action will log out of the account",
+      icon: <ExclamationCircleOutlined />,
+      content: "are you sure ?",
+      okText: "Logout",
+      onOk() {
+        // console.log('OK');
+        localStorage.removeItem("auth");
+        notification("success", `Logout Successfully`, "");
+        // history.push("/admin");
+        // history.push("/admin");
+        window.location.reload();
+      },
+      onCancel() {
+        // console.log('Cancel');
+      },
+    });
+  };
+  const menu = (
+    <Menu>
+      <Menu.Item>
+        <a onClick={() => info(this.state.userid)}>Account Information</a>
+      </Menu.Item>
+      <Menu.Item>
+        <a onClick={""}>Change Password</a>
+      </Menu.Item>
+      <Menu.Item>
+        <a onClick={() => info()}>Settings</a>
+      </Menu.Item>
+      <Menu.Item>
+        <a onClick={showConfirm}>Logout</a>
+      </Menu.Item>
+    </Menu>
+  );
   return (
     <React.Fragment>
       <Router>
@@ -105,10 +169,12 @@ const ApplicationRoutes = (props) => {
                       // <Button className='btn-delete' type='danger' onClick={logout}>
                       //   Logout
                       // </Button>
-                      <img
-                        style={{ width: "50px", marginLeft: "200px" }}
-                        src={user}
-                      ></img>
+                      <Dropdown overlay={menu} placement="bottomCenter" arrow>
+                        <img
+                          style={{ width: "50px", marginLeft: "200px" }}
+                          src={user}
+                        ></img>
+                      </Dropdown>
                     ) : (
                       "You are not login"
                     )}
@@ -135,8 +201,15 @@ const ApplicationRoutes = (props) => {
                       path="/admin/productlist"
                       component={ProductList}
                     />
+                    <PrivateRoute
+                      path="/admin/orderlist"
+                      component={OrderList}
+                    />
                     <Route path="/admin/register" component={Register} />
-
+                    {/* <Route exact path="/admin/bao">
+                      <Redirect to="/admin/login"></Redirect>
+                    </Route> */}
+                    <Redirect from="/admin" to="/admin/login" />
                     {/* <Route path="/list" component={List} /> */}
                     <Route path="/form" component={Form} />
                     {/* <Route path="/files" component={File} /> */}

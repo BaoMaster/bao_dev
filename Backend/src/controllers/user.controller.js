@@ -1,19 +1,21 @@
-const db = require('../../config/db.config');
+const db = require("../../config/db.config");
 const User = db.user;
 
 const Permission = db.permission;
 const Op = db.Sequelize.Op;
-const multer = require('multer');
+const multer = require("multer");
 
-const mail = require('../../helper/mailForRegister');
+const mail = require("../../helper/mailForRegister");
 
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs');
-const shortId = require('shortid');
-const jwt_decode = require('jwt-decode');
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
+const shortId = require("shortid");
+const jwt_decode = require("jwt-decode");
 // const mail = require("../helper/mail");
 // const user = require("../models/user");
-shortId.characters('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ$@');
+shortId.characters(
+  "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ$@"
+);
 // const { Op } = require("sequelize/types");
 
 // function sendcode(email) {
@@ -35,7 +37,7 @@ shortId.characters('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWX
 // const validateForgotInput = require("../Validation/forgot");
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'uploads');
+    cb(null, "uploads");
   },
   filename: (req, file, cb) => {
     console.log(file);
@@ -43,7 +45,7 @@ const storage = multer.diskStorage({
   },
 });
 const fileFilter = (req, file, cb) => {
-  if (file.mimetype == 'image/jpeg' || file.mimetype == 'image/png') {
+  if (file.mimetype == "image/jpeg" || file.mimetype == "image/png") {
     cb(null, true);
   } else {
     cb(null, false);
@@ -75,10 +77,10 @@ exports.reSend = (req, res) => {
       const code = shortId.generate();
       sendCode(user.email, code);
       user.update({ codeforverify: code });
-      return res.send('resend success');
+      return res.send("resend success");
     })
     .catch((err) => {
-      return res.send('ERR: ' + err);
+      return res.send("ERR: " + err);
     });
 };
 
@@ -107,7 +109,7 @@ exports.register = (req, res) => {
   // if (!isValid) {
   //   return res.status(400).json(errors);
   // }
-  console.log('Register is starting');
+  console.log("Register is starting");
 
   User.findOne({
     where: {
@@ -119,7 +121,7 @@ exports.register = (req, res) => {
       //   return res.status(400).json({ name: "UserName already exit" });
       // }
       if (user) {
-        return res.status(401).json({ name: 'Username already exit' });
+        return res.status(401).json({ name: "Username already exit" });
       }
       User.findOne({
         where: {
@@ -127,7 +129,7 @@ exports.register = (req, res) => {
         },
       }).then((users) => {
         if (users) {
-          return res.status(401).json({ email: 'Email already exit' });
+          return res.status(401).json({ email: "Email already exit" });
         } else {
           User.create({
             // codenv: req.body.codenv,
@@ -152,15 +154,21 @@ exports.register = (req, res) => {
               // console.log('CODE:' + code);
               // console.log('username:' + user);
               // console.log('role:' + req.body.role);
-              console.log('register successfully test git continue bao main', user.username);
-              console.log('register successfully test git continue bao mainss', user.email);
+              console.log(
+                "register successfully test git continue bao main",
+                user.username
+              );
+              console.log(
+                "register successfully test git continue bao mainss",
+                user.email
+              );
               sendCode(user.email, user.username);
               // user.update({ codeforverify: code });
 
-              res.status(200).send({ status: 'success' });
+              res.status(200).send({ status: "success" });
             })
             .catch((err) => {
-              res.status(500).send('Fail, Error=>' + err);
+              res.status(500).send("Fail, Error=>" + err);
             });
         }
       });
@@ -184,7 +192,7 @@ exports.forgotPassword = (req, res) => {
   })
     .then((users) => {
       if (!users) {
-        return res.status(400).json({ name: 'User or email not found' });
+        return res.status(400).json({ name: "User or email not found" });
       }
       // if (user.email != req.body.email) {
       //   return res.status(400).json({ email: "Email or User not found" });
@@ -194,7 +202,7 @@ exports.forgotPassword = (req, res) => {
       // sendCode(user.email, newPass);
       res.status(200).send({
         forgotPassword: shortpass,
-        status: 'Your new password is sended to your email',
+        status: "Your new password is sended to your email",
       });
     })
     .catch((err) => {
@@ -209,7 +217,7 @@ function generateAccessToken(id, role) {
 }
 
 exports.login = (req, res) => {
-  console.log('Sign-In');
+  console.log("Sign-In");
   // const { errors, isValid } = validateLoginInput(req.body);
 
   // Check validation
@@ -224,18 +232,25 @@ exports.login = (req, res) => {
   })
     .then((user) => {
       if (!user) {
-        return res.status(401).json({ status: 'error', message: 'User Not Found.' });
+        return res
+          .status(401)
+          .json({ status: "error", message: "User Not Found." });
       }
 
-      var passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
+      var passwordIsValid = bcrypt.compareSync(
+        req.body.password,
+        user.password
+      );
       if (!passwordIsValid) {
         return res.status(401).json({
-          status: 'error',
-          message: 'Password incorrect',
+          status: "error",
+          message: "Password incorrect",
         });
       }
       if (user.idverify == false) {
-        return res.status(400).json({ status: 'error', message: 'Please verify your account !' });
+        return res
+          .status(400)
+          .json({ status: "error", message: "Please verify your account !" });
       }
       //   user.update({
       //     islogin: true
@@ -253,7 +268,7 @@ exports.login = (req, res) => {
         },
         process.env.JWT_SECRET,
         {
-          expiresIn: '24h', // expires in 24 hours
+          expiresIn: "24h", // expires in 24 hours
         }
       );
       const accessToken = generateAccessToken(user.id, user.role);
@@ -261,8 +276,8 @@ exports.login = (req, res) => {
       var decode = jwt_decode(token);
       res.status(200).send({
         auth: true,
-        status: 'success',
-        message: 'Login successfully !',
+        status: "success",
+        message: "Login successfully !",
         username: user.username,
         access_token: token,
         refresh_token: token,
@@ -272,7 +287,87 @@ exports.login = (req, res) => {
       });
     })
     .catch((err) => {
-      res.status(500).send('Error -> ' + err);
+      res.status(500).send("Error -> " + err);
+    });
+};
+exports.loginAdmin = (req, res) => {
+  console.log("Sign-In");
+  // const { errors, isValid } = validateLoginInput(req.body);
+
+  // Check validation
+  // if (!isValid) {
+  //   return res.status(400).json(errors);
+  // }
+  findPermission = (role) => {};
+  User.findOne({
+    where: {
+      email: req.body.email,
+    },
+  })
+    .then((user) => {
+      if (!user) {
+        return res
+          .status(401)
+          .json({ status: "error", message: "User Not Found." });
+      }
+
+      var passwordIsValid = bcrypt.compareSync(
+        req.body.password,
+        user.password
+      );
+      if (!passwordIsValid) {
+        return res.status(401).json({
+          status: "error",
+          message: "Password incorrect",
+        });
+      }
+      if (user.role == "USER") {
+        return res.status(401).json({
+          status: "error",
+          message: "Account have not right to access",
+        });
+      }
+      if (user.idverify == false) {
+        return res
+          .status(400)
+          .json({ status: "error", message: "Please verify your account !" });
+      }
+      //   user.update({
+      //     islogin: true
+      //   })
+      // user.islogin = true
+      // User.update(islogin = true, {
+      //   where: {
+      //     username: req.body.username
+      //   }
+      // })
+      var token = jwt.sign(
+        {
+          id: user.id,
+          role: user.role,
+        },
+        process.env.JWT_SECRET,
+        {
+          expiresIn: "24h", // expires in 24 hours
+        }
+      );
+      const accessToken = generateAccessToken(user.id, user.role);
+
+      var decode = jwt_decode(token);
+      res.status(200).send({
+        auth: true,
+        status: "success",
+        message: "Login successfully !",
+        username: user.username,
+        access_token: token,
+        refresh_token: token,
+        permission: user.permission,
+        decode: decode,
+        idverify: user.idverify,
+      });
+    })
+    .catch((err) => {
+      res.status(500).send("Error -> " + err);
     });
 };
 
@@ -287,7 +382,7 @@ exports.refreshToken = (req, res) => {
       expiresIn: 30, // expires in 24 hours
     }
   );
-  res.send('refrshToken:', token);
+  res.send("refrshToken:", token);
 };
 
 exports.update = (req, res) => {
@@ -300,7 +395,7 @@ exports.update = (req, res) => {
     .then((num) => {
       if (num == 1) {
         res.json({
-          status: 'success',
+          status: "success",
         });
       }
     })
@@ -322,7 +417,7 @@ exports.delete = (req, res) => {
     .then((num) => {
       if (num == 1) {
         res.json({
-          status: 'success',
+          status: "success",
         });
       }
     })
@@ -345,9 +440,15 @@ exports.verify = (req, res) => {
       // return res.json(user);
       if (user.idverify === false) {
         user.update({ idverify: true });
-        return res.json({ status: 'success', message: 'Your account has been successfully verified' });
+        return res.json({
+          status: "success",
+          message: "Your account has been successfully verified",
+        });
       } else {
-        return res.json({ status: 'fail', message: 'Your account has been verified' });
+        return res.json({
+          status: "fail",
+          message: "Your account has been verified",
+        });
       }
       // if (!user) {
       //   return res.status(401).json({
@@ -369,7 +470,7 @@ exports.verify = (req, res) => {
 
 exports.getUserById = (req, res) => {
   User.findOne({ where: { id: req.params.id } }).then((data) => {
-    return res.json({ status: 'success', data: data });
+    return res.json({ status: "success", data: data });
   });
 };
 

@@ -83,33 +83,119 @@ class ProductDetail extends React.Component {
   //   });
   // };
   addCart = (e, size, amount) => {
-    if (localStorage.getItem("userauth")) {
-      const obj = {
-        userid: localStorage.getItem("userauth").split("id")[1].split(`"`)[2],
-        size: size,
-        amountChoose: amount,
-        productid: e,
-      };
-      this.props.addProductToCart(obj);
-      notification("success", "Add product to cart success");
+    if (localStorage.getItem("cart")) {
+      let cartMain = localStorage.getItem("cart");
+      let cart = localStorage.getItem("cart").split("-");
+      let cartList = localStorage.getItem("cart").split(",");
+      for (let index = 0; index < cartList.length; index++) {
+        // const element = array[index];
+
+        console.log("bao:", cartList[index]);
+        let cartDetail = cartList[index].split("-");
+        if (cartDetail[0] === e && cartDetail[1] === size) {
+          cartList[index] =
+            e + "-" + size + "-" + (parseInt(cartDetail[2]) + 1);
+          return localStorage.setItem("cart", cartList);
+        } else {
+          localStorage.setItem(
+            "cart",
+            cartMain + "," + e + "-" + size + "-" + amount
+          );
+        }
+      }
+      // if (cart[0] === e && cart[1] === size) {
+      //   localStorage.setItem(
+      //     "cart",
+      //     e + "-" + size + "-" + (parseInt(cart[2]) + 1)
+      //   );
+      // } else {
+      //   localStorage.setItem(
+      //     "cart",
+      //     cartMain + "," + e + "-" + size + "-" + amount
+      //   );
+      // }
     } else {
-      this.setState({ showModal: true });
+      localStorage.setItem("cart", e + "-" + size + "-" + amount);
     }
+    // if (localStorage.getItem("userauth")) {
+    //   const obj = {
+    //     userid: localStorage.getItem("userauth").split("id")[1].split(`"`)[2],
+    //     size: size,
+    //     amountChoose: amount,
+    //     productid: e,
+    //   };
+    //   this.props.addProductToCart(obj);
+    //   notification("success", "Add product to cart success");
+    // } else {
+    //   this.setState({ showModal: true });
+    // }
+    console.log(e + "==", size, "==", amount);
   };
   byNow = (e, size, amount) => {
-    if (localStorage.getItem("userauth")) {
-      const obj = {
-        userid: localStorage.getItem("userauth").split("id")[1].split(`"`)[2],
-        size: size,
-        amountChoose: amount,
-        productid: e,
-      };
-      this.props.addProductToCart(obj);
-      notification("success", "Add product to cart success");
-      this.props.history.push("/shop/cart");
+    if (localStorage.getItem("cart")) {
+      let cartMain = localStorage.getItem("cart");
+      let cart = localStorage.getItem("cart").split("-");
+      let cartList = localStorage.getItem("cart").split(",");
+      for (let index = 0; index < cartList.length; index++) {
+        // const element = array[index];
+
+        console.log("bao:", cartList[index]);
+        let cartDetail = cartList[index].split("-");
+        if (cartDetail[0] === e && cartDetail[1] === size) {
+          cartList[index] =
+            e + "-" + size + "-" + (parseInt(cartDetail[2]) + 1);
+          this.props.history.push("/shop/cart");
+          return localStorage.setItem("cart", cartList);
+        } else {
+          localStorage.setItem(
+            "cart",
+            cartMain + "," + e + "-" + size + "-" + amount
+          );
+          this.props.history.push("/shop/cart");
+        }
+      }
+      // if (cart[0] === e && cart[1] === size) {
+      //   localStorage.setItem(
+      //     "cart",
+      //     e + "-" + size + "-" + (parseInt(cart[2]) + 1)
+      //   );
+      // } else {
+      //   localStorage.setItem(
+      //     "cart",
+      //     cartMain + "," + e + "-" + size + "-" + amount
+      //   );
+      // }
     } else {
-      this.setState({ showModal: true });
+      localStorage.setItem("cart", e + "-" + size + "-" + amount);
+      this.props.history.push("/shop/cart");
     }
+    // if (localStorage.getItem("userauth")) {
+    //   const obj = {
+    //     userid: localStorage.getItem("userauth").split("id")[1].split(`"`)[2],
+    //     size: size,
+    //     amountChoose: amount,
+    //     productid: e,
+    //   };
+    //   this.props.addProductToCart(obj);
+    //   notification("success", "Add product to cart success");
+    // } else {
+    //   this.setState({ showModal: true });
+    // }
+    console.log(e + "==", size, "==", amount);
+
+    // if (localStorage.getItem("userauth")) {
+    //   const obj = {
+    //     userid: localStorage.getItem("userauth").split("id")[1].split(`"`)[2],
+    //     size: size,
+    //     amountChoose: amount,
+    //     productid: e,
+    //   };
+    //   this.props.addProductToCart(obj);
+    //   notification("success", "Add product to cart success");
+    //   this.props.history.push("/shop/cart");
+    // } else {
+    //   this.setState({ showModal: true });
+    // }
   };
   // handleDelete = (productId) => {
   //   // productId.preventDefault();

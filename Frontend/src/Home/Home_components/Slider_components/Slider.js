@@ -18,6 +18,10 @@ import shoes2 from "../../../image/2.jpg";
 import shoes3 from "../../../image/3.jpg";
 import shoes4 from "../../../image/4.jpg";
 import shoes5 from "../../../image/5.jpg";
+import ao1 from "../../../image/ao1.jpg";
+import ao2 from "../../../image/ao2.jpg";
+import ao3 from "../../../image/ao3.jpg";
+
 import ShopProductActions from "../../../redux/shopProduct/actions";
 
 const RenderArrow = ({ className, style, onClick, type }) => {
@@ -50,24 +54,26 @@ class Slider extends React.Component {
       id: "",
     };
   }
-
   handleSelect = async (productId) => {
-    console.log("clicked");
-    await this.setState({ isShowModal: true, productId: productId });
-    console.log("bao:", this.state.isShowModal);
-    this.props.getProductById(productId).then((res) => {
-      this.setState({
-        id: res.data.data.id,
-        productname: res.data.data.productname,
-        productcode: res.data.data.productcode,
-        illustration: res.data.data.illustration,
-        price: res.data.data.price,
-        description: res.data.data.description,
-        brand: res.data.data.brand,
-      });
-      console.log("bao:", res.data.data.productname);
-    });
+    this.props.history.push("/detail/" + productId);
   };
+  // handleSelect = async (productId) => {
+  //   console.log("clicked");
+  //   await this.setState({ isShowModal: true, productId: productId });
+  //   console.log("bao:", this.state.isShowModal);
+  //   this.props.getProductById(productId).then((res) => {
+  //     this.setState({
+  //       // id: res.data.data.id,
+  //       productname: res.data.data.productname,
+  //       productcode: res.data.data.productcode,
+  //       illustration: res.data.data.illustration,
+  //       price: res.data.data.price,
+  //       description: res.data.data.description,
+  //       brand: res.data.data.brand,
+  //     });
+  //     console.log("bao:", res.data.data.productname);
+  //   });
+  // };
   handleCancel = () => {
     this.setState({ isShowModal: false });
     console.log("status:", this.state.isShowModal);
@@ -116,7 +122,7 @@ class Slider extends React.Component {
               <div>
                 <SlickSlider {...settings}>
                   <div
-                    onClick={(e) => this.handleSelect(1)}
+                    onClick={(e) => this.handleSelect("6")}
                     className="col-sm-6"
                     style={{ marginTop: "10px" }}
                   >
@@ -128,24 +134,26 @@ class Slider extends React.Component {
                         width: "60%",
                       }}
                     >
-                      <h2> Nike Air Jordan 1 Mid ‘Light Smoke Grey’</h2>
-                      <h3>Color: Light-Grey</h3>
+                      <h2> ÁO THUN KHÔNG CỔ 6M4031CT3/ST2 viettien</h2>
+                      <h3>Color: Light-Blue</h3>
                       <p>
-                        With buzz around the Dior x AJ1 still as fervent as it
-                        was upon debut, it’s no question that comparisons will
-                        be drawn with every gray scheme thereafter. This latest
-                        Air Jordan 1 Mid is certainly not exempt from this
+                        Áo thun không cổ Smart Casual có các tính năng như thấm
+                        hút tốt, mềm mịn, ít nhăn dễ ủi và co dãn cao, phù hợp
+                        với các chàng trai trẻ trung, năng động. Áo thun không
+                        cổ Smart Casual được sử dụng trong môi trường đi chơi,
+                        dạo phố, đi du lịch...Sản phẩm đang được bán tại hệ
+                        thống Cửa hàng Việt Tiến Phía Nam.
                       </p>
                     </div>
                     <div>
                       <img
-                        style={{ paddingLeft: "50px" }}
-                        src={shoes1}
+                        style={{ paddingLeft: "50px", width: "200px" }}
+                        src={ao1}
                         className="girl img-responsive"
                       />
                     </div>
                   </div>
-                  <div onClick={(e) => this.handleSelect(2)}>
+                  <div onClick={(e) => this.handleSelect("7")}>
                     <div
                       style={{
                         float: "left",
@@ -153,27 +161,26 @@ class Slider extends React.Component {
                         width: "60%",
                       }}
                     >
-                      <h2>
-                        {" "}
-                        Nike Men's Air Jordan 1 Retro High OG 'Origin Story'
-                        Red/White
-                      </h2>
-                      <h3>Color: Red/White</h3>
+                      <h2> ÁO THUN KHÔNG CỔ 6M4051CT3/ST2 viettien</h2>
+                      <h3>Color: Gray</h3>
                       <p>
-                        The Spider-Man x Air Jordan 1 Origin Story is a special
-                        edition of Michael Jordan's first signature shoe that
-                        celebrates the 2018 release of the Marvel movie
+                        Áo thun không cổ Smart Casual có các tính năng như thấm
+                        hút tốt, mềm mịn, ít nhăn dễ ủi và bền màu, phù hợp với
+                        các chàng trai trẻ trung, năng động. Áo thun không cổ
+                        Smart Casual được sử dụng trong môi trường đi chơi, dạo
+                        phố, đi du lịch...Sản phẩm đang được bán tại hệ thống
+                        Cửa hàng Việt Tiến trên toàn quốc.
                       </p>
                     </div>
                     <div>
                       <img
-                        style={{ paddingLeft: "50px" }}
-                        src={shoes2}
+                        style={{ paddingLeft: "50px", width: "200px" }}
+                        src={ao2}
                         className="girl img-responsive"
                       />
                     </div>
                   </div>
-                  <div>
+                  <div onClick={(e) => this.handleSelect("8")}>
                     <div
                       style={{
                         float: "left",
@@ -181,25 +188,27 @@ class Slider extends React.Component {
                         width: "60%",
                       }}
                     >
-                      <h2> Nike Jordan 1 Low Orange</h2>
-                      <h3>Color: Orange Black White</h3>
+                      <h2> ÁO THUN 6M4024CT3/ST2 </h2>
+                      <h3>Color: BEIGE</h3>
                       <p>
-                        The Air Jordan 1 Low 'Shattered Backboard' commemorates
-                        when Michael Jordan broke a backboard during a 1985
-                        exhibition game in Italy. Inspired by the OG AJ1, this
-                        low-cut version is presented in Starfish, black and
-                        Sail, a nod to the jersey worn by MJ during the game.
+                        Áo thun không cổ Smart Casual có các tính năng như: Thấm
+                        hút tốt, mềm mịn, ít nhăn dễ ủi và bền màu, phù hợp với
+                        các quý ông trung niên, những chàng " đậm" người, hoặc
+                        có vòng 2 " dư chuẩn". Áo thun không cổ Smart Casual
+                        được sử dụng trong môi trường đi chơi, dạo phố, đi du
+                        lịch. Sản phẩm đang được bán tại hệ thống Cửa hàng Việt
+                        Tiến Phía Nam.
                       </p>
                     </div>
                     <div>
                       <img
-                        style={{ paddingLeft: "50px" }}
-                        src={shoes3}
+                        style={{ paddingLeft: "50px", width: "200px" }}
+                        src={ao3}
                         className="girl img-responsive"
                       />
                     </div>
                   </div>
-                  <div>
+                  {/* <div>
                     <div
                       style={{
                         float: "left",
@@ -247,7 +256,7 @@ class Slider extends React.Component {
                         className="girl img-responsive"
                       />
                     </div>
-                  </div>
+                  </div> */}
                 </SlickSlider>
               </div>
               <div>

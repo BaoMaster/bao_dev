@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { Badge, Form, Modal } from "antd";
+import { Badge, Form, Modal, Select } from "antd";
 import axios from "axios";
 import React from "react";
 import { connect } from "react-redux";
@@ -13,6 +13,7 @@ import ShopProductActions from "../../redux/shopProduct/actions";
 import Left_slidebar from "../Home_components/Slider_components/Left_slidebar";
 import Slider from "../Home_components/Slider_components/Slider";
 
+const { Option } = Select;
 class All_product extends React.Component {
   constructor(props) {
     super(props);
@@ -30,6 +31,7 @@ class All_product extends React.Component {
       productInCart: [],
       count: "",
       userid: "",
+      sort: "",
     };
   }
   handleCancel = () => {
@@ -53,6 +55,15 @@ class All_product extends React.Component {
       // this.getProductFromCart(this.state.userid);
       console.log("this:", this.state.userid);
     }
+  };
+  search = (e) => {
+    // this.setState({ sort: e });
+    this.props.sortPrice(e.toString()).then((data) => {
+      this.setState({
+        product: data.data,
+      });
+    });
+    console.log("ass", e);
   };
   getProductFromCart = (userid) => {
     console.log("id:", userid);
@@ -203,6 +214,28 @@ class All_product extends React.Component {
                   <img style={{ width: "49%" }} src={salee}></img>
                 </div>
               </div>
+              <div
+                style={{
+                  backgroundColor: "#F0F0E9",
+                  marginTop: "20px",
+                  height: "50px",
+                  // textAlign: "center",
+                }}
+              >
+                <div style={{ marginTop: "10px" }}>
+                  <label style={{ marginTop: "15px", marginLeft: "100px" }}>
+                    SORTED BY:{" "}
+                  </label>
+                  <Select
+                    placeholder="Price"
+                    style={{ width: 120, marginLeft: "50px" }}
+                    onChange={this.search}
+                  >
+                    <Option value="ASC">Low to High</Option>
+                    <Option value="DESC">High to Low</Option>
+                  </Select>
+                </div>
+              </div>
               <h2 style={{ marginTop: "30px" }} className="title text-center">
                 All Items
               </h2>
@@ -278,6 +311,7 @@ const mapDispatchToProps = (dispatch) => ({
   getProduct: () => dispatch(productActions.getProduct),
   getProductById: (productId) =>
     dispatch(ShopProductActions.getProductById(productId)),
+  sortPrice: (key) => dispatch(ShopProductActions.sortPrice(key)),
   findBrand: (brand) => dispatch(ShopProductActions.findBrand(brand)),
   addProductToCart: (product) =>
     dispatch(ShopProductActions.addProductToCart(product)),

@@ -1,42 +1,49 @@
-import { UnorderedListOutlined, UploadOutlined, UserOutlined, VideoCameraOutlined } from '@ant-design/icons';
-import { Menu } from 'antd';
-import React from 'react';
-import { useHistory } from 'react-router';
+import {
+  UnorderedListOutlined,
+  UploadOutlined,
+  UserOutlined,
+  VideoCameraOutlined,
+} from "@ant-design/icons";
+import { Menu } from "antd";
+import React from "react";
+import { useHistory } from "react-router";
 
-import logo from '../../image/shoplogo.png';
+import logo from "../../image/shoplogo.png";
 
 const SideNav = () => {
   const history = useHistory();
 
   const handleUserClick = () => {
-    history.push('/admin/userlist');
+    history.push("/admin/userlist");
   };
 
   const handleProductsClick = () => {
-    history.push('/admin/productlist');
+    history.push("/admin/productlist");
   };
 
   const handleRegisterClick = () => {
-    history.push('/admin/register');
+    history.push("/admin/orderlist");
   };
 
   return (
     <div>
       <div
         style={{
-          height: '32px',
-          background: 'rgba(255, 255, 255, 0.2)',
-          margin: '16px',
+          height: "32px",
+          background: "rgba(255, 255, 255, 0.2)",
+          margin: "16px",
         }}
       >
-        <p style={{ color: 'white', fontSize: '18px', marginLeft: '25px' }}>SneakerShop</p>
+        <p style={{ color: "white", fontSize: "18px", marginLeft: "25px" }}>
+          FashionShop
+        </p>
       </div>
-      <Menu theme='dark' mode='inline' defaultSelectedKeys={['1']}>
-        <Menu.Item key='1' onClick={handleUserClick}>
+      <Menu theme="dark" mode="inline" defaultSelectedKeys={["1"]}>
+        <Menu.Item key="1" onClick={handleUserClick}>
           <UnorderedListOutlined />
           <span> Users List</span>
         </Menu.Item>
-        <Menu.Item key='2' onClick={handleProductsClick}>
+        <Menu.Item key="2" onClick={handleProductsClick}>
           <UnorderedListOutlined />
           <span> Product List</span>
         </Menu.Item>
@@ -44,9 +51,9 @@ const SideNav = () => {
                     <UploadOutlined />
                     <span> Files</span>
                 </Menu.Item> */}
-        <Menu.Item key='4' onClick={handleRegisterClick}>
+        <Menu.Item key="4" onClick={handleRegisterClick}>
           <UnorderedListOutlined />
-          <span> Category</span>
+          <span> Order List</span>
         </Menu.Item>
       </Menu>
     </div>

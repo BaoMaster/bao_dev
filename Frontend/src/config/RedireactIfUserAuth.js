@@ -14,7 +14,7 @@ function RedirectIfUserAuth({ children, ...rest }) {
         ) : (
           <Redirect
             to={{
-              pathname: "/shop/cart",
+              pathname: "/",
             }}
           />
         )

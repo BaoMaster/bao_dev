@@ -49,6 +49,13 @@ class Header_top extends React.Component {
       id: "",
     };
   }
+  componentDidMount = () => {
+    if (localStorage.getItem("userauth")) {
+      this.setState({
+        userid: localStorage.getItem("userauth").split("id")[1].split(`"`)[2],
+      });
+    }
+  };
 
   showConfirm() {
     confirm({
@@ -60,6 +67,8 @@ class Header_top extends React.Component {
         // console.log('OK');
         localStorage.removeItem("userauth");
         notification("success", `Logout Successfully`, "");
+        // this.props.history.push("/shop/login");
+        window.location.reload();
       },
       onCancel() {
         // console.log('Cancel');
@@ -81,6 +90,30 @@ class Header_top extends React.Component {
     });
     console.log("baoooooo:", this.state.ShowInfo);
   };
+  handleCancel = () => {
+    this.setState({ ShowInfo: false });
+    // console.log('status:', this.state.isShowModal);
+  };
+  onChange = (e) => {
+    this.setState({ [e.target.id]: e.target.value });
+    console.log("sas:", e.target.value);
+  };
+  handleOk = (userid) => {
+    let obj = {
+      username: this.state.username,
+      email: this.state.email,
+      phoneNumber: this.state.phoneNumber,
+      address: this.state.address,
+      avatar: this.state.avatar,
+      dayOfBirth: this.state.dayOfBirth,
+    };
+    this.props.updateUser(userid, obj).then((res) => {
+      if (res.data.status === "success") {
+        notification("success", "update user success !");
+        this.setState({ ShowInfo: false });
+      }
+    });
+  };
   render() {
     const { username } = this.props.auth;
     const menu = (
@@ -94,7 +127,7 @@ class Header_top extends React.Component {
           <a onClick={""}>Change Password</a>
         </Menu.Item>
         <Menu.Item>
-          <a onClick={() => this.info()}>Settings</a>
+          <a onClick={() => this.info()}>Order History</a>
         </Menu.Item>
         <Menu.Item>
           <a onClick={this.showConfirm}>Logout</a>
@@ -180,7 +213,7 @@ class Header_top extends React.Component {
                   className="company-details"
                   title="User Information"
                   visible={this.state.ShowInfo}
-                  onOk={this.handleOk}
+                  onOk={() => this.handleOk(this.state.userid)}
                   onCancel={this.handleCancel}
                 >
                   <Form>
@@ -221,24 +254,26 @@ class Header_top extends React.Component {
                       ></Input> */}
                     </div>
                     <div>
-                      <label>User Name</label>
-                      <Input
+                      <label>User Name: </label>
+                      {this.state.username}
+                      {/* <Input
                         type="text"
                         name="userName"
                         value={this.state.username}
                         onChange={this.onChange}
                         id="username"
-                      ></Input>
+                      ></Input> */}
                     </div>
                     <div>
-                      <label>Email</label>
-                      <Input
+                      <label style={{ marginRight: "10px" }}>Email: </label>
+                      {this.state.email}
+                      {/* <Input
                         type="text"
                         name="email"
                         value={this.state.email}
                         onChange={this.onChange}
                         id="email"
-                      ></Input>
+                      ></Input> */}
                     </div>
                     <div>
                       <label>Phone Number</label>
@@ -271,27 +306,6 @@ class Header_top extends React.Component {
                       ></Input>
                     </div>
 
-                    <div>
-                      <label>Role</label>
-                      {/* <Select
-                        placeholder="Choose user role"
-                        style={{ width: "100%" }}
-                        onChange={(e) => this.onChange(e)}
-                        id="role"
-                        name="role"
-                        // value={this.state.role}
-                      >
-                        <Option value="ADMIN">Admin</Option>
-                        <Option value="USER">User</Option>
-                      </Select> */}
-                      <Input
-                        type="text"
-                        name="role"
-                        value={this.state.role}
-                        onChange={this.onChange}
-                        id="role"
-                      ></Input>
-                    </div>
                     {/* <div>
                           <label>Password</label>
                           <Input type='password' name='password' value={this.state.password} onChange={this.onChange} id='password'></Input>

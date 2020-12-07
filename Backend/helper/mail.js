@@ -1,10 +1,10 @@
-const nodemailer = require('nodemailer');
-const smtpTransport = require('nodemailer-smtp-transport');
+const nodemailer = require("nodemailer");
+const smtpTransport = require("nodemailer-smtp-transport");
 
 const transporter = nodemailer.createTransport(
   smtpTransport({
-    service: 'gmail',
-    host: 'smtp.gmail.com',
+    service: "gmail",
+    host: "smtp.gmail.com",
     auth: {
       user: process.env.EMAIL_USER,
       pass: process.env.EMAIL_PASS,
@@ -14,10 +14,10 @@ const transporter = nodemailer.createTransport(
 
 module.exports.send = (email, orderid, username, total) => {
   const mailOptions = {
-    from: 'My Instagram <any@pvt.com>',
+    from: "FashionShop <any@pvt.com>",
     to: email,
     subject: `New Invoice For Order #${orderid}`,
-    text: 'For clients with plaintext support only',
+    text: "For clients with plaintext support only",
     html: `<h3>Dear ${username},</h3>
     <br>
     <p>Thanks for supporting our store.</p> 

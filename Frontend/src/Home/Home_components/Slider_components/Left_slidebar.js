@@ -14,21 +14,21 @@ class Left_slidebar extends React.Component {
             <div className="panel panel-default">
               <div className="panel-heading">
                 <h4 className="panel-title">
-                  <a href="/Jordan">Jordan</a>
+                  <a href="/viettien">VietTien</a>
                 </h4>
               </div>
             </div>
             <div className="panel panel-default">
               <div className="panel-heading">
                 <h4 className="panel-title">
-                  <a href="/Convert">Convert</a>
+                  <a href="/adidas">Adidas</a>
                 </h4>
               </div>
             </div>
             <div className="panel panel-default">
               <div className="panel-heading">
                 <h4 className="panel-title">
-                  <a href="Adidas">Adidas</a>
+                  <a href="/uniqlo">UniQlo</a>
                 </h4>
               </div>
             </div>

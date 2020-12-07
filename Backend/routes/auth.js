@@ -1,19 +1,20 @@
-var express = require('express');
+var express = require("express");
 var router = express.Router();
-const controller = require('../src/controllers/user.controller');
-const multer = require('multer');
-const path = require('path');
+const controller = require("../src/controllers/user.controller");
+const multer = require("multer");
+const path = require("path");
 
-const Resize = require('../config/resize');
+const Resize = require("../config/resize");
 
 // const authJwt = require("../verifyJwtToken");
 
 /* GET home page. */
-router.get('/', function (req, res, next) {
-  res.send('index from nodejs server');
+router.get("/", function (req, res, next) {
+  res.send("index from nodejs server");
 });
-router.post('/api/register', controller.register);
-router.post('/api/login', controller.login);
+router.post("/api/register", controller.register);
+router.post("/api/login", controller.login);
+router.post("/api/loginadmin", controller.loginAdmin);
 // router.get("/login", controller.checkLogin)
 // router.post("/logout", function (req, res) {
 //   controller.logout;
@@ -30,9 +31,9 @@ router.post('/api/login', controller.login);
 //   [authJwt.verifyToken, authJwt.isAdmin],
 //   controller.adminBoard
 // );
-router.post('/api/forgotpassword', controller.forgotPassword);
-router.post('/api/resend', controller.reSend);
-router.post('/api/verify/:id', controller.verify);
+router.post("/api/forgotpassword", controller.forgotPassword);
+router.post("/api/resend", controller.reSend);
+router.post("/api/verify/:id", controller.verify);
 
 // const storage = multer.diskStorage({
 //   destination: (req, file, cb) => {
