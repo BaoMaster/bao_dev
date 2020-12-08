@@ -75,6 +75,9 @@ class Header_top extends React.Component {
       },
     });
   }
+  orderHistory = (userid) => {
+    this.props.history.push("/orderhistory/" + userid);
+  };
   info = (userId) => {
     this.setState({ ShowInfo: true });
     this.props.getUserById(userId).then((res) => {
@@ -127,7 +130,9 @@ class Header_top extends React.Component {
           <a onClick={""}>Change Password</a>
         </Menu.Item>
         <Menu.Item>
-          <a onClick={() => this.info()}>Order History</a>
+          <a onClick={() => this.orderHistory(this.state.userid)}>
+            Order History
+          </a>
         </Menu.Item>
         <Menu.Item>
           <a onClick={this.showConfirm}>Logout</a>

@@ -18,6 +18,11 @@ const shopProductActions = {
       return axios.post(`./shop/api/addoneincart`, data);
     };
   },
+  cancelOrder: (id) => {
+    return (dispatch) => {
+      return axios.get(`./shop/api/cancelorder/${id}`);
+    };
+  },
   subOneInCart: (data) => {
     return (dispatch) => {
       return axios.post(`./shop/api/suboneincart`, data);

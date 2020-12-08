@@ -197,7 +197,7 @@ exports.getProduct = (req, res) => {
       res.status(err).json({ err });
     });
 };
-exports.getOrder = (req, res) => {
+exports.getOrder = async (req, res) => {
   let sp = [];
   let productsQuery = [];
   let temp = [];
@@ -206,27 +206,101 @@ exports.getOrder = (req, res) => {
       let dataTemp = data;
       let length = data.length;
       for (let i = 0; i < length; i++) {
-        // let productsQuery = await Product.findOne({
-        //   where: { id: data[i].productid },
-        // });
-        console.log(dataTemp[i].product.split("***"));
         sp = dataTemp[i].product.split("***");
-        console.log("le:", sp.length - 1);
         for (let x = 0; x < sp.length - 1; x++) {
           let a = sp[x].split("/");
-          // console.log("baooo:", a[0], a[1]);
           productsQuery = await Product.findOne({
             where: { id: a[0] },
           });
-          // console.log("step:", productsQuery);
           temp[x] = productsQuery;
         }
-        data[i].products = "s";
-        console.log("spsasas:", dataTemp[i].products);
+        dataTemp[i].pro = { temp };
+        // dataTemp[i] = { ...dataTemp[i], productdetail: { temp } };
+
+        console.log("spsasas:", dataTemp[i].productsid);
       }
-      console.log("sp:", sp[0]);
+
+      console.log("sp:", dataTemp[0]);
 
       return res.json(dataTemp);
+    })
+    .catch((err) => {
+      res.status(err).json({ err });
+    });
+};
+exports.getOrderByUserid = async (req, res) => {
+  // return res.json(req.params.id);
+  let sp = [];
+  let productsQuery = [];
+  let temp = [];
+  History.findAll({
+    where: { userid: req.params.id },
+  })
+    .then(async (data) => {
+      if (data.length) {
+        let dataTemp = data;
+        let length = data.length;
+        for (let i = 0; i < length; i++) {
+          sp = dataTemp[i].product.split("***");
+          for (let x = 0; x < sp.length - 1; x++) {
+            let a = sp[x].split("/");
+            productsQuery = await Product.findOne({
+              where: { id: a[0] },
+            });
+            temp[x] = productsQuery;
+          }
+          dataTemp[i].pro = { temp };
+          // dataTemp[i] = { ...dataTemp[i], productdetail: { temp } };
+
+          console.log("spsasas:", dataTemp[i].productsid);
+        }
+
+        console.log("sp:", dataTemp[0]);
+
+        return res.json(dataTemp);
+      } else {
+        return res.json({ Status: "fail", message: "User not found" });
+      }
+    })
+    .catch((err) => {
+      res.status(err).json({ err });
+    });
+};
+exports.cancelOrder = async (req, res) => {
+  // return res.json(req.params.id);
+  let sp = [];
+  let productsQuery = [];
+  let temp = [];
+  History.findOne({
+    where: { id: req.params.id },
+  })
+    .then((data) => {
+      if (data != null) {
+        data.update({ status: "canceled" });
+        return res.json({ status: "success", message: "canceled order" });
+        // let dataTemp = data;
+        // let length = data.length;
+        // for (let i = 0; i < length; i++) {
+        //   sp = dataTemp[i].product.split("***");
+        //   for (let x = 0; x < sp.length - 1; x++) {
+        //     let a = sp[x].split("/");
+        //     productsQuery = await Product.findOne({
+        //       where: { id: a[0] },
+        //     });
+        //     temp[x] = productsQuery;
+        //   }
+        //   dataTemp[i].pro = { temp };
+        //   // dataTemp[i] = { ...dataTemp[i], productdetail: { temp } };
+
+        //   console.log("spsasas:", dataTemp[i].productsid);
+        // }
+
+        // console.log("sp:", dataTemp[0]);
+
+        // return res.json(dataTemp);
+      } else {
+        return res.json({ Status: "fail", message: "User not found" });
+      }
     })
     .catch((err) => {
       res.status(err).json({ err });

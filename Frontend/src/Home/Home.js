@@ -57,6 +57,7 @@ import Not_found from "./layouts/Not_found";
 import ProductDetail from "./layouts/ProductDetail";
 import Verify from "./layouts/Verify";
 import Search from "./layouts/search";
+import OrderHistory from "./layouts/orderhistory";
 
 const { Header, Sider } = Layout;
 
@@ -415,6 +416,11 @@ class Home extends React.Component {
                   </RedirectIfUserAuth>
                   <Route path="/shop/cart" exact component={Cart} />
                   <Route path="/verify/:id" exact component={Verify} />
+                  <Route
+                    path="/orderhistory/:id"
+                    exact
+                    component={OrderHistory}
+                  />
                   <Route path="/detail/:id" exact component={ProductDetail} />
                   <Route path="/search/:keyword" exact component={Search} />
                   <Route path="/shop/checkout" exact component={Checkout} />
