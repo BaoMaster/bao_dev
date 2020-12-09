@@ -6,27 +6,16 @@ import {
   SearchOutlined,
   ShoppingCartOutlined,
   UnlockOutlined,
-} from "@ant-design/icons";
-import {
-  Button,
-  Divider,
-  Dropdown,
-  Form,
-  Input,
-  Layout,
-  Menu,
-  Modal,
-  Popconfirm,
-  Upload,
-} from "antd";
-import React from "react";
-import { connect } from "react-redux";
-import { Link, withRouter } from "react-router-dom";
+} from '@ant-design/icons';
+import { Button, Divider, Dropdown, Form, Input, Layout, Menu, Modal, Popconfirm, Upload } from 'antd';
+import React from 'react';
+import { connect } from 'react-redux';
+import { Link, withRouter } from 'react-router-dom';
 
-import notification from "../../../helper/Notification";
-import userLogo from "../../../image/no-avatar.png";
-import userActions from "../../../redux/user/actions";
-import userGuestActions from "../../../redux/user/userAction";
+import notification from '../../../helper/Notification';
+import userLogo from '../../../image/no-avatar.png';
+import userActions from '../../../redux/user/actions';
+import userGuestActions from '../../../redux/user/userAction';
 
 const { confirm } = Modal;
 
@@ -36,37 +25,38 @@ class Header_top extends React.Component {
     this.state = {
       ShowInfo: false,
       showLogout: false,
-      imageUrl: "",
+      imageUrl: '',
       loading: false,
-      address: "",
-      avatar: "",
-      dayOfBirth: "",
-      email: "",
-      phoneNumber: "",
-      role: "",
-      username: "",
-      userid: "",
-      id: "",
+      address: '',
+      avatar: '',
+      dayOfBirth: '',
+      email: '',
+      phoneNumber: '',
+      role: '',
+      username: '',
+      userid: '',
+      id: '',
     };
   }
-  componentDidMount = () => {
-    if (localStorage.getItem("userauth")) {
+  componentDidMount = async () => {
+    if (localStorage.getItem('userauth')) {
       this.setState({
-        userid: localStorage.getItem("userauth").split("id")[1].split(`"`)[2],
+        userid: localStorage.getItem('userauth').split('id')[1].split(`"`)[2],
       });
+      await console.log('userid:', this.state.userid);
     }
   };
 
   showConfirm() {
     confirm({
-      title: "This action will log out of the account",
+      title: 'This action will log out of the account',
       icon: <ExclamationCircleOutlined />,
-      content: "are you sure ?",
-      okText: "Logout",
+      content: 'are you sure ?',
+      okText: 'Logout',
       onOk() {
         // console.log('OK');
-        localStorage.removeItem("userauth");
-        notification("success", `Logout Successfully`, "");
+        localStorage.removeItem('userauth');
+        notification('success', `Logout Successfully`, '');
         // this.props.history.push("/shop/login");
         window.location.reload();
       },
@@ -76,7 +66,7 @@ class Header_top extends React.Component {
     });
   }
   orderHistory = (userid) => {
-    this.props.history.push("/orderhistory/" + userid);
+    this.props.history.push('/orderhistory/' + userid);
   };
   info = (userId) => {
     this.setState({ ShowInfo: true });
@@ -91,7 +81,7 @@ class Header_top extends React.Component {
         username: res.data.data.username,
       });
     });
-    console.log("baoooooo:", this.state.ShowInfo);
+    console.log('baoooooo:', this.state.ShowInfo);
   };
   handleCancel = () => {
     this.setState({ ShowInfo: false });
@@ -99,7 +89,7 @@ class Header_top extends React.Component {
   };
   onChange = (e) => {
     this.setState({ [e.target.id]: e.target.value });
-    console.log("sas:", e.target.value);
+    console.log('sas:', e.target.value);
   };
   handleOk = (userid) => {
     let obj = {
@@ -111,8 +101,8 @@ class Header_top extends React.Component {
       dayOfBirth: this.state.dayOfBirth,
     };
     this.props.updateUser(userid, obj).then((res) => {
-      if (res.data.status === "success") {
-        notification("success", "update user success !");
+      if (res.data.status === 'success') {
+        notification('success', 'update user success !');
         this.setState({ ShowInfo: false });
       }
     });
@@ -122,17 +112,13 @@ class Header_top extends React.Component {
     const menu = (
       <Menu>
         <Menu.Item>
-          <a onClick={() => this.info(this.state.userid)}>
-            Account Information
-          </a>
+          <a onClick={() => this.info(this.state.userid)}>Account Information</a>
         </Menu.Item>
         <Menu.Item>
-          <a onClick={""}>Change Password</a>
+          <a onClick={''}>Change Password</a>
         </Menu.Item>
         <Menu.Item>
-          <a onClick={() => this.orderHistory(this.state.userid)}>
-            Order History
-          </a>
+          <a onClick={() => this.orderHistory(this.state.userid)}>Order History</a>
         </Menu.Item>
         <Menu.Item>
           <a onClick={this.showConfirm}>Logout</a>
@@ -141,41 +127,37 @@ class Header_top extends React.Component {
     );
 
     return (
-      <div
-        className="header_top"
-        style={{ backgroundColor: "#ee4d2d", color: "white" }}
-      >
-        <div className="container">
-          <div className="row">
-            <div className="col-sm-6">
-              <div className="contactinfo">
-                <ul className="nav nav-pills" style={{ width: "1000px" }}>
+      <div className='header_top' style={{ backgroundColor: '#ee4d2d', color: 'white' }}>
+        <div className='container'>
+          <div className='row'>
+            <div className='col-sm-6'>
+              <div className='contactinfo'>
+                <ul className='nav nav-pills' style={{ width: '1000px' }}>
                   <li>
-                    <a style={{ color: "white", marginTop: "8px" }}>
-                      <i className="fa fa-phone"></i> +84 942 099 721
+                    <a style={{ color: 'white', marginTop: '8px' }}>
+                      <i className='fa fa-phone'></i> +84 942 099 721
                     </a>
                   </li>
                   <li>
-                    <a style={{ color: "white", marginTop: "8px" }}>
-                      <i className="fa fa-envelope"></i>{" "}
-                      info@sneakershop@gmail.com
+                    <a style={{ color: 'white', marginTop: '8px' }}>
+                      <i className='fa fa-envelope'></i> info@sneakershop@gmail.com
                     </a>
                   </li>
                   <li>
-                    <div style={{ width: "200px", marginLeft: "465px" }}>
+                    <div style={{ width: '200px', marginLeft: '465px' }}>
                       <Link
                         style={{
-                          fontSize: "30px",
-                          marginLeft: "1%",
-                          color: "#EE4D2D",
-                          marginTop: "50px",
+                          fontSize: '30px',
+                          marginLeft: '1%',
+                          color: '#EE4D2D',
+                          marginTop: '50px',
                         }}
-                        to={"/shop/cart"}
+                        to={'/shop/cart'}
                       >
                         <ShoppingCartOutlined />
                       </Link>
                       {username ? (
-                        <Dropdown overlay={menu} placement="bottomCenter" arrow>
+                        <Dropdown overlay={menu} placement='bottomCenter' arrow>
                           {/* <Button>bottomCenter</Button> */}
                           {/* <Link
                             style={{
@@ -188,10 +170,7 @@ class Header_top extends React.Component {
                           >
                             Hello {username}
                           </Link> */}
-                          <img
-                            style={{ width: "45px", marginBottom: "5px" }}
-                            src={userLogo}
-                          ></img>
+                          <img style={{ width: '45px', marginBottom: '5px' }} src={userLogo}></img>
                         </Dropdown>
                       ) : (
                         // <button type='button'></button>
@@ -199,14 +178,14 @@ class Header_top extends React.Component {
                         // </div>
                         <Link
                           style={{
-                            fontSize: "20px",
-                            marginLeft: "5%",
-                            color: "white",
-                            marginTop: "50px",
+                            fontSize: '20px',
+                            marginLeft: '5%',
+                            color: 'white',
+                            marginTop: '50px',
                           }}
-                          to={"/shop/login"}
+                          to={'/shop/login'}
                         >
-                          <UnlockOutlined /> {"Login"}
+                          <UnlockOutlined /> {'Login'}
                         </Link>
                       )}
                     </div>
@@ -215,8 +194,8 @@ class Header_top extends React.Component {
               </div>
               <div>
                 <Modal
-                  className="company-details"
-                  title="User Information"
+                  className='company-details'
+                  title='User Information'
                   visible={this.state.ShowInfo}
                   onOk={() => this.handleOk(this.state.userid)}
                   onCancel={this.handleCancel}
@@ -270,7 +249,7 @@ class Header_top extends React.Component {
                       ></Input> */}
                     </div>
                     <div>
-                      <label style={{ marginRight: "10px" }}>Email: </label>
+                      <label style={{ marginRight: '10px' }}>Email: </label>
                       {this.state.email}
                       {/* <Input
                         type="text"
@@ -282,33 +261,15 @@ class Header_top extends React.Component {
                     </div>
                     <div>
                       <label>Phone Number</label>
-                      <Input
-                        type="text"
-                        name="phoneNumber"
-                        value={this.state.phoneNumber}
-                        onChange={this.onChange}
-                        id="phoneNumber"
-                      ></Input>
+                      <Input type='text' name='phoneNumber' value={this.state.phoneNumber} onChange={this.onChange} id='phoneNumber'></Input>
                     </div>
                     <div>
                       <label>Address</label>
-                      <Input
-                        type="text"
-                        name="address"
-                        value={this.state.address}
-                        onChange={this.onChange}
-                        id="address"
-                      ></Input>
+                      <Input type='text' name='address' value={this.state.address} onChange={this.onChange} id='address'></Input>
                     </div>
                     <div>
                       <label>Day of birth</label>
-                      <Input
-                        type="date"
-                        name="dayOfBirth"
-                        value={this.state.dayOfBirth}
-                        onChange={this.onChange}
-                        id="dayOfBirth"
-                      ></Input>
+                      <Input type='date' name='dayOfBirth' value={this.state.dayOfBirth} onChange={this.onChange} id='dayOfBirth'></Input>
                     </div>
 
                     {/* <div>
@@ -343,9 +304,6 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(withRouter(Header_top));
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Header_top));
 
 // export default Header_top;
