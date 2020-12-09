@@ -39,7 +39,7 @@ import LocalStorageService from "../config/LocalStorageService";
 import RedirectIfUserAuth from "../config/RedireactIfUserAuth";
 import notification from "../helper/Notification";
 // import Logo from "../image/shoplogo.png";
-import Logo from "../image/logofashion.png";
+import Logo from "../image/shoplogo.png";
 import userActions from "../redux/user/actions";
 import userGuestActions from "../redux/user/userAction";
 import store from "../store";
@@ -58,6 +58,7 @@ import ProductDetail from "./layouts/ProductDetail";
 import Verify from "./layouts/Verify";
 import Search from "./layouts/search";
 import OrderHistory from "./layouts/orderhistory";
+import About from "./layouts/aboutus";
 
 const { Header, Sider } = Layout;
 
@@ -69,6 +70,7 @@ class Home extends React.Component {
     super(props);
     this.state = {
       ShowInfo: false,
+      ShowChangePassword: false,
       showLogout: false,
       imageUrl: "",
       loading: false,
@@ -83,6 +85,9 @@ class Home extends React.Component {
       id: "",
       productInCart: [],
       search: "",
+      count: "",
+      newPassword: "",
+      confirmPassword: "",
     };
   }
   // useEffect(() => {
@@ -117,7 +122,18 @@ class Home extends React.Component {
         userid: localStorage.getItem("userauth").split("id")[1].split(`"`)[2],
       });
     }
+    if (localStorage.getItem("cart")) {
+      this.setState({ count: localStorage.getItem("cart").split(",").length });
+    }
     this.getProductFromCart(this.state.userid);
+    console.log("count:", this.state.count);
+  };
+  showChangePassword = () => {
+    // this.setState({ ShowChangePassword: true });
+    console.log("active:", this.state.ShowChangePassword);
+  };
+  handleCancelChange = () => {
+    this.setState({ ShowChangePassword: false });
   };
   search = async (keyword) => {
     this.props.history.push("/search/" + keyword);
@@ -125,14 +141,14 @@ class Home extends React.Component {
   getProductFromCart = (userid) => {
     console.log("id:", userid);
     axios
-      .get("http://localhost:3030/shop/api/getproductfromcart/" + userid)
+      .post("http://localhost:3030/shop/api/getproductfromcart/")
       .then((res) => {
         this.setState({
           productInCart: res.data,
           // count: this.state.productInCart.length(),
         });
 
-        console.log("lengthaa:", this.state.productInCart.length);
+        console.log("lengthaa:", res.data.length);
         // localStorage.setItem('count', this.state.productInCart.length);
         // var temp = localStorage.getItem('userauth');
         // const { productInCart } = this.state;
@@ -208,7 +224,7 @@ class Home extends React.Component {
           </a>
         </Menu.Item>
         <Menu.Item>
-          <a onClick={""}>Change Password</a>
+          <a onClick={() => this.info()}>Change Password</a>
         </Menu.Item>
         <Menu.Item>
           <a onClick={() => this.info()}>Settings</a>
@@ -293,7 +309,7 @@ class Home extends React.Component {
                       </div>
                     </div>
                     <div style={{ marginTop: "50px" }}>
-                      <Badge count={this.state.productInCart.length || ""}>
+                      <Badge count={this.state.count || ""}>
                         <Link
                           style={{
                             fontSize: "30px",
@@ -358,16 +374,6 @@ class Home extends React.Component {
                             id="address"
                           ></Input>
                         </div>
-                        <div>
-                          <label>Day of birth</label>
-                          <Input
-                            type="date"
-                            name="dayOfBirth"
-                            value={this.state.dayOfBirth}
-                            onChange={this.onChange}
-                            id="dayOfBirth"
-                          ></Input>
-                        </div>
 
                         <div>
                           <label>Role</label>
@@ -399,6 +405,36 @@ class Home extends React.Component {
                       </Form>
                     </Modal>
                   </div>
+                  <Modal
+                    className="company-details"
+                    title="Change Password"
+                    visible={this.state.ShowChangePassword}
+                    onOk={this.handleOkChange}
+                    onCancel={this.handleCancelChange}
+                  >
+                    <Form>
+                      <div>
+                        <label>New Password</label>
+                        <Input
+                          type="text"
+                          name="newPassword"
+                          // value={this.state.username}
+                          onChange={this.onChange}
+                          id="newPassword"
+                        ></Input>
+                      </div>
+                      <div>
+                        <label>Confirm Password</label>
+                        <Input
+                          type="text"
+                          name="confirmPassword"
+                          // value={this.state.email}
+                          onChange={this.onChange}
+                          id="confirmPassword"
+                        ></Input>
+                      </div>
+                    </Form>
+                  </Modal>
                 </Layout>
                 <Divider />
                 {/* <Header_bottom /> */}
@@ -415,6 +451,7 @@ class Home extends React.Component {
                     <Login />
                   </RedirectIfUserAuth>
                   <Route path="/shop/cart" exact component={Cart} />
+                  <Route path="/shop/aboutus" exact component={About} />
                   <Route path="/verify/:id" exact component={Verify} />
                   <Route
                     path="/orderhistory/:id"

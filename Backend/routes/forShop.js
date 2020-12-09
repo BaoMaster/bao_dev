@@ -11,6 +11,7 @@ const pdfController = require("../src/controllers/pdf");
 router.post("/api/addproducttocart", controller.addProductToCart);
 router.post("/api/addoneincart", controller.addOneInCart);
 router.post("/api/suboneincart", controller.subOneInCart);
+router.post("/api/updateorder", controller.updateOrder);
 router.get("/api/sort/:key", controller.Sort);
 router.get("/api/sortonsearch/:key", controller.SortOnSearch);
 router.get("/api/getproduct", controller.getProduct);

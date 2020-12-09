@@ -14,7 +14,7 @@ const transporter = nodemailer.createTransport(
 
 module.exports.send = (email, orderid, username, total) => {
   const mailOptions = {
-    from: "FashionShop <any@pvt.com>",
+    from: "SneakerShop <any@pvt.com>",
     to: email,
     subject: `New Invoice For Order #${orderid}`,
     text: "For clients with plaintext support only",

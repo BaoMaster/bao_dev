@@ -38,10 +38,12 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.STRING,
     },
     paid: {
-      type: Sequelize.BOOLEAN,
+      type: Sequelize.STRING,
+      defaultValue: false,
     },
     status: {
       type: Sequelize.STRING,
+      defaultValue: "Coming",
     },
     discount: {
       type: Sequelize.STRING,

@@ -13,6 +13,7 @@ router.get("/", function (req, res, next) {
   res.send("index from nodejs server");
 });
 router.post("/api/register", controller.register);
+router.post("/api/resetpassword", controller.resetPassword);
 router.post("/api/login", controller.login);
 router.post("/api/loginadmin", controller.loginAdmin);
 // router.get("/login", controller.checkLogin)

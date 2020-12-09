@@ -136,6 +136,7 @@ const ApplicationRoutes = (props) => {
         <Route exact path="/orderhistory/:id" component={Home} />
         <Route exact path="/search/:keyword" component={Home} />
         <Route path="/shop/checkout" exact component={Home} />
+        <Route path="/shop/aboutus" exact component={Home} />
         <Route path="/shop/cart" component={Home} />
         {/* <Route component={Not_found} /> */}
 

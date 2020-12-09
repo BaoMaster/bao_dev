@@ -138,9 +138,9 @@ exports.register = (req, res) => {
             // dayofbirth: req.body.dayofbirth,
             // phonenumber: req.body.phonenumber,
             email: req.body.email,
-            phoneNumber: req.body.phoneNumber,
+            phoneNumber: req.body.phone,
             address: req.body.address,
-            dayOfBirth: req.body.dayOfBirth,
+            // dayOfBirth: req.body.dayOfBirth,
             role: req.body.role,
             avatar: req.body.avatar,
             // address: req.body.address,
@@ -177,7 +177,21 @@ exports.register = (req, res) => {
       return res.send({ messErr: err });
     });
 };
-
+exports.resetPassword = (req, res) => {
+  User.findOne({
+    where: { id: req.body.userid },
+  })
+    .then((data) => {
+      data.update({ password: bcrypt.hashSync(req.body.newPassword, 8) });
+      return res.json({
+        status: "success",
+        message: "Reset password successfully",
+      });
+    })
+    .catch((err) => {
+      return res.status(err).json(err);
+    });
+};
 exports.forgotPassword = (req, res) => {
   const { errors, isValid } = validateForgotInput(req.body);
   const shortpass = shortId.generate();

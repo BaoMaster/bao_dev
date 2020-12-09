@@ -11,6 +11,9 @@ import {
   Table,
   Tabs,
   Upload,
+  Row,
+  Col,
+  Radio,
 } from "antd";
 import axios from "axios";
 import PropTypes from "prop-types";
@@ -22,6 +25,7 @@ import { Link, withRouter } from "react-router-dom";
 import LocalStorageService from "../../config/LocalStorageService";
 import notification from "../../helper/Notification";
 import productActions from "../../redux/product/actions";
+import shopProductActions from "../../redux/shopProduct/actions";
 import LayoutContentWrapper from "../../utility/layoutWrapper";
 
 // import { getAll } from "../../Actions/authActions";
@@ -55,9 +59,54 @@ class OrderList extends Component {
     },
     {
       title: "Product",
-      //   key: "description",
-      dataIndex: "product",
+      children: [
+        {
+          title: "Product Name",
+          dataIndex: "products",
+          // key: 'productname',
+          render: (item) => {
+            return (
+              <Col>
+                {item.map((i) => (
+                  <Row>
+                    -<a href={"../detail/" + i.id}>{i.productname}</a>-
+                  </Row>
+                ))}
+              </Col>
+            );
+          },
+        },
+        {
+          title: "Size",
+          dataIndex: "products",
+          render: (item) => {
+            return (
+              <Col>
+                {item.map((i) => (
+                  <Row>-{i.size}-</Row>
+                ))}
+              </Col>
+            );
+          },
+          width: 70,
+        },
+        {
+          title: "Amount",
+          dataIndex: "products",
+          render: (item) => {
+            return (
+              <Col>
+                {item.map((i) => (
+                  <Row>-{i.total}-</Row>
+                ))}
+              </Col>
+            );
+          },
+          width: 50,
+        },
+      ],
     },
+
     // {
     //   title: "Illustration",
     //   key: "illustration",
@@ -145,6 +194,8 @@ class OrderList extends Component {
       errors: {},
       loading: false,
       imageUrl: "",
+      paid: "",
+      status: "",
     };
   }
   componentDidMount() {
@@ -217,20 +268,22 @@ class OrderList extends Component {
       });
   };
 
-  handleUpdate = (productId) => {
-    this.setState({ isShowModal: true, productId: productId });
-    this.props.getProductById(productId).then((res) => {
-      console.log("daat:", res);
-      this.setState({
-        brand: res.data.data.brand,
-        productname: res.data.data.productname,
-        productcode: res.data.data.productcode,
-        illustration: res.data.data.illustration,
-        description: res.data.data.description,
-        price: res.data.data.price,
-        amount: res.data.data.amount,
-      });
-    });
+  handleUpdate = (orderid) => {
+    console.log("bao:", orderid, "-", this.state.paid, "-", this.state.status);
+    this.setState({ isShowModal: true, productId: orderid });
+
+    // this.props.getProductById(productId).then((res) => {
+    //   console.log("daat:", res);
+    //   this.setState({
+    //     brand: res.data.data.brand,
+    //     productname: res.data.data.productname,
+    //     productcode: res.data.data.productcode,
+    //     illustration: res.data.data.illustration,
+    //     description: res.data.data.description,
+    //     price: res.data.data.price,
+    //     amount: res.data.data.amount,
+    //   });
+    // });
   };
 
   handleModal = () => {
@@ -251,45 +304,64 @@ class OrderList extends Component {
   };
 
   handleOk = async () => {
-    if (this.state.productId) {
-      console.log("update");
-      const obj = {
-        brand: this.state.brand,
-        productname: this.state.productname,
-        productcode: this.state.productcode,
-        illustration: this.state.illustration,
-        description: this.state.description,
-        price: this.state.price,
-        amount: this.state.amount,
-      };
-      await this.props.updateProduct(this.state.productId, obj).then((res) => {
-        if (res.data.status === "success") {
-          this.getProduct();
-          this.setState({ isShowModal: false });
-          notification("success", `Update Product Successfully`, "");
-        }
-      });
-    } else {
-      console.log("submit");
-      const obj = {
-        brand: this.state.brand,
-        productname: this.state.productname,
-        productcode: this.state.productcode,
-        illustration: this.state.illustration,
-        description: this.state.description,
-        price: this.state.price,
-        amount: this.state.amount,
-      };
-      await this.props.addProduct(obj).then((res) => {
-        if (res.data.status === "success") {
-          console.log("okkkk add");
-          this.getProduct();
-          this.handleToggleDeletedModal(false, 0);
-          notification("success", `Add Product Successfully`, "");
-          this.setState({ isShowModal: false });
-        }
-      });
-    }
+    console.log(
+      "ddsds:",
+      this.state.productId,
+      "-",
+      this.state.paid,
+      "-",
+      this.state.status
+    );
+    const obj = {
+      orderid: this.state.productId,
+      paid: this.state.paid,
+      status: this.state.status,
+    };
+    this.props.updateOrder(obj).then((data) => {
+      if (data.data.status === "success") {
+        notification("success", "Update successfully");
+      }
+      this.setState({ isShowModal: false });
+    });
+    // if (this.state.productId) {
+    //   console.log("update");
+    //   const obj = {
+    //     brand: this.state.brand,
+    //     productname: this.state.productname,
+    //     productcode: this.state.productcode,
+    //     illustration: this.state.illustration,
+    //     description: this.state.description,
+    //     price: this.state.price,
+    //     amount: this.state.amount,
+    //   };
+    //   await this.props.updateProduct(this.state.productId, obj).then((res) => {
+    //     if (res.data.status === "success") {
+    //       this.getProduct();
+    //       this.setState({ isShowModal: false });
+    //       notification("success", `Update Product Successfully`, "");
+    //     }
+    //   });
+    // } else {
+    //   console.log("submit");
+    //   const obj = {
+    //     brand: this.state.brand,
+    //     productname: this.state.productname,
+    //     productcode: this.state.productcode,
+    //     illustration: this.state.illustration,
+    //     description: this.state.description,
+    //     price: this.state.price,
+    //     amount: this.state.amount,
+    //   };
+    //   await this.props.addProduct(obj).then((res) => {
+    //     if (res.data.status === "success") {
+    //       console.log("okkkk add");
+    //       this.getProduct();
+    //       this.handleToggleDeletedModal(false, 0);
+    //       notification("success", `Add Product Successfully`, "");
+    //       this.setState({ isShowModal: false });
+    //     }
+    //   });
+    // }
     // const closeModal = localStorage.getItem("openModal");
     // this.setState({ isShowModal: false });
     // message.success("Add user success!");
@@ -308,6 +380,7 @@ class OrderList extends Component {
   handleAva = () => {};
   onChange = (e) => {
     this.setState({ [e.target.id]: e.target.value });
+    console.log(e.target.value);
   };
 
   handleCancel = (e) => {
@@ -327,21 +400,21 @@ class OrderList extends Component {
       <div>
         <Card
           header={{ title: "Product" }}
-          extra={
-            <React.Fragment>
-              {/* <SearchBox
-                placeholder="Search companies"
-                handleOnTransferText={this.handleOnTransferText}
-              ></SearchBox> */}
-              <Button
-                className="btn-add"
-                type="primary"
-                onClick={this.handleModal}
-              >
-                Add Product
-              </Button>
-            </React.Fragment>
-          }
+          // extra={
+          //   <React.Fragment>
+          //     {/* <SearchBox
+          //       placeholder="Search companies"
+          //       handleOnTransferText={this.handleOnTransferText}
+          //     ></SearchBox> */}
+          //     <Button
+          //       className="btn-add"
+          //       type="primary"
+          //       onClick={this.handleModal}
+          //     >
+          //       Add Product
+          //     </Button>
+          //   </React.Fragment>
+          // }
         >
           <Modal
             title="Are you sure?"
@@ -366,114 +439,54 @@ class OrderList extends Component {
           <>
             <Modal
               className="company-details"
-              title={
-                this.state.productId ? "Update Product" : "Add New Product"
-              }
+              title={this.state.productId ? "Update Order" : "Add New Product"}
               visible={this.state.isShowModal}
               onOk={this.handleOk}
               onCancel={this.handleCancel}
             >
               <Form>
-                <Tabs
-                  defaultActiveKey="1"
-                  activeKey={this.state.activeTab}
-                  onChange={(activeTab) => this.setState({ activeTab })}
-                >
-                  <TabPane tab="Add product" key="1">
-                    <div>
-                      <label>Illustration</label>
-                      <Upload
-                        name="image"
-                        listType="picture-card"
-                        className="avatar-uploader"
-                        showUploadList={false}
-                        action="http://localhost:3030/products/post"
-                        headers={{
-                          authorization: `Bearer ${LocalStorageService.getAccessToken()}`,
-                        }}
-                        beforeUpload={this.beforeUpload}
-                        onChange={this.handleChange}
-                      >
-                        {imageUrl ? (
-                          <img
-                            src={imageUrl}
-                            alt="image"
-                            style={{ width: "100%" }}
-                          />
-                        ) : (
-                          uploadButton
-                        )}
-                      </Upload>
-                      {/* <Input
-                        type="file"
-                        name="image"
-                        beforeUpload={this.beforeUpload}
-                      ></Input> */}
-                    </div>
-                    <div>
-                      <label>Product Name</label>
-                      <Input
-                        type="text"
-                        name="productname"
-                        value={this.state.productname}
-                        onChange={this.onChange}
-                        id="productname"
-                      ></Input>
-                    </div>
-                    <div>
-                      <label>Product Code</label>
-                      <Input
-                        type="text"
-                        name="productcode"
-                        value={this.state.productcode}
-                        onChange={this.onChange}
-                        id="productcode"
-                      ></Input>
-                    </div>
-                    <div>
-                      <label>Brand</label>
-                      <Input
-                        type="text"
-                        name="brand"
-                        value={this.state.brand}
-                        onChange={this.onChange}
-                        id="brand"
-                      ></Input>
-                    </div>
-                    <div>
-                      <label>Description</label>
-                      <Input
-                        type="text"
-                        name="description"
-                        value={this.state.description}
-                        onChange={this.onChange}
-                        id="description"
-                      ></Input>
-                    </div>
-                    <div>
-                      <label>Price</label>
-                      <Input
-                        type="text"
-                        name="price"
-                        value={this.state.price}
-                        onChange={this.onChange}
-                        id="price"
-                      ></Input>
-                    </div>
-
-                    <div>
-                      <label>amount</label>
-
-                      <Input
-                        type="text"
-                        name="amount"
-                        value={this.state.amount}
-                        onChange={this.onChange}
-                        id="amount"
-                      ></Input>
-                    </div>
-                  </TabPane>
-                </Tabs>
+                <div>
+                  <label>Paid: </label>
+                  <br></br>
+                  {/* <Input
+                      type="text"
+                      name="price"
+                      value={this.state.price}
+                      onChange={this.onChange}
+                      id="price"
+                    ></Input> */}
+                  <Radio.Group id="paid" onChange={this.onChange}>
+                    <Radio id="paid" value="true">
+                      True
+                    </Radio>
+                    <Radio id="paid" value="false">
+                      False
+                    </Radio>
+                  </Radio.Group>
+                </div>
+                <br></br>
+                <div>
+                  <label>Status: </label>
+                  <br></br>
+                  {/* <Input
+                    type="text"
+                    name="amount"
+                    value={this.state.amount}
+                    onChange={this.onChange}
+                    id="amount"
+                  ></Input> */}
+                  <Radio.Group id="status" onChange={this.onChange}>
+                    <Radio id="status" value="Coming">
+                      Coming
+                    </Radio>
+                    <Radio id="status" value="Delivered">
+                      Delivered
+                    </Radio>
+                    <Radio id="status" value="Canceled">
+                      Canceled
+                    </Radio>
+                  </Radio.Group>
+                </div>
               </Form>
             </Modal>
           </>
@@ -490,6 +503,7 @@ const mapDispatchToProps = (dispatch) => ({
   getProductById: (productId) =>
     dispatch(productActions.getProductById(productId)),
   addProduct: (product) => dispatch(productActions.addProduct(product)),
+  updateOrder: (data) => dispatch(shopProductActions.updateOrder(data)),
 });
 
 export default connect(null, mapDispatchToProps)(withRouter(OrderList));

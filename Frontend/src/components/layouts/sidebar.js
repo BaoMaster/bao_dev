@@ -35,7 +35,7 @@ const SideNav = () => {
         }}
       >
         <p style={{ color: "white", fontSize: "18px", marginLeft: "25px" }}>
-          FashionShop
+          SneakerShop
         </p>
       </div>
       <Menu theme="dark" mode="inline" defaultSelectedKeys={["1"]}>

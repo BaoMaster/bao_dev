@@ -95,12 +95,14 @@ class ProductDetail extends React.Component {
         if (cartDetail[0] === e && cartDetail[1] === size) {
           cartList[index] =
             e + "-" + size + "-" + (parseInt(cartDetail[2]) + 1);
+          window.location.reload();
           return localStorage.setItem("cart", cartList);
         } else {
           localStorage.setItem(
             "cart",
             cartMain + "," + e + "-" + size + "-" + amount
           );
+          window.location.reload();
         }
       }
       // if (cart[0] === e && cart[1] === size) {
@@ -116,6 +118,7 @@ class ProductDetail extends React.Component {
       // }
     } else {
       localStorage.setItem("cart", e + "-" + size + "-" + amount);
+      window.location.reload();
     }
     // if (localStorage.getItem("userauth")) {
     //   const obj = {
@@ -145,6 +148,7 @@ class ProductDetail extends React.Component {
           cartList[index] =
             e + "-" + size + "-" + (parseInt(cartDetail[2]) + 1);
           this.props.history.push("/shop/cart");
+          window.location.reload();
           return localStorage.setItem("cart", cartList);
         } else {
           localStorage.setItem(
@@ -152,6 +156,7 @@ class ProductDetail extends React.Component {
             cartMain + "," + e + "-" + size + "-" + amount
           );
           this.props.history.push("/shop/cart");
+          window.location.reload();
         }
       }
       // if (cart[0] === e && cart[1] === size) {

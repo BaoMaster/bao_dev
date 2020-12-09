@@ -13,9 +13,9 @@ import { Link, withRouter } from "react-router-dom";
 import SlickSlider from "react-slick";
 
 import notification from "../../../helper/Notification";
-import shoes1 from "../../../image/1.jpg";
-import shoes2 from "../../../image/2.jpg";
-import shoes3 from "../../../image/3.jpg";
+import shoes1 from "../../../image/giay1.jpg";
+import shoes2 from "../../../image/giay2.jpg";
+import shoes3 from "../../../image/giayadi3.jpg";
 import shoes4 from "../../../image/4.jpg";
 import shoes5 from "../../../image/5.jpg";
 import ao1 from "../../../image/ao1.jpg";
@@ -90,8 +90,8 @@ class Slider extends React.Component {
     const settings = {
       dots: true,
       infinite: true,
-      speed: 500,
-      // autoplay: true,
+      speed: 800,
+      autoplay: true,
       slidesToShow: 1,
       slidesToScroll: 1,
       nextArrow: <RenderArrow type={"next"} />,
@@ -122,7 +122,7 @@ class Slider extends React.Component {
               <div>
                 <SlickSlider {...settings}>
                   <div
-                    onClick={(e) => this.handleSelect("6")}
+                    onClick={(e) => this.handleSelect("1")}
                     className="col-sm-6"
                     style={{ marginTop: "10px" }}
                   >
@@ -134,26 +134,27 @@ class Slider extends React.Component {
                         width: "60%",
                       }}
                     >
-                      <h2> ÁO THUN KHÔNG CỔ 6M4031CT3/ST2 viettien</h2>
-                      <h3>Color: Light-Blue</h3>
+                      <h2> Nike Air Jordan 1 Mid</h2>
+                      <h3>Color: Red/White</h3>
                       <p>
-                        Áo thun không cổ Smart Casual có các tính năng như thấm
-                        hút tốt, mềm mịn, ít nhăn dễ ủi và co dãn cao, phù hợp
-                        với các chàng trai trẻ trung, năng động. Áo thun không
-                        cổ Smart Casual được sử dụng trong môi trường đi chơi,
-                        dạo phố, đi du lịch...Sản phẩm đang được bán tại hệ
-                        thống Cửa hàng Việt Tiến Phía Nam.
+                        The Spider-Man x Air Jordan 1 on the upper feature a
+                        tonal dot print that is also reflective, referencing
+                        Spider-Man¬ís suit. The Nike Air tongue tag is presented
+                        in blue and red as another nod to the superhero, while
+                        an icy clear outsole completes the colorway. Released on
+                        December 14, 2018 to coincide with the opening of the
+                        film, the Spider-Man
                       </p>
                     </div>
                     <div>
                       <img
-                        style={{ paddingLeft: "50px", width: "200px" }}
-                        src={ao1}
+                        style={{ paddingLeft: "50px", width: "300px" }}
+                        src={shoes1}
                         className="girl img-responsive"
                       />
                     </div>
                   </div>
-                  <div onClick={(e) => this.handleSelect("7")}>
+                  <div onClick={(e) => this.handleSelect("2")}>
                     <div
                       style={{
                         float: "left",
@@ -161,26 +162,25 @@ class Slider extends React.Component {
                         width: "60%",
                       }}
                     >
-                      <h2> ÁO THUN KHÔNG CỔ 6M4051CT3/ST2 viettien</h2>
-                      <h3>Color: Gray</h3>
+                      <h2> Nike Air Jordan 1 Mid z700 </h2>
+                      <h3>Color: Red/White</h3>
                       <p>
-                        Áo thun không cổ Smart Casual có các tính năng như thấm
-                        hút tốt, mềm mịn, ít nhăn dễ ủi và bền màu, phù hợp với
-                        các chàng trai trẻ trung, năng động. Áo thun không cổ
-                        Smart Casual được sử dụng trong môi trường đi chơi, dạo
-                        phố, đi du lịch...Sản phẩm đang được bán tại hệ thống
-                        Cửa hàng Việt Tiến trên toàn quốc.
+                        With buzz around the Dior x AJ1 stembraces such
+                        connections as palettes are nearly shot-for-shot the
+                        same as its high-end counterpart, though sans any of the
+                        luxury imprint’s signature all-over graphic or their
+                        luxe Italian made leathers.#airjordan1mid
                       </p>
                     </div>
                     <div>
                       <img
-                        style={{ paddingLeft: "50px", width: "200px" }}
-                        src={ao2}
+                        style={{ paddingLeft: "50px", width: "300px" }}
+                        src={shoes2}
                         className="girl img-responsive"
                       />
                     </div>
                   </div>
-                  <div onClick={(e) => this.handleSelect("8")}>
+                  <div onClick={(e) => this.handleSelect("3")}>
                     <div
                       style={{
                         float: "left",
@@ -188,75 +188,25 @@ class Slider extends React.Component {
                         width: "60%",
                       }}
                     >
-                      <h2> ÁO THUN 6M4024CT3/ST2 </h2>
-                      <h3>Color: BEIGE</h3>
+                      <h2> Nike SUPERSTAR 100 </h2>
+                      <h3>Color: Black/White</h3>
                       <p>
-                        Áo thun không cổ Smart Casual có các tính năng như: Thấm
-                        hút tốt, mềm mịn, ít nhăn dễ ủi và bền màu, phù hợp với
-                        các quý ông trung niên, những chàng " đậm" người, hoặc
-                        có vòng 2 " dư chuẩn". Áo thun không cổ Smart Casual
-                        được sử dụng trong môi trường đi chơi, dạo phố, đi du
-                        lịch. Sản phẩm đang được bán tại hệ thống Cửa hàng Việt
-                        Tiến Phía Nam.
+                        Originally made for basketball courts in the '70s.
+                        Celebrated by hip hop royalty in the '80s. The adidas
+                        Superstar shoe is now a lifestyle staple for streetwear
+                        enthusiasts. The world-famous shell toe feature remains,
+                        providing style and protection. Just like it did on the
+                        B-ball courts back in the day.
                       </p>
                     </div>
                     <div>
                       <img
-                        style={{ paddingLeft: "50px", width: "200px" }}
-                        src={ao3}
+                        style={{ paddingLeft: "50px", width: "300px" }}
+                        src={shoes3}
                         className="girl img-responsive"
                       />
                     </div>
                   </div>
-                  {/* <div>
-                    <div
-                      style={{
-                        float: "left",
-                        textAlign: "center",
-                        width: "60%",
-                      }}
-                    >
-                      <h2> Nike Air Jordan Retro 1</h2>
-                      <h3>Color: White BLue</h3>
-                      <p>
-                        The Nike Air Jordan signature shoe bearing Michael
-                        Jordan was first released in 1985 and is the only model
-                        to replace the Nike Air logo on the reed with the
-                        Jumpman image. As an Air Jordan line, the Nike Air
-                      </p>
-                    </div>
-                    <div>
-                      <img
-                        style={{ paddingLeft: "50px" }}
-                        src={shoes4}
-                        className="girl img-responsive"
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <div
-                      style={{
-                        float: "left",
-                        textAlign: "center",
-                        width: "60%",
-                      }}
-                    >
-                      <h2> Nike Air Jordan 4 st 308497-110</h2>
-                      <h3>Color: White Red</h3>
-                      <p>
-                        Premium material is soft and smooth, creating a
-                        comfortable feeling for every step. The base is made of
-                        synthetic rubber with anti-slip groove, ensuring the
-                      </p>
-                    </div>
-                    <div>
-                      <img
-                        style={{ paddingLeft: "20px", width: "300px" }}
-                        src={shoes5}
-                        className="girl img-responsive"
-                      />
-                    </div>
-                  </div> */}
                 </SlickSlider>
               </div>
               <div>

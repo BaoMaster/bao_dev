@@ -1,7 +1,7 @@
-import axios from 'axios';
+import axios from "axios";
 
-import * as authActions from '../../actions/auth';
-import notification from '../../helper/Notification';
+import * as authActions from "../../actions/auth";
+import notification from "../../helper/Notification";
 
 // import { UserRoles } from 'src/shared/library/helpers/userRoles';
 
@@ -51,10 +51,17 @@ const userGuestActions = {
     return (dispatch) => {
       dispatch({ type: authActions.USER_LOGIN });
       try {
-        axios.post('./api/login', user).then((res) => dispatch({ type: authActions.LOGIN_SUCCESS, data: res.data }));
+        axios
+          .post("./api/login", user)
+          .then((res) =>
+            dispatch({ type: authActions.LOGIN_SUCCESS, data: res.data })
+          );
         // notification(res.data.status, res.data.message);
       } catch (err) {
-        dispatch({ type: authActions.USER_LOGIN_FAIL, data: err?.response?.data });
+        dispatch({
+          type: authActions.USER_LOGIN_FAIL,
+          data: err?.response?.data,
+        });
       }
     };
   },
@@ -73,34 +80,11 @@ const userGuestActions = {
       return axios.get(`./users/api/getuserbyid/${userId}`);
     };
   },
-
-  // updateCompany: (companyId, company) => {
-  //   return dispatch => {
-  //     return axios.put(`./api/companies/${companyId}`, company);
-  //   };
-  // },
-
-  // getCompaniesBaseOnUserRole: currentUserRole => {
-  //   return dispatch => {
-  //     switch (currentUserRole) {
-  //       case UserRoles.CompanyAdmin:
-  //       case UserRoles.CompanyOwner:
-  //         return axios.get('/api/companies/admin');
-
-  //       case UserRoles.PlexusAdmin:
-  //         return axios.get('/api/companies/selections');
-
-  //       default:
-  //         return Promise.reject('Cannot get list companies!');
-  //     }
-  //   };
-  // },
-
-  // getCompanySites: companyId => {
-  //   return dispatch => {
-  //     return axios.get(`/api/sites/company/${companyId}`);
-  //   };
-  // },
+  resetPassword: (data) => {
+    return (dispatch) => {
+      return axios.post(`./api/resetpassword`, data);
+    };
+  },
 };
 
 export default userGuestActions;

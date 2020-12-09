@@ -28,6 +28,11 @@ const shopProductActions = {
       return axios.post(`./shop/api/suboneincart`, data);
     };
   },
+  updateOrder: (data) => {
+    return (dispatch) => {
+      return axios.post(`./shop/api/updateorder`, data);
+    };
+  },
   addToHistory: (data) => {
     return (dispatch) => {
       return axios.post(`./shop/api/addtohistory`, data);

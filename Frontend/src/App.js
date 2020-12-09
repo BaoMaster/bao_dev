@@ -1,11 +1,11 @@
-import axios from 'axios';
-import jwt_decode from 'jwt-decode';
-import React, { useEffect } from 'react';
-import { Provider } from 'react-redux';
+import axios from "axios";
+import jwt_decode from "jwt-decode";
+import React, { useEffect } from "react";
+import { Provider } from "react-redux";
 
-import ApplicationRoutes from './config/ApplicationRoutes';
-import localStorageService from './config/LocalStorageService';
-import store from './store';
+import ApplicationRoutes from "./config/ApplicationRoutes";
+import localStorageService from "./config/LocalStorageService";
+import store from "./store";
 
 function App() {
   useEffect(() => {
@@ -13,7 +13,7 @@ function App() {
       (config) => {
         const token = localStorageService.getAccessToken();
         if (token) {
-          config.headers['Authorization'] = 'Bearer ' + token;
+          config.headers["Authorization"] = "Bearer " + token;
         }
         // config.headers['Content-Type'] = 'application/json';
         return config;
@@ -22,6 +22,9 @@ function App() {
         Promise.reject(error);
       }
     );
+    if (localStorage.getItem("cart")) {
+      console.log("cart", localStorage.getItem("cart").split(",").length);
+    }
     // axios.interceptors.response.use(async (response) => {
     //   if (response.status === 401) {
     //     let temp = localStorage.getItem("accsess_token");

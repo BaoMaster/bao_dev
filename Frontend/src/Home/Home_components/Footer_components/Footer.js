@@ -1,17 +1,17 @@
 /* eslint-disable */
-import React from 'react';
+import React from "react";
 
 class Footer extends React.Component {
   render() {
     return (
-      <footer id='footer'>
-        <div className='footer-widget'>
-          <div className='container'>
-            <div className='row'>
-              <div className='col-sm-2'>
-                <div className='single-widget'>
+      <footer id="footer">
+        <div className="footer-widget">
+          <div className="container">
+            <div className="row">
+              <div className="col-sm-2">
+                <div className="single-widget">
                   <h2>Service</h2>
-                  <ul className='nav nav-pills nav-stacked'>
+                  <ul className="nav nav-pills nav-stacked">
                     <li>
                       <a>Online Help</a>
                     </li>
@@ -30,10 +30,10 @@ class Footer extends React.Component {
                   </ul>
                 </div>
               </div>
-              <div className='col-sm-2'>
-                <div className='single-widget'>
+              <div className="col-sm-2">
+                <div className="single-widget">
                   <h2>Category </h2>
-                  <ul className='nav nav-pills nav-stacked'>
+                  <ul className="nav nav-pills nav-stacked">
                     <li>
                       <a>Jordan</a>
                     </li>
@@ -52,10 +52,10 @@ class Footer extends React.Component {
                   </ul>
                 </div>
               </div>
-              <div className='col-sm-2'>
-                <div className='single-widget'>
+              <div className="col-sm-2">
+                <div className="single-widget">
                   <h2>Policies</h2>
-                  <ul className='nav nav-pills nav-stacked'>
+                  <ul className="nav nav-pills nav-stacked">
                     <li>
                       <a>Terms of Use</a>
                     </li>
@@ -74,10 +74,10 @@ class Footer extends React.Component {
                   </ul>
                 </div>
               </div>
-              <div className='col-sm-2'>
-                <div className='single-widget'>
-                  <h2>About Shopper</h2>
-                  <ul className='nav nav-pills nav-stacked'>
+              <div className="col-sm-2">
+                <div className="single-widget">
+                  <h2>About Shop</h2>
+                  <ul className="nav nav-pills nav-stacked">
                     <li>
                       <a>Company Information</a>
                     </li>
@@ -96,13 +96,13 @@ class Footer extends React.Component {
                   </ul>
                 </div>
               </div>
-              <div className='col-sm-3 col-sm-offset-1'>
-                <div className='single-widget'>
-                  <h2>About Shopper</h2>
-                  <form action='#' className='searchform'>
-                    <input type='text' placeholder='Your email address' />
-                    <button type='submit' className='btn btn-default'>
-                      <i className='fa fa-arrow-circle-o-right'></i>
+              <div className="col-sm-3 col-sm-offset-1">
+                <div className="single-widget">
+                  <h2>About Shop</h2>
+                  <form action="#" className="searchform">
+                    <input type="text" placeholder="Your email address" />
+                    <button type="submit" className="btn btn-default">
+                      <i className="fa fa-arrow-circle-o-right"></i>
                     </button>
                     <p>
                       Get the most recent updates from <br />
@@ -114,7 +114,7 @@ class Footer extends React.Component {
             </div>
           </div>
         </div>
-        <div className='footer-bottom'></div>
+        <div className="footer-bottom"></div>
       </footer>
     );
   }
